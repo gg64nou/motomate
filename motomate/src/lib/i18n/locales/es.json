@@ -871,7 +871,6 @@
 				"ready": "Listo, se activa en la próxima comprobación",
 				"cooldown": "En espera hasta {date}",
 				"waiting": "Esperando el próximo registro de servicio",
-				"inKm": "En {km} km",
 				"inMeasurement": "En {value} {unit}",
 				"onDate": "A partir del {date}",
 				"trackerLabel": "({tracker})",

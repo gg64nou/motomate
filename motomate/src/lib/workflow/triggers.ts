@@ -404,7 +404,3 @@ export function buildMaintenanceNotificationVars(
 
 	return vars;
 }
-
-export function getMeasurementBasisFromUnit(unit: MeasurementUnit): MeasurementBasis {
-	return getMeasurementBasis(unit);
-}

@@ -882,7 +882,6 @@
 				"ready": "Ready, fires next check",
 				"cooldown": "Cooling down until {date}",
 				"waiting": "Waiting for next service log",
-				"inKm": "In {km} km",
 				"inMeasurement": "In {value} {unit}",
 				"onDate": "From {date}",
 				"trackerLabel": "({tracker})",

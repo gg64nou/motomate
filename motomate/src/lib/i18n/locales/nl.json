@@ -872,7 +872,6 @@
 				"ready": "Klaar, wordt verstuurd bij volgende controle",
 				"cooldown": "Wacht tot {date}",
 				"waiting": "Wacht op volgend service-log",
-				"inKm": "Over {km} km",
 				"inMeasurement": "Over {value} {unit}",
 				"onDate": "Vanaf {date}",
 				"trackerLabel": "({tracker})",

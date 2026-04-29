@@ -872,7 +872,6 @@
 				"ready": "Prêt, se déclenche au prochain contrôle",
 				"cooldown": "En attente jusqu'au {date}",
 				"waiting": "En attente du prochain journal de service",
-				"inKm": "Dans {km} km",
 				"inMeasurement": "Dans {value} {unit}",
 				"onDate": "À partir du {date}",
 				"trackerLabel": "({tracker})",

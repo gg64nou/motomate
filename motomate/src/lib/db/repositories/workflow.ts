@@ -5,11 +5,9 @@ import { CreateWorkflowRuleSchema, UpdateWorkflowTriggerSchema } from '../../val
 import type { InsertWorkflowRule, WorkflowRule, RuleTrigger } from '../schema.js';
 import { generateId } from '../../utils/id.js';
 import { PRESET_RULES } from '../../workflow/rules.js';
-import { normalizeWorkflowTrigger } from '../../workflow/triggers.js';
 
 export async function createWorkflowRule(userId: string, input: unknown): Promise<WorkflowRule> {
 	const parsed = CreateWorkflowRuleSchema.parse(input);
-	normalizeWorkflowTrigger(parsed.trigger);
 	const id = generateId();
 	const row: InsertWorkflowRule = { ...parsed, id, user_id: userId };
 	await db.insert(workflow_rules).values(row);
@@ -48,7 +46,6 @@ export async function updateWorkflowRuleTrigger(
 	trigger: RuleTrigger
 ): Promise<void> {
 	const { trigger: validatedTrigger } = UpdateWorkflowTriggerSchema.parse({ id, trigger });
-	normalizeWorkflowTrigger(validatedTrigger);
 	await db
 		.update(workflow_rules)
 		.set({ trigger: validatedTrigger, updated_at: new Date().toISOString() })
