@@ -48,7 +48,7 @@ If MotoMate replaces your existing spreadsheet or saves you time, you can suppor
 
 ## License
 
-This project is licensed under the **AGPL 3.0** license. See [LICENSE](https://www.google.com/search?q=LICENSE) for details.
+This project is licensed under the **AGPL 3.0** license. See [LICENSE](LICENSE) for details.
 
 ## Contributing
 
