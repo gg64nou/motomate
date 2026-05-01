@@ -11,6 +11,8 @@
 		id: string;
 		performed_at: string;
 		odometer_at_service: number;
+		measurement_at_service?: number | null;
+		measurement_unit?: string | null;
 		cost_cents: number | null;
 		currency: string;
 		notes: string | null;
@@ -37,12 +39,20 @@
 	}: {
 		tracker: {
 			id: string;
-			template: { name: string; interval_km?: number | null; interval_months?: number | null };
+			template: {
+				name: string;
+				interval_km?: number | null;
+				interval_measurement?: number | null;
+				interval_unit?: string | null;
+				interval_months?: number | null;
+			};
 			status: 'ok' | 'due' | 'overdue';
 			next_due_odometer?: number | null;
+			next_due_measurement?: number | null;
 			next_due_at?: string | null;
 			last_done_at?: string | null;
 			last_done_odometer?: number | null;
+			last_done_measurement?: number | null;
 		};
 		vehicleUnit: string;
 		locale: string;
@@ -67,7 +77,9 @@
 	function formatInterval() {
 		const t = tracker.template;
 		const parts: string[] = [];
-		if (t.interval_km) parts.push(formatMeasurement(t.interval_km, vehicleUnit, locale));
+		const intervalValue = t.interval_measurement ?? t.interval_km;
+		const intervalUnit = t.interval_unit ?? vehicleUnit;
+		if (intervalValue) parts.push(formatMeasurement(intervalValue, intervalUnit, locale));
 		if (t.interval_months) parts.push(`${t.interval_months} ${$_('common.months')}`);
 		const sep = ` ${$_('common.or')} `;
 		return parts.join(sep) || '—';
@@ -75,8 +87,9 @@
 
 	function nextInfo() {
 		const parts: string[] = [];
-		if (tracker.next_due_odometer)
-			parts.push(formatMeasurement(tracker.next_due_odometer, vehicleUnit, locale));
+		const nextDueValue = tracker.next_due_measurement ?? tracker.next_due_odometer;
+		const nextDueUnit = tracker.template.interval_unit ?? vehicleUnit;
+		if (nextDueValue) parts.push(formatMeasurement(nextDueValue, nextDueUnit, locale));
 		if (tracker.next_due_at) parts.push(formatDateShort(tracker.next_due_at, locale));
 		return parts.join(' · ') || $_('maintenance.tracker.notScheduled');
 	}
@@ -84,8 +97,9 @@
 	function lastInfo() {
 		const parts: string[] = [];
 		if (tracker.last_done_at) parts.push(formatDateShort(tracker.last_done_at, locale));
-		if (tracker.last_done_odometer)
-			parts.push(formatMeasurement(tracker.last_done_odometer, vehicleUnit, locale));
+		const lastDoneValue = tracker.last_done_measurement ?? tracker.last_done_odometer;
+		const lastDoneUnit = tracker.template.interval_unit ?? vehicleUnit;
+		if (lastDoneValue) parts.push(formatMeasurement(lastDoneValue, lastDoneUnit, locale));
 		return parts.join(' · ');
 	}
 
@@ -111,7 +125,7 @@
 			<div class="tracker-name">{tracker.template.name}</div>
 			<div class="tracker-meta">
 				<span>{$_('maintenance.tracker.every', { values: { interval: formatInterval() } })}</span>
-				{#if !forecastMode && (tracker.next_due_odometer || tracker.next_due_at)}
+				{#if !forecastMode && (tracker.next_due_measurement || tracker.next_due_odometer || tracker.next_due_at)}
 					<span class="meta-sep">·</span>
 					<span>{$_('maintenance.tracker.next', { values: { info: nextInfo() } })}</span>
 				{/if}
@@ -219,11 +233,11 @@
 							<span class="history-dot"></span>
 							<span class="history-title">{tracker.template.name}</span>
 							<span class="history-meta">
-								{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
-									log.odometer_at_service,
-									vehicleUnit,
-									locale
-								)}
+							{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
+								log.measurement_at_service ?? log.odometer_at_service,
+								log.measurement_unit ?? vehicleUnit,
+								locale
+							)}
 								{#if log.cost_cents}
 									<span class="history-cost">
 										· {formatCurrency(log.cost_cents, log.currency, locale)}</span

@@ -46,6 +46,16 @@
 			? $_('maintenance.addTask.placeholders.hours')
 			: $_('maintenance.addTask.placeholders.km')
 	);
+	const intervalFieldLabel = $derived(
+		$_('maintenance.addTask.fields.intervalKm', {
+			values: { unit: data.vehicle.odometer_unit }
+		})
+	);
+	const trackerIntervalFieldLabel = $derived(
+		$_('maintenance.editTracker.fields.everyKm', {
+			values: { unit: data.vehicle.odometer_unit }
+		})
+	);
 
 	let loggingTracker = $state<string | null>(null);
 	let recentlyLoggedId = $state<string | null>(null);
@@ -657,11 +667,7 @@
 				/>
 			</label>
 			<label class="field">
-				<span class="field-label"
-					>{$_('maintenance.addTask.fields.intervalKm', {
-						values: { unit: data.vehicle.odometer_unit }
-					})}</span
-				>
+				<span class="field-label">{intervalFieldLabel}</span>
 				<input
 					name="interval_km"
 					type="number"
@@ -830,19 +836,15 @@
 										>
 										<div class="edit-row">
 											<label class="field">
-												<span class="field-label"
-													>{$_('maintenance.editTracker.fields.everyKm', {
-														values: { unit: data.vehicle.odometer_unit }
-													})}</span
-												>
-												<input
-													type="number"
-													name="interval_km"
-													min="1"
-											value={et.template.interval_km ?? ''}
-											placeholder={intervalPlaceholder}
-													class="input mono"
-												/>
+							<span class="field-label">{trackerIntervalFieldLabel}</span>
+							<input
+								type="number"
+								name="interval_km"
+								min="1"
+								value={et.template.interval_measurement ?? et.template.interval_km ?? ''}
+								placeholder={intervalPlaceholder}
+								class="input mono"
+							/>
 											</label>
 											<label class="field">
 												<span class="field-label"
@@ -878,14 +880,14 @@
 												<span class="field-label"
 											>{trackerMeasurementFieldLabel}</span
 										>
-												<input
-													type="number"
-													name="last_done_odometer"
-													min="0"
-													placeholder="e.g. 0"
-													value={et.last_done_odometer ?? ''}
-													class="input mono"
-												/>
+							<input
+								type="number"
+								name="last_done_odometer"
+								min="0"
+								placeholder="e.g. 0"
+								value={et.last_done_measurement ?? et.last_done_odometer ?? ''}
+								class="input mono"
+							/>
 											</label>
 										</div>
 									</div>
@@ -902,14 +904,14 @@
 												<span class="field-label"
 											>{trackerMeasurementFieldLabel}</span
 										>
-												<input
-													type="number"
-													name="next_due_odometer"
-													min="0"
-													value={et.next_due_odometer ?? ''}
-													placeholder="auto"
-													class="input mono"
-												/>
+							<input
+								type="number"
+								name="next_due_odometer"
+								min="0"
+								value={et.next_due_measurement ?? et.next_due_odometer ?? ''}
+								placeholder="auto"
+								class="input mono"
+							/>
 											</label>
 											<label class="field">
 												<span class="field-label">{$_('maintenance.editTracker.fields.date')}</span>
