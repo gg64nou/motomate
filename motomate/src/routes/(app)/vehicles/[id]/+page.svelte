@@ -30,7 +30,9 @@
 			? $_('vehicle.forms.fields.usage', { values: { unit } })
 			: $_('vehicle.forms.fields.odometer', { values: { unit } })
 	);
-	const currentReadingLabel = $derived($_('vehicle.forms.fields.currentReading', { values: { unit } }));
+	const currentReadingLabel = $derived(
+		$_('vehicle.forms.fields.currentReading', { values: { unit } })
+	);
 	const updateReadingTitle = $derived(
 		isHoursVehicle ? $_('vehicle.forms.updateUsage') : $_('vehicle.forms.updateOdo')
 	);
@@ -667,9 +669,7 @@
 					<input type="date" name="performed_at" value={today} class="input" required />
 				</label>
 				<label class="field">
-					<span class="field-label"
-						>{measurementFieldLabel}</span
-					>
+					<span class="field-label">{measurementFieldLabel}</span>
 					<input
 						type="number"
 						name="odometer_at_service"
@@ -900,9 +900,7 @@
 			{/if}
 			<div class="form-row">
 				<label class="field">
-					<span class="field-label"
-						>{currentReadingLabel}</span
-					>
+					<span class="field-label">{currentReadingLabel}</span>
 					<input
 						type="number"
 						name="odometer"
@@ -1095,7 +1093,9 @@
 											>{/if}
 									</div>
 									<div class="entry-meta">
-										<span class="mono">{formatMeasurement(log.odometer_at_service, unit, locale)}</span>
+										<span class="mono"
+											>{formatMeasurement(log.odometer_at_service, unit, locale)}</span
+										>
 										{#if log.cost_cents}
 											<span class="sep">·</span>
 											<span class="mono cost"
@@ -1185,9 +1185,7 @@
 												/>
 											</label>
 											<label class="field">
-												<span class="field-label"
-											>{measurementFieldLabel}</span
-										>
+												<span class="field-label">{measurementFieldLabel}</span>
 												<input
 													type="number"
 													name="odometer_at_service"
@@ -1620,7 +1618,7 @@
 								<div class="entry-icon" title={readingMenuLabel} aria-hidden="true"></div>
 								<div class="entry-body">
 									<div class="entry-title odo-title">
-									<span class="mono">{formatMeasurement(log.odometer, unit, locale)}</span>
+										<span class="mono">{formatMeasurement(log.odometer, unit, locale)}</span>
 										{#if log.remark}<span class="odo-note"> · {log.remark}</span>{/if}
 									</div>
 								</div>
@@ -1673,9 +1671,7 @@
 									<input type="hidden" name="id" value={log.id} />
 									<div class="form-row">
 										<label class="field">
-											<span class="field-label"
-											>{measurementFieldLabel}</span
-										>
+											<span class="field-label">{measurementFieldLabel}</span>
 											<input
 												type="number"
 												name="odometer"

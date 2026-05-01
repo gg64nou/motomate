@@ -73,7 +73,9 @@
 		isHoursVehicle ? $_('onboarding.odometer.hoursTitle') : $_('onboarding.odometer.title')
 	);
 	const currentReadingDescription = $derived(
-		isHoursVehicle ? $_('onboarding.odometer.hoursDescription') : $_('onboarding.odometer.description')
+		isHoursVehicle
+			? $_('onboarding.odometer.hoursDescription')
+			: $_('onboarding.odometer.description')
 	);
 	const lastServiceReadingLabel = $derived(
 		isHoursVehicle
@@ -277,29 +279,29 @@
 			{:else}
 				<div class="preset-list">
 					{#each presets as preset}
-					<label
-						class="preset-item"
-						class:preset-item--checked={selectedCategories.includes(preset.id)}
-					>
-						<input
-							type="checkbox"
-							checked={selectedCategories.includes(preset.id)}
-							onchange={() => toggleCategory(preset.id)}
-							class="sr-only"
-						/>
-						<span class="preset-check" aria-hidden="true"
-							>{selectedCategories.includes(preset.id) ? '✓' : '○'}</span
+						<label
+							class="preset-item"
+							class:preset-item--checked={selectedCategories.includes(preset.id)}
 						>
-						<span class="preset-icon" aria-hidden="true">{preset.icon}</span>
-						<div class="preset-text">
-							<span class="preset-label">{$_('onboarding.presets.tasks.' + preset.id)}</span>
-							<span class="preset-interval"
-								>{odometerUnit === 'h'
-									? (HOUR_INTERVAL_LABELS[preset.id] ?? $_('onboarding.presets.hoursEmpty'))
-									: $_('onboarding.presets.intervals.' + preset.id)}</span
+							<input
+								type="checkbox"
+								checked={selectedCategories.includes(preset.id)}
+								onchange={() => toggleCategory(preset.id)}
+								class="sr-only"
+							/>
+							<span class="preset-check" aria-hidden="true"
+								>{selectedCategories.includes(preset.id) ? '✓' : '○'}</span
 							>
-						</div>
-					</label>
+							<span class="preset-icon" aria-hidden="true">{preset.icon}</span>
+							<div class="preset-text">
+								<span class="preset-label">{$_('onboarding.presets.tasks.' + preset.id)}</span>
+								<span class="preset-interval"
+									>{odometerUnit === 'h'
+										? (HOUR_INTERVAL_LABELS[preset.id] ?? $_('onboarding.presets.hoursEmpty'))
+										: $_('onboarding.presets.intervals.' + preset.id)}</span
+								>
+							</div>
+						</label>
 					{/each}
 				</div>
 			{/if}

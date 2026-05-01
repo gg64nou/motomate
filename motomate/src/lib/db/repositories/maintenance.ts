@@ -436,7 +436,10 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 // Backwards compat
 export const PRESET_TEMPLATES = PRESET_TEMPLATES_BY_TYPE.motorcycle;
 
-export function getPresetsForType(type: string, measurementUnit: MeasurementUnit = DEFAULT_ODOMETER_UNIT) {
+export function getPresetsForType(
+	type: string,
+	measurementUnit: MeasurementUnit = DEFAULT_ODOMETER_UNIT
+) {
 	if (measurementUnit === 'h') {
 		return (
 			HOUR_PRESET_TEMPLATES_BY_TYPE[type as keyof typeof HOUR_PRESET_TEMPLATES_BY_TYPE] ??

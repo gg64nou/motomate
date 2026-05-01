@@ -233,11 +233,11 @@
 							<span class="history-dot"></span>
 							<span class="history-title">{tracker.template.name}</span>
 							<span class="history-meta">
-							{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
-								log.measurement_at_service ?? log.odometer_at_service,
-								log.measurement_unit ?? vehicleUnit,
-								locale
-							)}
+								{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
+									log.measurement_at_service ?? log.odometer_at_service,
+									log.measurement_unit ?? vehicleUnit,
+									locale
+								)}
 								{#if log.cost_cents}
 									<span class="history-cost">
 										· {formatCurrency(log.cost_cents, log.currency, locale)}</span

@@ -135,9 +135,13 @@
 							<div class="entry-meta">
 								<span>{vehicle.make} {vehicle.model} · {vehicle.year}</span>
 								<span class="sep">·</span>
-				<span class="mono"
-					>{formatMeasurement(vehicle.current_odometer, vehicle.odometer_unit, currentLocale)}</span
-				>
+								<span class="mono"
+									>{formatMeasurement(
+										vehicle.current_odometer,
+										vehicle.odometer_unit,
+										currentLocale
+									)}</span
+								>
 							</div>
 						</div>
 						{#if vStatus !== 'ok'}
@@ -168,13 +172,13 @@
 							<div class="entry-meta">
 								<span>{log.vehicle.name}</span>
 								<span class="sep">·</span>
-				<span class="mono"
-					>{formatMeasurement(
-						log.odometer_at_service,
-						log.vehicle.odometer_unit,
-						currentLocale
-					)}</span
-				>
+								<span class="mono"
+									>{formatMeasurement(
+										log.odometer_at_service,
+										log.vehicle.odometer_unit,
+										currentLocale
+									)}</span
+								>
 								{#if log.cost_cents}
 									<span class="sep">·</span>
 									<span class="mono cost"

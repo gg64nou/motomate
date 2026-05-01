@@ -557,9 +557,7 @@
 												/>
 											</label>
 											<label class="field">
-												<span class="field-label"
-											>{measurementFieldLabel}</span
-										>
+												<span class="field-label">{measurementFieldLabel}</span>
 												<input
 													type="number"
 													name="odometer_at_service"
@@ -836,15 +834,15 @@
 										>
 										<div class="edit-row">
 											<label class="field">
-							<span class="field-label">{trackerIntervalFieldLabel}</span>
-							<input
-								type="number"
-								name="interval_km"
-								min="1"
-								value={et.template.interval_measurement ?? et.template.interval_km ?? ''}
-								placeholder={intervalPlaceholder}
-								class="input mono"
-							/>
+												<span class="field-label">{trackerIntervalFieldLabel}</span>
+												<input
+													type="number"
+													name="interval_km"
+													min="1"
+													value={et.template.interval_measurement ?? et.template.interval_km ?? ''}
+													placeholder={intervalPlaceholder}
+													class="input mono"
+												/>
 											</label>
 											<label class="field">
 												<span class="field-label"
@@ -877,17 +875,15 @@
 												/>
 											</label>
 											<label class="field">
-												<span class="field-label"
-											>{trackerMeasurementFieldLabel}</span
-										>
-							<input
-								type="number"
-								name="last_done_odometer"
-								min="0"
-								placeholder="e.g. 0"
-								value={et.last_done_measurement ?? et.last_done_odometer ?? ''}
-								class="input mono"
-							/>
+												<span class="field-label">{trackerMeasurementFieldLabel}</span>
+												<input
+													type="number"
+													name="last_done_odometer"
+													min="0"
+													placeholder="e.g. 0"
+													value={et.last_done_measurement ?? et.last_done_odometer ?? ''}
+													class="input mono"
+												/>
 											</label>
 										</div>
 									</div>
@@ -901,17 +897,15 @@
 										>
 										<div class="edit-row">
 											<label class="field">
-												<span class="field-label"
-											>{trackerMeasurementFieldLabel}</span
-										>
-							<input
-								type="number"
-								name="next_due_odometer"
-								min="0"
-								value={et.next_due_measurement ?? et.next_due_odometer ?? ''}
-								placeholder="auto"
-								class="input mono"
-							/>
+												<span class="field-label">{trackerMeasurementFieldLabel}</span>
+												<input
+													type="number"
+													name="next_due_odometer"
+													min="0"
+													value={et.next_due_measurement ?? et.next_due_odometer ?? ''}
+													placeholder="auto"
+													class="input mono"
+												/>
 											</label>
 											<label class="field">
 												<span class="field-label">{$_('maintenance.editTracker.fields.date')}</span>
@@ -965,9 +959,7 @@
 									/>
 								</label>
 								<label class="field">
-									<span class="field-label"
-									>{measurementFieldLabel}</span
-								>
+									<span class="field-label">{measurementFieldLabel}</span>
 									<input
 										name="odometer_at_service"
 										type="number"
