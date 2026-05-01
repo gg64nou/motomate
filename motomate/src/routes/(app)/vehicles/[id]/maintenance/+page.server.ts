@@ -231,7 +231,8 @@ export const actions: Actions = {
 				locals.user!.id,
 				logs,
 				userLocale,
-				vehicle?.type ?? 'motorcycle'
+				vehicle?.type ?? 'motorcycle',
+				vehicle?.odometer_unit ?? 'km'
 			);
 			await recomputeTrackerStatuses(params.id, vehicle?.current_odometer ?? 0);
 			return { defaultsApplied: true };

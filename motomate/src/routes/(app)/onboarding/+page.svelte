@@ -48,9 +48,24 @@
 		bike: ['tire', 'chain_lube', 'brake', 'cable_check'],
 		other: ['oil', 'tire', 'brake', 'air_filter', 'battery']
 	};
+	const HOUR_PRESETS_BY_TYPE: Record<string, string[]> = {
+		motorcycle: ['oil', 'tire', 'chain_lube', 'chain_tension', 'brake'],
+		scooter: [],
+		bike: [],
+		other: ['oil', 'tire', 'chain_lube', 'chain_tension', 'brake']
+	};
+	const HOUR_INTERVAL_LABELS: Record<string, string> = {
+		oil: 'every 15 hours',
+		tire: 'every 3 hours',
+		chain_lube: 'every 3 hours',
+		chain_tension: 'every 3 hours',
+		brake: 'every 3 hours'
+	};
 
 	const presetKeys = $derived(
-		odometerUnit === 'h' ? [] : (PRESETS_BY_TYPE[vehicleType] ?? PRESETS_BY_TYPE.motorcycle)
+		odometerUnit === 'h'
+			? (HOUR_PRESETS_BY_TYPE[vehicleType] ?? HOUR_PRESETS_BY_TYPE.motorcycle)
+			: (PRESETS_BY_TYPE[vehicleType] ?? PRESETS_BY_TYPE.motorcycle)
 	);
 	const presets = $derived(presetKeys.map((id) => ({ id, icon: PRESET_ICONS[id] ?? '🔧' })));
 	const isHoursVehicle = $derived(odometerUnit === 'h');
@@ -278,7 +293,11 @@
 						<span class="preset-icon" aria-hidden="true">{preset.icon}</span>
 						<div class="preset-text">
 							<span class="preset-label">{$_('onboarding.presets.tasks.' + preset.id)}</span>
-							<span class="preset-interval">{$_('onboarding.presets.intervals.' + preset.id)}</span>
+							<span class="preset-interval"
+								>{odometerUnit === 'h'
+									? (HOUR_INTERVAL_LABELS[preset.id] ?? $_('onboarding.presets.hoursEmpty'))
+									: $_('onboarding.presets.intervals.' + preset.id)}</span
+							>
 						</div>
 					</label>
 					{/each}

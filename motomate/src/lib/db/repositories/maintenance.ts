@@ -344,10 +344,106 @@ export const PRESET_TEMPLATES_BY_TYPE = {
 	]
 };
 
+const HOUR_PRESET_TEMPLATES_BY_TYPE = {
+	motorcycle: [
+		{
+			key: 'oil',
+			name: 'Oil & Filter Change',
+			category: 'oil' as const,
+			description: 'Engine oil and oil filter replacement',
+			interval_km: 15,
+			interval_months: null
+		},
+		{
+			key: 'tire',
+			name: 'Tire Pressure & Wear Check',
+			category: 'tire' as const,
+			description: 'Check tyre pressure and inspect tread depth',
+			interval_km: 3,
+			interval_months: null
+		},
+		{
+			key: 'chain_lube',
+			name: 'Chain Clean & Lube',
+			category: 'chain' as const,
+			description: 'Clean and lubricate the chain',
+			interval_km: 3,
+			interval_months: null
+		},
+		{
+			key: 'chain_tension',
+			name: 'Chain Tension Check',
+			category: 'chain' as const,
+			description: 'Check and adjust chain tension',
+			interval_km: 3,
+			interval_months: null
+		},
+		{
+			key: 'brake',
+			name: 'Brake Pads & Fluid',
+			category: 'brake' as const,
+			description: 'Inspect brake pads and replace brake fluid',
+			interval_km: 3,
+			interval_months: null
+		}
+	],
+	scooter: [],
+	bike: [],
+	other: [
+		{
+			key: 'oil',
+			name: 'Oil & Filter Change',
+			category: 'oil' as const,
+			description: 'Engine oil and oil filter replacement',
+			interval_km: 15,
+			interval_months: null
+		},
+		{
+			key: 'tire',
+			name: 'Tire Pressure & Wear Check',
+			category: 'tire' as const,
+			description: 'Check tyre pressure and inspect tread depth',
+			interval_km: 3,
+			interval_months: null
+		},
+		{
+			key: 'chain_lube',
+			name: 'Chain Clean & Lube',
+			category: 'chain' as const,
+			description: 'Clean and lubricate the chain',
+			interval_km: 3,
+			interval_months: null
+		},
+		{
+			key: 'chain_tension',
+			name: 'Chain Tension Check',
+			category: 'chain' as const,
+			description: 'Check and adjust chain tension',
+			interval_km: 3,
+			interval_months: null
+		},
+		{
+			key: 'brake',
+			name: 'Brake Pads & Fluid',
+			category: 'brake' as const,
+			description: 'Inspect brake pads and replace brake fluid',
+			interval_km: 3,
+			interval_months: null
+		}
+	]
+} as const;
+
 // Backwards compat
 export const PRESET_TEMPLATES = PRESET_TEMPLATES_BY_TYPE.motorcycle;
 
-export function getPresetsForType(type: string) {
+export function getPresetsForType(type: string, measurementUnit: MeasurementUnit = DEFAULT_ODOMETER_UNIT) {
+	if (measurementUnit === 'h') {
+		return (
+			HOUR_PRESET_TEMPLATES_BY_TYPE[type as keyof typeof HOUR_PRESET_TEMPLATES_BY_TYPE] ??
+			HOUR_PRESET_TEMPLATES_BY_TYPE.motorcycle
+		);
+	}
+
 	return (
 		PRESET_TEMPLATES_BY_TYPE[type as keyof typeof PRESET_TEMPLATES_BY_TYPE] ??
 		PRESET_TEMPLATES_BY_TYPE.motorcycle
@@ -387,10 +483,11 @@ export async function seedPresetsForVehicle(
 	selectedKeys: string[] = ['oil', 'tire', 'chain_lube', 'chain_tension', 'brake'],
 	currentOdometer: number = 0,
 	nameMap: Record<string, { name: string; description?: string }> = {},
-	vehicleType: string = 'motorcycle'
+	vehicleType: string = 'motorcycle',
+	measurementUnit: MeasurementUnit = DEFAULT_ODOMETER_UNIT
 ): Promise<{ template: TaskTemplate; tracker: ActiveTracker }[]> {
 	const results = [];
-	for (const preset of getPresetsForType(vehicleType)) {
+	for (const preset of getPresetsForType(vehicleType, measurementUnit)) {
 		if (!selectedKeys.includes(preset.key)) continue;
 		const override = nameMap[preset.key];
 		const template = await createTaskTemplate(userId, {
@@ -483,14 +580,15 @@ export async function applyDefaultTrackersFromHistory(
 	userId: string,
 	serviceLogs: { performed_at: string; odometer_at_service: number }[],
 	locale?: string,
-	vehicleType: string = 'motorcycle'
+	vehicleType: string = 'motorcycle',
+	measurementUnit: MeasurementUnit = DEFAULT_ODOMETER_UNIT
 ): Promise<void> {
 	const userLocale = locale ?? 'en';
 	const messages = localeMessages[userLocale] ?? localeMessages['en'];
 	const tasks = messages.onboarding.presets.tasks as Record<string, string>;
 	const descs = messages.onboarding.presets.descriptions as Record<string, string>;
 
-	const vehiclePresets = getPresetsForType(vehicleType);
+	const vehiclePresets = getPresetsForType(vehicleType, measurementUnit);
 	const nameMap: Record<string, { name: string; description?: string }> = {};
 	for (const p of vehiclePresets) {
 		nameMap[p.key] = {
@@ -506,7 +604,8 @@ export async function applyDefaultTrackersFromHistory(
 			vehiclePresets.map((p) => p.key),
 			0,
 			nameMap,
-			vehicleType
+			vehicleType,
+			measurementUnit
 		);
 		return;
 	}

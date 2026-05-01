@@ -90,7 +90,8 @@ export const actions: Actions = {
 			categories,
 			0,
 			nameMap,
-			vehicleType
+			vehicleType,
+			odometerUnit
 		);
 
 		const lastServiceDate = String(data.last_service_date ?? '').trim();
