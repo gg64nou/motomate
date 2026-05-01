@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {
-		formatNumber,
+		formatMeasurement,
 		formatDateShort,
 		formatCurrency,
 		formatYearMonth
@@ -67,7 +67,7 @@
 	function formatInterval() {
 		const t = tracker.template;
 		const parts: string[] = [];
-		if (t.interval_km) parts.push(`${formatNumber(t.interval_km, locale)} ${vehicleUnit}`);
+		if (t.interval_km) parts.push(formatMeasurement(t.interval_km, vehicleUnit, locale));
 		if (t.interval_months) parts.push(`${t.interval_months} ${$_('common.months')}`);
 		const sep = ` ${$_('common.or')} `;
 		return parts.join(sep) || '—';
@@ -76,7 +76,7 @@
 	function nextInfo() {
 		const parts: string[] = [];
 		if (tracker.next_due_odometer)
-			parts.push(`${formatNumber(tracker.next_due_odometer, locale)} ${vehicleUnit}`);
+			parts.push(formatMeasurement(tracker.next_due_odometer, vehicleUnit, locale));
 		if (tracker.next_due_at) parts.push(formatDateShort(tracker.next_due_at, locale));
 		return parts.join(' · ') || $_('maintenance.tracker.notScheduled');
 	}
@@ -85,7 +85,7 @@
 		const parts: string[] = [];
 		if (tracker.last_done_at) parts.push(formatDateShort(tracker.last_done_at, locale));
 		if (tracker.last_done_odometer)
-			parts.push(`${formatNumber(tracker.last_done_odometer, locale)} ${vehicleUnit}`);
+			parts.push(formatMeasurement(tracker.last_done_odometer, vehicleUnit, locale));
 		return parts.join(' · ');
 	}
 
@@ -120,8 +120,7 @@
 						<span class="meta-sep">·</span>
 						<span class="forecast-info">
 							{$_('maintenance.forecast.estimated')}
-							{formatNumber(forecastData.odometer, locale)}
-							{vehicleUnit}
+							{formatMeasurement(forecastData.odometer, vehicleUnit, locale)}
 							{#if forecastData.monthsUntil !== null && forecastData.monthsUntil > 0}
 								<span class="forecast-when"
 									>· {$_('maintenance.forecast.inMonths', {
@@ -220,11 +219,11 @@
 							<span class="history-dot"></span>
 							<span class="history-title">{tracker.template.name}</span>
 							<span class="history-meta">
-								{formatDateShort(log.performed_at, locale)} · {formatNumber(
+								{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
 									log.odometer_at_service,
+									vehicleUnit,
 									locale
 								)}
-								{vehicleUnit}
 								{#if log.cost_cents}
 									<span class="history-cost">
 										· {formatCurrency(log.cost_cents, log.currency, locale)}</span

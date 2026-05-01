@@ -2,7 +2,6 @@ import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 import { sql, relations } from 'drizzle-orm';
 import {
 	DEFAULT_ODOMETER_UNIT,
-	DISTANCE_UNITS,
 	MEASUREMENT_UNITS,
 	type MeasurementUnit,
 	type OdometerUnit
@@ -150,7 +149,8 @@ export const vehicles = sqliteTable(
 			.$type<MeasurementUnit>()
 			.notNull()
 			.default(DEFAULT_ODOMETER_UNIT),
-		odometer_unit: text('odometer_unit', { enum: DISTANCE_UNITS })
+		odometer_unit: text('odometer_unit', { enum: MEASUREMENT_UNITS })
+			.$type<MeasurementUnit>()
 			.notNull()
 			.default(DEFAULT_ODOMETER_UNIT),
 		cover_image_key: text('cover_image_key'),

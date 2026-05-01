@@ -106,11 +106,14 @@
 		"odometer": {
 			"title": "Current odometer reading",
 			"description": "Sets the baseline for km-based maintenance intervals.",
+			"hoursTitle": "Current hour reading",
+			"hoursDescription": "Sets the baseline for hour-based maintenance intervals.",
 			"placeholder": "0"
 		},
 		"presets": {
 			"title": "Which maintenance tasks?",
 			"description": "We'll create trackers for these. You can add or remove them anytime.",
+			"hoursEmpty": "Hour-based vehicles start without distance presets. You can add hour intervals from Maintenance after setup.",
 			"tasks": {
 				"oil": "Oil & filter change",
 				"tire": "Tire pressure & wear",
@@ -143,6 +146,7 @@
 			"description": "Optional: helps calculate when the next service is due.",
 			"date": "Date",
 			"odometer": "Odometer at service",
+			"hoursReading": "Hours at service",
 			"skip": "Skip this step",
 			"setupNote": "Last service (entered during setup)"
 		},
@@ -248,11 +252,13 @@
 				"subtitle": "All your records for {name} in one place.",
 				"empty": {
 					"title": "No history yet",
-					"description": "Log your first service or odometer check-in to start the timeline."
+					"description": "Log your first service or odometer check-in to start the timeline.",
+					"usageDescription": "Log your first service or usage reading to start the timeline."
 				},
 				"filter": {
 					"service": "Maintenance",
 					"odometer": "Odometer",
+					"usage": "Usage",
 					"notes": "Notes",
 					"travels": "Travels",
 					"finance": "Finance"
@@ -271,7 +277,9 @@
 			"nextDueOdo": "Next: {reading} {unit}",
 			"serviceEntry": "Service entry",
 			"hideOdoReadings": "Hide odometer readings",
+			"hideUsageReadings": "Hide usage readings",
 			"showMoreOdoReadings": "Show {n} more odometer readings",
+			"showMoreUsageReadings": "Show {n} more usage readings",
 			"deleteDialog": {
 				"title": "Delete this entry?",
 				"description": "This entry will be permanently removed from your timeline. This action cannot be undone.",
@@ -282,12 +290,14 @@
 		"forms": {
 			"logService": "Log service entry",
 			"updateOdo": "Update odometer",
+			"updateUsage": "Update usage",
 			"writeNote": "Write a note",
 			"noteDesc": "Write a note or remark",
 			"editEntry": "Edit entry",
 			"fields": {
 				"date": "Date",
 				"odometer": "Odometer ({unit})",
+				"usage": "Usage reading ({unit})",
 				"description": "Description",
 				"remark": "Remark {optional}",
 				"cost": "Cost {optional}",
@@ -331,8 +341,14 @@
 			"subtitle": "Manage your {name}",
 			"odometer": {
 				"title": "Update odometer",
+				"usageTitle": "Update usage",
 				"currentReading": "Current reading ({unit})",
+				"currentUsage": "Current usage ({unit})",
 				"update": "Update"
+			},
+			"measurementUnit": {
+				"title": "Measurement unit",
+				"locked": "Locked after creation"
 			},
 			"vehicleDetails": "Vehicle details",
 			"fields": {
@@ -349,6 +365,7 @@
 			"save": "Save changes",
 			"saved": "Changes saved",
 			"odometerUpdated": "Odometer updated",
+			"usageUpdated": "Usage updated",
 			"vehicleRestored": "Vehicle restored",
 			"settings": {
 				"title": "Settings",
@@ -495,6 +512,7 @@
 			"placeholders": {
 				"name": "e.g. Oil change",
 				"km": "e.g. 5000",
+				"hours": "e.g. 100",
 				"months": "e.g. 12"
 			},
 			"submit": "Add task"
@@ -533,6 +551,7 @@
 				"everyMonths": "Every (months)",
 				"date": "Date",
 				"odometer": "Odometer ({unit})",
+				"usage": "Usage reading ({unit})",
 				"autoCompute": "— leave empty to auto-compute"
 			},
 			"submit": "Save changes"
@@ -608,6 +627,7 @@
 			"amount": "Amount ({currency})",
 			"date": "Date",
 			"odometer": "Odometer ({unit})",
+			"usage": "Usage reading ({unit})",
 			"odometerOptional": "Optional",
 			"notes": "Notes",
 			"notesPlaceholder": "Additional details"
@@ -925,13 +945,16 @@
 			"maintenanceDesc": "Oil, tires, or repairs",
 			"mileage": "Mileage",
 			"mileageDesc": "Number on your dash",
+			"usage": "Usage",
+			"usageDesc": "Hours or reading on your meter",
 			"finance": "Finance",
 			"financeDesc": "Fuel, insurance, or parts"
 		}
 	},
 	"units": {
 		"km": "km",
-		"mi": "mi"
+		"mi": "mi",
+		"hours": "hours"
 	},
 	"currency": {
 		"eur": "€ Euro",

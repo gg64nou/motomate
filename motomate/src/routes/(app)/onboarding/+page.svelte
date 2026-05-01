@@ -2,9 +2,9 @@
 	import { _ } from '$lib/i18n';
 	import {
 		DEFAULT_ODOMETER_UNIT,
-		DISTANCE_UNITS,
-		getDistanceUnitTranslationKey,
-		type DistanceUnit
+		MEASUREMENT_UNITS,
+		getMeasurementUnitTranslationKey,
+		type MeasurementUnit
 	} from '$lib/utils/measurement.js';
 
 	let { data: _data, form: _form } = $props<{
@@ -25,7 +25,7 @@
 	let vin = $state('');
 	let licensePlate = $state('');
 	let odometer = $state(0);
-	let odometerUnit = $state<DistanceUnit>(DEFAULT_ODOMETER_UNIT);
+	let odometerUnit = $state<MeasurementUnit>(DEFAULT_ODOMETER_UNIT);
 	let selectedCategories = $state(['oil', 'tire', 'chain_lube', 'chain_tension', 'brake']);
 	let lastServiceDate = $state('');
 	let lastServiceOdo = $state('');
@@ -49,8 +49,22 @@
 		other: ['oil', 'tire', 'brake', 'air_filter', 'battery']
 	};
 
-	const presetKeys = $derived(PRESETS_BY_TYPE[vehicleType] ?? PRESETS_BY_TYPE.motorcycle);
+	const presetKeys = $derived(
+		odometerUnit === 'h' ? [] : (PRESETS_BY_TYPE[vehicleType] ?? PRESETS_BY_TYPE.motorcycle)
+	);
 	const presets = $derived(presetKeys.map((id) => ({ id, icon: PRESET_ICONS[id] ?? '🔧' })));
+	const isHoursVehicle = $derived(odometerUnit === 'h');
+	const currentReadingTitle = $derived(
+		isHoursVehicle ? $_('onboarding.odometer.hoursTitle') : $_('onboarding.odometer.title')
+	);
+	const currentReadingDescription = $derived(
+		isHoursVehicle ? $_('onboarding.odometer.hoursDescription') : $_('onboarding.odometer.description')
+	);
+	const lastServiceReadingLabel = $derived(
+		isHoursVehicle
+			? $_('onboarding.lastService.hoursReading')
+			: $_('onboarding.lastService.odometer')
+	);
 
 	// Reset selection when vehicle type changes
 	$effect(() => {
@@ -214,8 +228,8 @@
 
 			<!-- ── Step 4: Odometer ── -->
 		{:else if step === 4}
-			<h2 class="step-title">{$_('onboarding.odometer.title')}</h2>
-			<p class="step-desc">{$_('onboarding.odometer.description')}</p>
+			<h2 class="step-title">{currentReadingTitle}</h2>
+			<p class="step-desc">{currentReadingDescription}</p>
 			<div class="odo-input-row">
 				<input
 					bind:value={odometer}
@@ -225,13 +239,13 @@
 					placeholder={$_('onboarding.odometer.placeholder')}
 				/>
 				<div class="unit-toggle">
-					{#each DISTANCE_UNITS as unit}
+					{#each MEASUREMENT_UNITS as unit}
 						<button
 							class="unit-btn"
 							class:unit-btn--active={odometerUnit === unit}
 							onclick={() => (odometerUnit = unit)}
 						>
-							{$_(getDistanceUnitTranslationKey(unit))}
+							{$_(getMeasurementUnitTranslationKey(unit))}
 						</button>
 					{/each}
 				</div>
@@ -241,8 +255,13 @@
 		{:else if step === 5}
 			<h2 class="step-title">{$_('onboarding.presets.title')}</h2>
 			<p class="step-desc">{$_('onboarding.presets.description')}</p>
-			<div class="preset-list">
-				{#each presets as preset}
+			{#if presets.length === 0}
+				<div class="empty-presets">
+					<p class="step-desc">{$_('onboarding.presets.hoursEmpty')}</p>
+				</div>
+			{:else}
+				<div class="preset-list">
+					{#each presets as preset}
 					<label
 						class="preset-item"
 						class:preset-item--checked={selectedCategories.includes(preset.id)}
@@ -262,8 +281,9 @@
 							<span class="preset-interval">{$_('onboarding.presets.intervals.' + preset.id)}</span>
 						</div>
 					</label>
-				{/each}
-			</div>
+					{/each}
+				</div>
+			{/if}
 
 			<!-- ── Step 6: Last oil change (optional) ── -->
 		{:else if step === 6}
@@ -280,7 +300,7 @@
 					/>
 				</label>
 				<label class="field">
-					<span class="field-label">Odometer at service</span>
+					<span class="field-label">{lastServiceReadingLabel}</span>
 					<input
 						bind:value={lastServiceOdo}
 						type="number"

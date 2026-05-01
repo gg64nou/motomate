@@ -1,7 +1,12 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import AttentionCard from '$lib/components/ui/AttentionCard.svelte';
-	import { formatCurrency, formatDateShort, formatNumber } from '$lib/utils/format.js';
+	import {
+		formatCurrency,
+		formatDateShort,
+		formatMeasurement,
+		formatNumber
+	} from '$lib/utils/format.js';
 	import { _ } from '$lib/i18n';
 
 	let { data } = $props<{ data: PageData }>();
@@ -130,10 +135,9 @@
 							<div class="entry-meta">
 								<span>{vehicle.make} {vehicle.model} · {vehicle.year}</span>
 								<span class="sep">·</span>
-								<span class="mono"
-									>{formatNumber(vehicle.current_odometer, currentLocale)}
-									{vehicle.odometer_unit}</span
-								>
+				<span class="mono"
+					>{formatMeasurement(vehicle.current_odometer, vehicle.odometer_unit, currentLocale)}</span
+				>
 							</div>
 						</div>
 						{#if vStatus !== 'ok'}
@@ -164,10 +168,13 @@
 							<div class="entry-meta">
 								<span>{log.vehicle.name}</span>
 								<span class="sep">·</span>
-								<span class="mono"
-									>{formatNumber(log.odometer_at_service, currentLocale)}
-									{log.vehicle.odometer_unit}</span
-								>
+				<span class="mono"
+					>{formatMeasurement(
+						log.odometer_at_service,
+						log.vehicle.odometer_unit,
+						currentLocale
+					)}</span
+				>
 								{#if log.cost_cents}
 									<span class="sep">·</span>
 									<span class="mono cost"

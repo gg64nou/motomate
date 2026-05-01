@@ -4,7 +4,7 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { replaceState, beforeNavigate } from '$app/navigation';
-	import { formatCurrency, formatDateShort, formatNumber } from '$lib/utils/format.js';
+	import { formatCurrency, formatDateShort, formatMeasurement } from '$lib/utils/format.js';
 	import { toasts } from '$lib/stores/toasts.js';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { _, waitLocale } from '$lib/i18n';
@@ -54,6 +54,12 @@
 
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
 	const currency = $derived(data.currency || 'EUR');
+	const isHoursVehicle = $derived(data.vehicle.odometer_unit === 'h');
+	const measurementFieldLabel = $derived(
+		isHoursVehicle
+			? $_('finance.form.usage', { values: { unit: data.vehicle.odometer_unit } })
+			: $_('finance.form.odometer', { values: { unit: data.vehicle.odometer_unit } })
+	);
 
 	// Grouping state
 	let groupBy = $state<'category' | 'year' | 'description' | 'none'>(
@@ -388,9 +394,7 @@
 					</label>
 
 					<label class="field">
-						<span class="field-label"
-							>{$_('finance.form.odometer', { values: { unit: data.vehicle.odometer_unit } })}</span
-						>
+						<span class="field-label">{measurementFieldLabel}</span>
 						<input
 							type="number"
 							name="odometer"
@@ -609,9 +613,7 @@
 					</label>
 
 					<label class="field">
-						<span class="field-label"
-							>{$_('finance.form.odometer', { values: { unit: data.vehicle.odometer_unit } })}</span
-						>
+						<span class="field-label">{measurementFieldLabel}</span>
 						<input
 							type="number"
 							name="odometer"
@@ -917,7 +919,7 @@
 								{#if tx.odometer}
 									<span class="sep">·</span>
 									<span class="mono"
-										>{formatNumber(tx.odometer, locale)} {data.vehicle.odometer_unit}</span
+										>{formatMeasurement(tx.odometer, data.vehicle.odometer_unit, locale)}</span
 									>
 								{/if}
 								<span class="sep">·</span>
@@ -1040,11 +1042,7 @@
 										<input type="date" name="date" bind:value={editDate} class="input" required />
 									</label>
 									<label class="field">
-										<span class="field-label"
-											>{$_('finance.form.odometer', {
-												values: { unit: data.vehicle.odometer_unit }
-											})}</span
-										>
+										<span class="field-label">{measurementFieldLabel}</span>
 										<input
 											type="number"
 											name="odometer"

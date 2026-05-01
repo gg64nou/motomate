@@ -3,7 +3,6 @@ import {
 	DEFAULT_ODOMETER_UNIT,
 	areMeasurementsComparable,
 	compareMeasurements,
-	getMeasurementBasis,
 	isDistanceUnit,
 	resolveMeasurementValue,
 	type DistanceUnit,

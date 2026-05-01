@@ -897,7 +897,8 @@
 	},
 	"units": {
 		"km": "km",
-		"mi": "mi"
+		"mi": "mi",
+		"hours": "hours"
 	},
 	"currency": {
 		"eur": "€ Euro",

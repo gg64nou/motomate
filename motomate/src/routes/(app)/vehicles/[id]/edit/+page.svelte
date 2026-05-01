@@ -6,6 +6,7 @@
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import { toasts } from '$lib/stores/toasts.js';
 	import { _, waitLocale } from '$lib/i18n';
+	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
 
 	let {
 		data,
@@ -56,6 +57,25 @@
 	// Odometer state
 	let odometerInput = $state<number>(untrack(() => data.vehicle.current_odometer));
 	const odometerChanged = $derived(odometerInput !== data.vehicle.current_odometer);
+	const vehicleMeasurementUnitLabel = $derived(
+		$_(getMeasurementUnitTranslationKey(data.vehicle.odometer_unit))
+	);
+	const isHoursVehicle = $derived(data.vehicle.odometer_unit === 'h');
+	const updateReadingTitle = $derived(
+		isHoursVehicle ? $_('vehicle.edit.odometer.usageTitle') : $_('vehicle.edit.odometer.title')
+	);
+	const currentReadingLabel = $derived(
+		isHoursVehicle
+			? $_('vehicle.edit.odometer.currentUsage', {
+					values: { unit: data.vehicle.odometer_unit }
+				})
+			: $_('vehicle.edit.odometer.currentReading', {
+					values: { unit: vehicleMeasurementUnitLabel }
+				})
+	);
+	const readingUpdatedToast = $derived(
+		isHoursVehicle ? $_('vehicle.edit.usageUpdated') : $_('vehicle.edit.odometerUpdated')
+	);
 
 	let purchasePrice = $state<string>(
 		untrack(() =>
@@ -104,7 +124,7 @@
 <div class="edit-page">
 	<!-- Odometer quick-update -->
 	<section class="edit-section">
-		<h2 class="section-label">{$_('vehicle.edit.odometer.title')}</h2>
+		<h2 class="section-label">{updateReadingTitle}</h2>
 		<form
 			method="POST"
 			action="?/odometer"
@@ -112,7 +132,7 @@
 				return async ({ result, update }) => {
 					await update({ reset: false });
 					if (result.type === 'success') {
-						toasts.success($_('vehicle.edit.odometerUpdated'));
+						toasts.success(readingUpdatedToast);
 					} else if (result.type === 'failure' && (result.data as any)?.error) {
 						toasts.error((result.data as any).error);
 					}
@@ -121,11 +141,7 @@
 			class="inline-form"
 		>
 			<label class="field">
-				<span class="field-label"
-					>{$_('vehicle.edit.odometer.currentReading', {
-						values: { unit: data.vehicle.odometer_unit }
-					})}</span
-				>
+				<span class="field-label">{currentReadingLabel}</span>
 				<input
 					name="odometer"
 					type="number"
@@ -167,6 +183,15 @@
 			}}
 			class="details-form"
 		>
+			<div class="settings-box">
+				<div>
+					<div class="settings-title">{$_('vehicle.edit.measurementUnit.title')}</div>
+					<div class="settings-desc">
+						{vehicleMeasurementUnitLabel} · {$_('vehicle.edit.measurementUnit.locked')}
+					</div>
+				</div>
+			</div>
+
 			<div class="form-grid">
 				<label class="field">
 					<span class="field-label"
