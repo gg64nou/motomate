@@ -261,7 +261,7 @@
 		color: var(--text);
 		font-size: var(--text-md);
 		font-family: var(--font-sans);
-		min-height: 48px;
+		height: 48px;
 		width: 100%;
 		box-sizing: border-box;
 	}

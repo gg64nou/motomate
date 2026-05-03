@@ -6,6 +6,7 @@
 		formatYearMonth
 	} from '$lib/utils/format';
 	import { _, waitLocale } from '$lib/i18n';
+	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement';
 
 	type ServiceLog = {
 		id: string;
@@ -74,11 +75,17 @@
 		waitLocale();
 	});
 
+	import type { MeasurementUnit } from '$lib/utils/measurement';
+
+	function tl(unit: string) {
+		return $_(getMeasurementUnitTranslationKey(unit as MeasurementUnit));
+	}
+
 	function formatInterval() {
 		const t = tracker.template;
 		const parts: string[] = [];
 		const intervalValue = t.interval_measurement ?? t.interval_km;
-		const intervalUnit = t.interval_unit ?? vehicleUnit;
+		const intervalUnit = tl(t.interval_unit ?? vehicleUnit);
 		if (intervalValue) parts.push(formatMeasurement(intervalValue, intervalUnit, locale));
 		if (t.interval_months) parts.push(`${t.interval_months} ${$_('common.months')}`);
 		const sep = ` ${$_('common.or')} `;
@@ -88,7 +95,7 @@
 	function nextInfo() {
 		const parts: string[] = [];
 		const nextDueValue = tracker.next_due_measurement ?? tracker.next_due_odometer;
-		const nextDueUnit = tracker.template.interval_unit ?? vehicleUnit;
+		const nextDueUnit = tl(tracker.template.interval_unit ?? vehicleUnit);
 		if (nextDueValue) parts.push(formatMeasurement(nextDueValue, nextDueUnit, locale));
 		if (tracker.next_due_at) parts.push(formatDateShort(tracker.next_due_at, locale));
 		return parts.join(' · ') || $_('maintenance.tracker.notScheduled');
@@ -98,7 +105,7 @@
 		const parts: string[] = [];
 		if (tracker.last_done_at) parts.push(formatDateShort(tracker.last_done_at, locale));
 		const lastDoneValue = tracker.last_done_measurement ?? tracker.last_done_odometer;
-		const lastDoneUnit = tracker.template.interval_unit ?? vehicleUnit;
+		const lastDoneUnit = tl(tracker.template.interval_unit ?? vehicleUnit);
 		if (lastDoneValue) parts.push(formatMeasurement(lastDoneValue, lastDoneUnit, locale));
 		return parts.join(' · ');
 	}
@@ -134,7 +141,7 @@
 						<span class="meta-sep">·</span>
 						<span class="forecast-info">
 							{$_('maintenance.forecast.estimated')}
-							{formatMeasurement(forecastData.odometer, vehicleUnit, locale)}
+							{formatMeasurement(forecastData.odometer, tl(vehicleUnit), locale)}
 							{#if forecastData.monthsUntil !== null && forecastData.monthsUntil > 0}
 								<span class="forecast-when"
 									>· {$_('maintenance.forecast.inMonths', {
@@ -235,7 +242,7 @@
 							<span class="history-meta">
 								{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
 									log.measurement_at_service ?? log.odometer_at_service,
-									log.measurement_unit ?? vehicleUnit,
+									tl(log.measurement_unit ?? vehicleUnit),
 									locale
 								)}
 								{#if log.cost_cents}

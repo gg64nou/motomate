@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { _ } from '$lib/i18n';
+	import { _, locale } from '$lib/i18n';
+	import { formatNumber } from '$lib/utils/format.js';
 	import {
 		DEFAULT_ODOMETER_UNIT,
 		MEASUREMENT_UNITS,
@@ -53,13 +54,6 @@
 		scooter: [],
 		bike: [],
 		other: ['oil', 'tire', 'chain_lube', 'chain_tension', 'brake']
-	};
-	const HOUR_INTERVAL_LABELS: Record<string, string> = {
-		oil: 'every 15 hours',
-		tire: 'every 3 hours',
-		chain_lube: 'every 3 hours',
-		chain_tension: 'every 3 hours',
-		brake: 'every 3 hours'
 	};
 
 	const presetKeys = $derived(
@@ -274,7 +268,8 @@
 			<p class="step-desc">{$_('onboarding.presets.description')}</p>
 			{#if presets.length === 0}
 				<div class="empty-presets">
-					<p class="step-desc">{$_('onboarding.presets.hoursEmpty')}</p>
+					<span class="empty-presets-icon" aria-hidden="true">⏱</span>
+					<p class="empty-presets-desc">{$_('onboarding.presets.hoursEmpty')}</p>
 				</div>
 			{:else}
 				<div class="preset-list">
@@ -297,7 +292,7 @@
 								<span class="preset-label">{$_('onboarding.presets.tasks.' + preset.id)}</span>
 								<span class="preset-interval"
 									>{odometerUnit === 'h'
-										? (HOUR_INTERVAL_LABELS[preset.id] ?? $_('onboarding.presets.hoursEmpty'))
+										? $_('onboarding.presets.hourIntervals.' + preset.id)
 										: $_('onboarding.presets.intervals.' + preset.id)}</span
 								>
 							</div>
@@ -355,7 +350,7 @@
 						</div>
 					</div>
 					<div class="summary-odo">
-						<span class="summary-odo-val">{odometer.toLocaleString()}</span>
+						<span class="summary-odo-val">{formatNumber(odometer, $locale ?? 'en')}</span>
 						<span class="summary-odo-unit">{odometerUnit}</span>
 					</div>
 					<div class="summary-presets">
@@ -595,10 +590,21 @@
 		padding: 0.5rem 0.875rem;
 		background: var(--bg-subtle);
 		border: none;
+		border-right: 1px solid var(--border);
 		cursor: pointer;
-		font-size: 0.875rem;
+		font-size: var(--text-sm);
 		font-weight: 500;
 		color: var(--text-muted);
+		transition:
+			background-color 0.15s ease,
+			color 0.15s ease;
+	}
+	.unit-btn:last-child {
+		border-right: none;
+	}
+	.unit-btn:hover:not(.unit-btn--active) {
+		background: var(--bg-muted);
+		color: var(--text);
 	}
 	.unit-btn--active {
 		background: var(--accent);
@@ -606,6 +612,25 @@
 	}
 
 	/* Presets */
+	.empty-presets {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-3);
+		padding: var(--space-7) var(--space-4);
+		text-align: center;
+	}
+	.empty-presets-icon {
+		font-size: 2.5rem;
+		line-height: 1;
+	}
+	.empty-presets-desc {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		line-height: var(--leading-base);
+		max-width: 32ch;
+		margin: 0;
+	}
 	.preset-list {
 		display: flex;
 		flex-direction: column;

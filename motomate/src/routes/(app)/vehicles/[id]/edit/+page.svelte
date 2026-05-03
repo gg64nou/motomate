@@ -61,13 +61,18 @@
 		$_(getMeasurementUnitTranslationKey(data.vehicle.odometer_unit))
 	);
 	const isHoursVehicle = $derived(data.vehicle.odometer_unit === 'h');
+	const vehicleUnitTitle = $derived(
+		isHoursVehicle
+			? vehicleMeasurementUnitLabel.charAt(0).toUpperCase() + vehicleMeasurementUnitLabel.slice(1)
+			: vehicleMeasurementUnitLabel
+	);
 	const updateReadingTitle = $derived(
 		isHoursVehicle ? $_('vehicle.edit.odometer.usageTitle') : $_('vehicle.edit.odometer.title')
 	);
 	const currentReadingLabel = $derived(
 		isHoursVehicle
 			? $_('vehicle.edit.odometer.currentUsage', {
-					values: { unit: data.vehicle.odometer_unit }
+					values: { unit: vehicleMeasurementUnitLabel }
 				})
 			: $_('vehicle.edit.odometer.currentReading', {
 					values: { unit: vehicleMeasurementUnitLabel }
@@ -183,15 +188,6 @@
 			}}
 			class="details-form"
 		>
-			<div class="settings-box">
-				<div>
-					<div class="settings-title">{$_('vehicle.edit.measurementUnit.title')}</div>
-					<div class="settings-desc">
-						{vehicleMeasurementUnitLabel} · {$_('vehicle.edit.measurementUnit.locked')}
-					</div>
-				</div>
-			</div>
-
 			<div class="form-grid">
 				<label class="field">
 					<span class="field-label"
@@ -352,6 +348,19 @@
 					{$_('vehicle.edit.settings.archive.btnArchive')}
 				</button>
 			{/if}
+		</div>
+	</section>
+
+	<div class="divider"></div>
+
+	<!-- Measurement unit -->
+	<section class="edit-section">
+		<h2 class="section-label">{$_('vehicle.edit.measurementUnit.title')}</h2>
+		<div class="settings-box">
+			<div>
+				<div class="settings-title">{vehicleUnitTitle}</div>
+				<div class="settings-desc">{$_('vehicle.edit.measurementUnit.locked')}</div>
+			</div>
 		</div>
 	</section>
 

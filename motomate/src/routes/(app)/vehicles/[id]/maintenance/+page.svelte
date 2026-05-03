@@ -14,6 +14,7 @@
 		formatCurrency,
 		formatYearMonth
 	} from '$lib/utils/format.js';
+	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
 
 	let {
 		data,
@@ -29,17 +30,16 @@
 
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
 	const isHoursVehicle = $derived(data.vehicle.odometer_unit === 'h');
+	const unitLabel = $derived($_(getMeasurementUnitTranslationKey(data.vehicle.odometer_unit)));
 	const measurementFieldLabel = $derived(
 		isHoursVehicle
-			? $_('vehicle.forms.fields.usage', { values: { unit: data.vehicle.odometer_unit } })
-			: $_('vehicle.forms.fields.odometer', { values: { unit: data.vehicle.odometer_unit } })
+			? $_('vehicle.forms.fields.usage', { values: { unit: unitLabel } })
+			: $_('vehicle.forms.fields.odometer', { values: { unit: unitLabel } })
 	);
 	const trackerMeasurementFieldLabel = $derived(
 		isHoursVehicle
-			? $_('maintenance.editTracker.fields.usage', { values: { unit: data.vehicle.odometer_unit } })
-			: $_('maintenance.editTracker.fields.odometer', {
-					values: { unit: data.vehicle.odometer_unit }
-				})
+			? $_('maintenance.editTracker.fields.usage', { values: { unit: unitLabel } })
+			: $_('maintenance.editTracker.fields.odometer', { values: { unit: unitLabel } })
 	);
 	const intervalPlaceholder = $derived(
 		isHoursVehicle
@@ -47,14 +47,10 @@
 			: $_('maintenance.addTask.placeholders.km')
 	);
 	const intervalFieldLabel = $derived(
-		$_('maintenance.addTask.fields.intervalKm', {
-			values: { unit: data.vehicle.odometer_unit }
-		})
+		$_('maintenance.addTask.fields.intervalKm', { values: { unit: unitLabel } })
 	);
 	const trackerIntervalFieldLabel = $derived(
-		$_('maintenance.editTracker.fields.everyKm', {
-			values: { unit: data.vehicle.odometer_unit }
-		})
+		$_('maintenance.editTracker.fields.everyKm', { values: { unit: unitLabel } })
 	);
 
 	let loggingTracker = $state<string | null>(null);

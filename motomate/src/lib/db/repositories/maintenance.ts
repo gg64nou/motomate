@@ -359,7 +359,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Tire Pressure & Wear Check',
 			category: 'tire' as const,
 			description: 'Check tyre pressure and inspect tread depth',
-			interval_km: 3,
+			interval_km: 20,
 			interval_months: null
 		},
 		{
@@ -367,7 +367,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Chain Clean & Lube',
 			category: 'chain' as const,
 			description: 'Clean and lubricate the chain',
-			interval_km: 3,
+			interval_km: 5,
 			interval_months: null
 		},
 		{
@@ -375,7 +375,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Chain Tension Check',
 			category: 'chain' as const,
 			description: 'Check and adjust chain tension',
-			interval_km: 3,
+			interval_km: 10,
 			interval_months: null
 		},
 		{
@@ -383,7 +383,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Brake Pads & Fluid',
 			category: 'brake' as const,
 			description: 'Inspect brake pads and replace brake fluid',
-			interval_km: 3,
+			interval_km: 25,
 			interval_months: null
 		}
 	],
@@ -403,7 +403,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Tire Pressure & Wear Check',
 			category: 'tire' as const,
 			description: 'Check tyre pressure and inspect tread depth',
-			interval_km: 3,
+			interval_km: 20,
 			interval_months: null
 		},
 		{
@@ -411,7 +411,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Chain Clean & Lube',
 			category: 'chain' as const,
 			description: 'Clean and lubricate the chain',
-			interval_km: 3,
+			interval_km: 5,
 			interval_months: null
 		},
 		{
@@ -419,7 +419,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Chain Tension Check',
 			category: 'chain' as const,
 			description: 'Check and adjust chain tension',
-			interval_km: 3,
+			interval_km: 10,
 			interval_months: null
 		},
 		{
@@ -427,7 +427,7 @@ const HOUR_PRESET_TEMPLATES_BY_TYPE = {
 			name: 'Brake Pads & Fluid',
 			category: 'brake' as const,
 			description: 'Inspect brake pads and replace brake fluid',
-			interval_km: 3,
+			interval_km: 25,
 			interval_months: null
 		}
 	]

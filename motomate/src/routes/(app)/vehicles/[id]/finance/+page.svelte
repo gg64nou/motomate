@@ -5,6 +5,7 @@
 	import { page } from '$app/stores';
 	import { replaceState, beforeNavigate } from '$app/navigation';
 	import { formatCurrency, formatDateShort, formatMeasurement } from '$lib/utils/format.js';
+	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
 	import { toasts } from '$lib/stores/toasts.js';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { _, waitLocale } from '$lib/i18n';
@@ -55,10 +56,11 @@
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
 	const currency = $derived(data.currency || 'EUR');
 	const isHoursVehicle = $derived(data.vehicle.odometer_unit === 'h');
+	const unitLabel = $derived($_(getMeasurementUnitTranslationKey(data.vehicle.odometer_unit)));
 	const measurementFieldLabel = $derived(
 		isHoursVehicle
-			? $_('finance.form.usage', { values: { unit: data.vehicle.odometer_unit } })
-			: $_('finance.form.odometer', { values: { unit: data.vehicle.odometer_unit } })
+			? $_('finance.form.usage', { values: { unit: unitLabel } })
+			: $_('finance.form.odometer', { values: { unit: unitLabel } })
 	);
 
 	// Grouping state

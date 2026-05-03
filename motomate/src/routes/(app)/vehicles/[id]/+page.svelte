@@ -15,6 +15,7 @@
 		formatMeasurement,
 		formatCurrency
 	} from '$lib/utils/format.js';
+	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
 
 	let { data, form }: { data: PageData; form: Record<string, unknown> | null } = $props();
 
@@ -25,13 +26,14 @@
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
 	const unit = $derived(data.vehicle.odometer_unit);
 	const isHoursVehicle = $derived(unit === 'h');
+	const unitLabel = $derived($_(getMeasurementUnitTranslationKey(unit)));
 	const measurementFieldLabel = $derived(
 		isHoursVehicle
-			? $_('vehicle.forms.fields.usage', { values: { unit } })
-			: $_('vehicle.forms.fields.odometer', { values: { unit } })
+			? $_('vehicle.forms.fields.usage', { values: { unit: unitLabel } })
+			: $_('vehicle.forms.fields.odometer', { values: { unit: unitLabel } })
 	);
 	const currentReadingLabel = $derived(
-		$_('vehicle.forms.fields.currentReading', { values: { unit } })
+		$_('vehicle.forms.fields.currentReading', { values: { unit: unitLabel } })
 	);
 	const updateReadingTitle = $derived(
 		isHoursVehicle ? $_('vehicle.forms.updateUsage') : $_('vehicle.forms.updateOdo')

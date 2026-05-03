@@ -105,7 +105,9 @@
 		"odometer": {
 			"title": "Huidige kilometerstand",
 			"description": "Stelt de basis in voor kilometer-gebaseerde onderhoudsintervallen.",
-			"placeholder": "0"
+			"placeholder": "0",
+			"hoursTitle": "Huidige uurmeterstand",
+			"hoursDescription": "Stelt de basis in voor urengebaseerde onderhoudsintervallen."
 		},
 		"presets": {
 			"title": "Welke onderhoudstaken?",
@@ -135,6 +137,14 @@
 			"descriptions": {
 				"chain_lube": "Ketting reinigen en smeren",
 				"chain_tension": "Kettingspanning controleren en afstellen"
+			},
+			"hoursEmpty": "Urenbasis-voertuigen starten zonder afstandspresets. Je kunt uurintervallen toevoegen via Onderhoud na de installatie.",
+			"hourIntervals": {
+				"oil": "elke 15 u",
+				"tire": "elke 20 u",
+				"chain_lube": "elke 5 u",
+				"chain_tension": "elke 10 u",
+				"brake": "elke 25 u"
 			}
 		},
 		"lastService": {
@@ -143,7 +153,8 @@
 			"date": "Datum",
 			"odometer": "Kilometerstand bij service",
 			"skip": "Deze stap overslaan",
-			"setupNote": "Laatste service (ingevoerd tijdens setup)"
+			"setupNote": "Laatste service (ingevoerd tijdens setup)",
+			"hoursReading": "Uren bij service"
 		},
 		"summary": {
 			"title": "Je bent klaar!",
@@ -228,14 +239,16 @@
 				"subtitle": "Al je gegevens voor {name} op een plek.",
 				"empty": {
 					"title": "Nog geen gegevens",
-					"description": "Registreer je eerste onderhoud of kilometerstand om de tijdlijn te starten."
+					"description": "Registreer je eerste onderhoud of kilometerstand om de tijdlijn te starten.",
+					"usageDescription": "Registreer je eerste service of uurmeterstand om de tijdlijn te starten."
 				},
 				"filter": {
 					"service": "Onderhoud",
 					"odometer": "Kilometerstand",
 					"notes": "Notities",
 					"travels": "Routes",
-					"finance": "Financieel"
+					"finance": "Financieel",
+					"usage": "Verbruik"
 				}
 			},
 			"upcoming": "Aankomende",
@@ -257,7 +270,9 @@
 				"description": "Dit item wordt permanent verwijderd uit je tijdlijn. Dit kan niet ongedaan worden gemaakt.",
 				"confirm": "Verwijderen",
 				"cancel": "Behouden"
-			}
+			},
+			"hideUsageReadings": "Uurmeterstanden verbergen",
+			"showMoreUsageReadings": "{n} meer uurmeterstanden tonen"
 		},
 		"forms": {
 			"logService": "Onderhoudsitem registreren",
@@ -276,7 +291,8 @@
 				"usedTracker": "Onderhoud uitgevoerd voor",
 				"checkToReset": "(vink aan om te resetten)",
 				"currentReading": "Huidige stand ({unit})",
-				"attachments": "Bijlagen {optional}"
+				"attachments": "Bijlagen {optional}",
+				"usage": "Verbruiksstand ({unit})"
 			},
 			"placeholders": {
 				"partsUsed": "Gebruikte onderdelen, observaties…",
@@ -304,7 +320,8 @@
 			"warnings": {
 				"odoSame": "Je hebt al een stand van {num} {unit} opgeslagen in jouw administratie.",
 				"odoLower": "Lager dan de hoogste opgenomen stand ({current} {unit}), wordt opgeslagen als historisch record."
-			}
+			},
+			"updateUsage": "Verbruik bijwerken"
 		},
 		"add": {
 			"title": "Voertuig toevoegen",
@@ -348,7 +365,9 @@
 			"odometer": {
 				"title": "Kilometerstand bijwerken",
 				"currentReading": "Huidige stand ({unit})",
-				"update": "Bijwerken"
+				"update": "Bijwerken",
+				"usageTitle": "Verbruik bijwerken",
+				"currentUsage": "Huidige stand ({unit})"
 			},
 			"vehicleDetails": "Voertuigdetails",
 			"fields": {
@@ -440,7 +459,12 @@
 				"invalidImageFormat": "Ongeldig afbeeldingsformaat. Ondersteund: JPEG, PNG, WebP, GIF",
 				"invalidFileExt": "Ongeldige bestandsextensie. Ondersteund: .jpg, .jpeg, .png, .webp, .gif",
 				"uploadFailed": "Upload mislukt: opslagfout"
-			}
+			},
+			"measurementUnit": {
+				"title": "Meeteenheid",
+				"locked": "Eenheid kan je niet meer aanpassen na het aanmaken van je voertuig."
+			},
+			"usageUpdated": "Verbruik bijgewerkt"
 		}
 	},
 	"maintenance": {
@@ -494,7 +518,8 @@
 			"placeholders": {
 				"name": "bijv. Olieverversing",
 				"km": "bijv. 5000",
-				"months": "bijv. 12"
+				"months": "bijv. 12",
+				"hours": "bijv. 100"
 			},
 			"submit": "Taak toevoegen"
 		},
@@ -532,7 +557,8 @@
 				"everyMonths": "Elke (maanden)",
 				"date": "Datum",
 				"odometer": "Kilometerstand ({unit})",
-				"autoCompute": "— leeglaten voor automatische berekening"
+				"autoCompute": "— leeglaten voor automatische berekening",
+				"usage": "Verbruiksstand ({unit})"
 			},
 			"submit": "Wijzigingen opslaan"
 		},
@@ -609,7 +635,8 @@
 			"odometer": "Kilometerstand ({unit})",
 			"odometerOptional": "Optioneel",
 			"notes": "Notities",
-			"notesPlaceholder": "Extra details"
+			"notesPlaceholder": "Extra details",
+			"usage": "Verbruiksstand ({unit})"
 		},
 		"deleteDialog": {
 			"title": "Deze transactie verwijderen?",
@@ -899,7 +926,7 @@
 	"units": {
 		"km": "km",
 		"mi": "mi",
-		"hours": "hours"
+		"hours": "uren"
 	},
 	"currency": {
 		"eur": "€ Euro",
@@ -936,7 +963,9 @@
 			"mileage": "Kilometerstand",
 			"mileageDesc": "Nummer op je dashboard",
 			"finance": "Financiën",
-			"financeDesc": "Brandstof, onderdelen of andere kosten"
+			"financeDesc": "Brandstof, onderdelen of andere kosten",
+			"usage": "Verbruik",
+			"usageDesc": "Uren of stand op je teller"
 		}
 	},
 	"notifications": {

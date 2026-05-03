@@ -139,6 +139,13 @@
 			"descriptions": {
 				"chain_lube": "Clean and lubricate the chain",
 				"chain_tension": "Check and adjust chain tension"
+			},
+			"hourIntervals": {
+				"oil": "every 15 h",
+				"tire": "every 20 h",
+				"chain_lube": "every 5 h",
+				"chain_tension": "every 10 h",
+				"brake": "every 25 h"
 			}
 		},
 		"lastService": {
@@ -348,7 +355,7 @@
 			},
 			"measurementUnit": {
 				"title": "Measurement unit",
-				"locked": "Locked after creation"
+				"locked": "Unit can no longer be changed after creating your vehicle."
 			},
 			"vehicleDetails": "Vehicle details",
 			"fields": {
