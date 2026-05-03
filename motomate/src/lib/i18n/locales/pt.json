@@ -105,7 +105,9 @@
 		"odometer": {
 			"title": "Leitura atual do odómetro",
 			"description": "Define a base para intervalos de manutenção baseados em km.",
-			"placeholder": "0"
+			"placeholder": "0",
+			"hoursTitle": "Leitura de horas atual",
+			"hoursDescription": "Define a base para os intervalos de manutenção baseados em horas."
 		},
 		"presets": {
 			"title": "Que tarefas de manutenção?",
@@ -135,6 +137,14 @@
 			"descriptions": {
 				"chain_lube": "Limpar e lubrificar a corrente",
 				"chain_tension": "Verificar e ajustar a tensão da corrente"
+			},
+			"hoursEmpty": "Veículos por horas começam sem predefinições de distância. Podes adicionar intervalos por horas em Manutenção após a configuração.",
+			"hourIntervals": {
+				"oil": "a cada 15 h",
+				"tire": "a cada 20 h",
+				"chain_lube": "a cada 5 h",
+				"chain_tension": "a cada 10 h",
+				"brake": "a cada 25 h"
 			}
 		},
 		"lastService": {
@@ -143,7 +153,8 @@
 			"date": "Data",
 			"odometer": "Odómetro na manutenção",
 			"skip": "Saltar este passo",
-			"setupNote": "Último serviço (inserido durante a configuração)"
+			"setupNote": "Último serviço (inserido durante a configuração)",
+			"hoursReading": "Horas no serviço"
 		},
 		"summary": {
 			"title": "Está tudo pronto!",
@@ -228,14 +239,16 @@
 				"subtitle": "Todos os seus registos para {name} num único lugar.",
 				"empty": {
 					"title": "Ainda sem histórico",
-					"description": "Registe a sua primeira manutenção ou verificação de quilometragem para iniciar a cronologia."
+					"description": "Registe a sua primeira manutenção ou verificação de quilometragem para iniciar a cronologia.",
+					"usageDescription": "Regista o primeiro serviço ou leitura de uso para iniciar a linha do tempo."
 				},
 				"filter": {
 					"service": "Manutenção",
 					"odometer": "Odômetro",
 					"notes": "Notas",
 					"travels": "Viagens",
-					"finance": "Finanças"
+					"finance": "Finanças",
+					"usage": "Uso"
 				}
 			},
 			"upcoming": "Próximo",
@@ -257,7 +270,9 @@
 				"description": "Esta entrada será removida permanentemente da sua cronologia. Esta ação não pode ser desfeita.",
 				"confirm": "Eliminar",
 				"cancel": "Manter"
-			}
+			},
+			"hideUsageReadings": "Ocultar leituras de uso",
+			"showMoreUsageReadings": "Mostrar mais {n} leituras de uso"
 		},
 		"forms": {
 			"logService": "Registar serviço",
@@ -276,7 +291,8 @@
 				"usedTracker": "Manutenção realizada para",
 				"checkToReset": "(marcar para repor)",
 				"currentReading": "Leitura atual ({unit})",
-				"attachments": "Anexos {optional}"
+				"attachments": "Anexos {optional}",
+				"usage": "Leitura de uso ({unit})"
 			},
 			"placeholders": {
 				"partsUsed": "Peças usadas, observações…",
@@ -304,7 +320,8 @@
 			"warnings": {
 				"odoSame": "Já tens uma leitura de {num} {unit} guardada.",
 				"odoLower": "Inferior à leitura mais alta registada ({current} {unit}), será guardado como registo histórico."
-			}
+			},
+			"updateUsage": "Atualizar uso"
 		},
 		"add": {
 			"title": "Adicionar veículo",
@@ -348,7 +365,9 @@
 			"odometer": {
 				"title": "Atualizar quilometragem",
 				"currentReading": "Leitura atual ({unit})",
-				"update": "Atualizar"
+				"update": "Atualizar",
+				"usageTitle": "Atualizar uso",
+				"currentUsage": "Uso atual ({unit})"
 			},
 			"vehicleDetails": "Detalhes do veículo",
 			"fields": {
@@ -440,7 +459,12 @@
 				"invalidImageFormat": "Formato de imagem inválido. Suportado: JPEG, PNG, WebP, GIF",
 				"invalidFileExt": "Extensão de ficheiro inválida. Suportado: .jpg, .jpeg, .png, .webp, .gif",
 				"uploadFailed": "Falha no upload: erro de armazenamento"
-			}
+			},
+			"measurementUnit": {
+				"title": "Unidade de medida",
+				"locked": "Bloqueada após criação"
+			},
+			"usageUpdated": "Uso atualizado"
 		}
 	},
 	"maintenance": {
@@ -494,7 +518,8 @@
 			"placeholders": {
 				"name": "ex. Troca de óleo",
 				"km": "ex. 5000",
-				"months": "ex. 12"
+				"months": "ex. 12",
+				"hours": "ex. 100"
 			},
 			"submit": "Adicionar tarefa"
 		},
@@ -515,7 +540,8 @@
 			"every": "A cada {interval}",
 			"due": "Previsto {info}",
 			"last": "Último {info}",
-			"notScheduled": "Não agendado"
+			"notScheduled": "Não agendado",
+			"next": "Próximo {info}"
 		},
 		"editTracker": {
 			"sections": {
@@ -531,7 +557,8 @@
 				"everyMonths": "Cada (meses)",
 				"date": "Data",
 				"odometer": "Odómetro ({unit})",
-				"autoCompute": "— deixar vazio para cálculo automático"
+				"autoCompute": "— deixar vazio para cálculo automático",
+				"usage": "Leitura de uso ({unit})"
 			},
 			"submit": "Guardar alterações"
 		},
@@ -608,7 +635,8 @@
 			"odometer": "Quilometragem ({unit})",
 			"odometerOptional": "Opcional",
 			"notes": "Notas",
-			"notesPlaceholder": "Detalhes adicionais"
+			"notesPlaceholder": "Detalhes adicionais",
+			"usage": "Leitura de uso ({unit})"
 		},
 		"deleteDialog": {
 			"title": "Eliminar esta transação?",
@@ -897,7 +925,8 @@
 	},
 	"units": {
 		"km": "km",
-		"mi": "mi"
+		"mi": "mi",
+		"hours": "horas"
 	},
 	"currency": {
 		"eur": "€ Euro",
@@ -934,7 +963,9 @@
 			"mileage": "Quilometragem",
 			"mileageDesc": "Número no seu painel",
 			"finance": "Finanças",
-			"financeDesc": "Combustível, seguro ou peças"
+			"financeDesc": "Combustível, seguro ou peças",
+			"usage": "Uso",
+			"usageDesc": "Horas ou leitura no contador"
 		}
 	},
 	"notifications": {

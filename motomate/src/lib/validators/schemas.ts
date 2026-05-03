@@ -152,7 +152,7 @@ export const CreateVehicleSchema = z.object({
 		(v) => (v === '' || v === null || v === undefined ? 0 : Number(v)),
 		z.number().int().min(0)
 	),
-	odometer_unit: DistanceUnitSchema.default(DEFAULT_ODOMETER_UNIT),
+	odometer_unit: MeasurementUnitSchema.default(DEFAULT_ODOMETER_UNIT),
 	meta: VehicleMetaSchema.default({})
 });
 

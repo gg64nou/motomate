@@ -3,8 +3,8 @@
 	import { _ } from '$lib/i18n';
 	import {
 		DEFAULT_ODOMETER_UNIT,
-		DISTANCE_UNITS,
-		getDistanceUnitTranslationKey
+		MEASUREMENT_UNITS,
+		getMeasurementUnitTranslationKey
 	} from '$lib/utils/measurement.js';
 
 	let { form } = $props<{
@@ -140,9 +140,9 @@
 				<label class="field">
 					<span class="field-label">{$_('vehicle.add.fields.unit')}</span>
 					<select name="odometer_unit" class="input">
-						{#each DISTANCE_UNITS as unit}
+						{#each MEASUREMENT_UNITS as unit}
 							<option value={unit} selected={selectedOdometerUnit === unit}>
-								{$_(getDistanceUnitTranslationKey(unit))}
+								{$_(getMeasurementUnitTranslationKey(unit))}
 							</option>
 						{/each}
 					</select>
@@ -261,7 +261,7 @@
 		color: var(--text);
 		font-size: var(--text-md);
 		font-family: var(--font-sans);
-		min-height: 48px;
+		height: 48px;
 		width: 100%;
 		box-sizing: border-box;
 	}

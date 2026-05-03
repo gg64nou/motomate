@@ -16,6 +16,11 @@ export function formatNumber(value: number, locale = 'en'): string {
 	return fmt.format(value);
 }
 
+/** Format a measurement reading with its stored unit token. */
+export function formatMeasurement(value: number, unit: string, locale = 'en'): string {
+	return `${formatNumber(value, locale)} ${unit}`;
+}
+
 /** Format cost stored in cents as a locale-aware currency string. */
 export function formatCurrency(cents: number, currency = 'EUR', locale = 'en'): string {
 	const key = `${locale}:${currency}`;

@@ -9,11 +9,12 @@
 	import { toasts } from '$lib/stores/toasts.js';
 	import { _, waitLocale } from '$lib/i18n';
 	import {
-		formatNumber,
+		formatMeasurement,
 		formatDateShort,
 		formatCurrency,
 		formatYearMonth
 	} from '$lib/utils/format.js';
+	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
 
 	let {
 		data,
@@ -28,6 +29,29 @@
 	});
 
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
+	const isHoursVehicle = $derived(data.vehicle.odometer_unit === 'h');
+	const unitLabel = $derived($_(getMeasurementUnitTranslationKey(data.vehicle.odometer_unit)));
+	const measurementFieldLabel = $derived(
+		isHoursVehicle
+			? $_('vehicle.forms.fields.usage', { values: { unit: unitLabel } })
+			: $_('vehicle.forms.fields.odometer', { values: { unit: unitLabel } })
+	);
+	const trackerMeasurementFieldLabel = $derived(
+		isHoursVehicle
+			? $_('maintenance.editTracker.fields.usage', { values: { unit: unitLabel } })
+			: $_('maintenance.editTracker.fields.odometer', { values: { unit: unitLabel } })
+	);
+	const intervalPlaceholder = $derived(
+		isHoursVehicle
+			? $_('maintenance.addTask.placeholders.hours')
+			: $_('maintenance.addTask.placeholders.km')
+	);
+	const intervalFieldLabel = $derived(
+		$_('maintenance.addTask.fields.intervalKm', { values: { unit: unitLabel } })
+	);
+	const trackerIntervalFieldLabel = $derived(
+		$_('maintenance.editTracker.fields.everyKm', { values: { unit: unitLabel } })
+	);
 
 	let loggingTracker = $state<string | null>(null);
 	let recentlyLoggedId = $state<string | null>(null);
@@ -95,6 +119,7 @@
 	let logMenu = $state<string | null>(null);
 
 	const averageKmPerMonth = $derived(() => {
+		if (isHoursVehicle) return null;
 		const logs = data.odometerLogs ?? [];
 		if (logs.length < 5) return null;
 		const odoValues = logs.map((l) => l.odometer).filter((v): v is number => v !== null && v > 0);
@@ -188,6 +213,7 @@
 		odometer: number | null;
 		monthsUntil: number | null;
 	} {
+		if (isHoursVehicle) return { odometer: null, monthsUntil: null };
 		const avgKm = averageKmPerMonth();
 		if (!avgKm || !tracker.last_done_odometer || !tracker.template.interval_km) {
 			return { odometer: null, monthsUntil: null };
@@ -465,11 +491,11 @@
 									{/if}
 								</span>
 								<span class="timeline-meta">
-									{formatDateShort(log.performed_at, locale)} · {formatNumber(
+									{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
 										log.odometer_at_service,
+										data.vehicle.odometer_unit,
 										locale
 									)}
-									{data.vehicle.odometer_unit}
 									{#if log.cost_cents}
 										<span class="timeline-cost">
 											· {formatCurrency(log.cost_cents, log.currency, locale)}</span
@@ -527,11 +553,7 @@
 												/>
 											</label>
 											<label class="field">
-												<span class="field-label"
-													>{$_('maintenance.editLog.odometer', {
-														values: { unit: data.vehicle.odometer_unit }
-													})}</span
-												>
+												<span class="field-label">{measurementFieldLabel}</span>
 												<input
 													type="number"
 													name="odometer_at_service"
@@ -639,16 +661,12 @@
 				/>
 			</label>
 			<label class="field">
-				<span class="field-label"
-					>{$_('maintenance.addTask.fields.intervalKm', {
-						values: { unit: data.vehicle.odometer_unit }
-					})}</span
-				>
+				<span class="field-label">{intervalFieldLabel}</span>
 				<input
 					name="interval_km"
 					type="number"
 					min="1"
-					placeholder={$_('maintenance.addTask.placeholders.km')}
+					placeholder={intervalPlaceholder}
 					class="input mono"
 				/>
 			</label>
@@ -812,17 +830,13 @@
 										>
 										<div class="edit-row">
 											<label class="field">
-												<span class="field-label"
-													>{$_('maintenance.editTracker.fields.everyKm', {
-														values: { unit: data.vehicle.odometer_unit }
-													})}</span
-												>
+												<span class="field-label">{trackerIntervalFieldLabel}</span>
 												<input
 													type="number"
 													name="interval_km"
 													min="1"
-													value={et.template.interval_km ?? ''}
-													placeholder="e.g. 5000"
+													value={et.template.interval_measurement ?? et.template.interval_km ?? ''}
+													placeholder={intervalPlaceholder}
 													class="input mono"
 												/>
 											</label>
@@ -857,17 +871,13 @@
 												/>
 											</label>
 											<label class="field">
-												<span class="field-label"
-													>{$_('maintenance.editTracker.fields.odometer', {
-														values: { unit: data.vehicle.odometer_unit }
-													})}</span
-												>
+												<span class="field-label">{trackerMeasurementFieldLabel}</span>
 												<input
 													type="number"
 													name="last_done_odometer"
 													min="0"
 													placeholder="e.g. 0"
-													value={et.last_done_odometer ?? ''}
+													value={et.last_done_measurement ?? et.last_done_odometer ?? ''}
 													class="input mono"
 												/>
 											</label>
@@ -883,16 +893,12 @@
 										>
 										<div class="edit-row">
 											<label class="field">
-												<span class="field-label"
-													>{$_('maintenance.editTracker.fields.odometer', {
-														values: { unit: data.vehicle.odometer_unit }
-													})}</span
-												>
+												<span class="field-label">{trackerMeasurementFieldLabel}</span>
 												<input
 													type="number"
 													name="next_due_odometer"
 													min="0"
-													value={et.next_due_odometer ?? ''}
+													value={et.next_due_measurement ?? et.next_due_odometer ?? ''}
 													placeholder="auto"
 													class="input mono"
 												/>
@@ -949,11 +955,7 @@
 									/>
 								</label>
 								<label class="field">
-									<span class="field-label"
-										>{$_('vehicle.forms.fields.odometer', {
-											values: { unit: data.vehicle.odometer_unit }
-										})}</span
-									>
+									<span class="field-label">{measurementFieldLabel}</span>
 									<input
 										name="odometer_at_service"
 										type="number"

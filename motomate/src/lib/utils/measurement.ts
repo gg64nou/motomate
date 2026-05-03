@@ -98,3 +98,10 @@ export function maxComparableMeasurement(
 export function getDistanceUnitTranslationKey(unit: DistanceUnit): 'units.km' | 'units.mi' {
 	return unit === 'km' ? 'units.km' : 'units.mi';
 }
+
+export function getMeasurementUnitTranslationKey(
+	unit: MeasurementUnit
+): 'units.km' | 'units.mi' | 'units.hours' {
+	if (unit === 'h') return 'units.hours';
+	return getDistanceUnitTranslationKey(unit);
+}

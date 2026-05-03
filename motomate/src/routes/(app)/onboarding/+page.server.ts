@@ -15,7 +15,11 @@ import es from '$lib/i18n/locales/es.json';
 import it from '$lib/i18n/locales/it.json';
 import nl from '$lib/i18n/locales/nl.json';
 import pt from '$lib/i18n/locales/pt.json';
-import { DEFAULT_ODOMETER_UNIT, isDistanceUnit } from '$lib/utils/measurement.js';
+import {
+	DEFAULT_ODOMETER_UNIT,
+	getMeasurementBasis,
+	isMeasurementUnit
+} from '$lib/utils/measurement.js';
 
 type LocaleMessages = {
 	onboarding: {
@@ -46,7 +50,9 @@ export const actions: Actions = {
 
 		const vehicleType = String(data.vehicle_type ?? 'motorcycle');
 		const rawOdometerUnit = data.odometer_unit;
-		const odometerUnit = isDistanceUnit(rawOdometerUnit) ? rawOdometerUnit : DEFAULT_ODOMETER_UNIT;
+		const odometerUnit = isMeasurementUnit(rawOdometerUnit)
+			? rawOdometerUnit
+			: DEFAULT_ODOMETER_UNIT;
 		const vehicleInput = {
 			type: vehicleType,
 			name: String(data.name),
@@ -66,9 +72,12 @@ export const actions: Actions = {
 			return fail(400, { error: String(e) });
 		}
 
-		const categories = String(data.categories ?? 'oil,tire,chain_lube,chain_tension,brake')
-			.split(',')
-			.filter(Boolean);
+		const categories =
+			getMeasurementBasis(odometerUnit) === 'duration'
+				? []
+				: String(data.categories ?? 'oil,tire,chain_lube,chain_tension,brake')
+						.split(',')
+						.filter(Boolean);
 
 		const nameMap: Record<string, { name: string; description?: string }> = {};
 		for (const key of categories) {
@@ -81,7 +90,8 @@ export const actions: Actions = {
 			categories,
 			0,
 			nameMap,
-			vehicleType
+			vehicleType,
+			odometerUnit
 		);
 
 		const lastServiceDate = String(data.last_service_date ?? '').trim();

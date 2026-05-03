@@ -6,10 +6,12 @@ import type { InsertVehicle, Vehicle, OdometerLog } from '../schema.js';
 import { generateId } from '../../utils/id.js';
 import {
 	DEFAULT_ODOMETER_UNIT,
+	getMeasurementBasis,
 	isDistanceMeasurementValue,
+	isMeasurementUnit,
 	maxComparableMeasurement,
 	resolveMeasurementValue,
-	type DistanceUnit,
+	type MeasurementUnit,
 	type MeasurementValue
 } from '../../utils/measurement.js';
 
@@ -23,13 +25,10 @@ function resolveVehicleOdometerFields(
 		vehicle.current_measurement,
 		vehicle.current_measurement_unit
 	);
-	const unit: DistanceUnit = isDistanceMeasurementValue(canonicalMeasurement)
-		? canonicalMeasurement.unit
-		: (vehicle.odometer_unit ?? DEFAULT_ODOMETER_UNIT);
+	const unit: MeasurementUnit =
+		canonicalMeasurement?.unit ?? vehicle.odometer_unit ?? DEFAULT_ODOMETER_UNIT;
 	return {
-		current_odometer: isDistanceMeasurementValue(canonicalMeasurement)
-			? canonicalMeasurement.value
-			: vehicle.current_odometer,
+		current_odometer: canonicalMeasurement?.value ?? vehicle.current_odometer,
 		odometer_unit: unit ?? DEFAULT_ODOMETER_UNIT
 	};
 }
@@ -111,6 +110,16 @@ export async function getVehicleById(id: string, userId: string): Promise<Vehicl
 
 export async function updateVehicle(id: string, userId: string, input: unknown): Promise<void> {
 	const parsed = UpdateVehicleSchema.parse(input);
+	if (parsed.odometer_unit !== undefined) {
+		const existing = await getVehicleById(id, userId);
+		if (!existing) return;
+		if (
+			isMeasurementUnit(existing.odometer_unit) &&
+			getMeasurementBasis(existing.odometer_unit) !== getMeasurementBasis(parsed.odometer_unit)
+		) {
+			throw new Error('Vehicle measurement basis cannot be changed after creation');
+		}
+	}
 	const patch: Partial<InsertVehicle> & { updated_at: string } = {
 		...parsed,
 		updated_at: new Date().toISOString()

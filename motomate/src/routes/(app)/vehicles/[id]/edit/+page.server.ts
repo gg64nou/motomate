@@ -18,6 +18,7 @@ import type { VehicleMeta } from '$lib/db/schema.js';
 import { db } from '$lib/db/index.js';
 import { vehicles } from '$lib/db/schema.js';
 import { serverT } from '$lib/i18n/server.js';
+import { getMeasurementBasis, isMeasurementUnit } from '$lib/utils/measurement.js';
 
 const MAX_AVATAR_SIZE = 2 * 1024 * 1024; // 2 MB
 
@@ -91,6 +92,18 @@ export const actions: Actions = {
 		const parsed = UpdateVehicleSchema.safeParse(input);
 		if (!parsed.success) {
 			return fail(400, { errors: parsed.error.flatten().fieldErrors });
+		}
+
+		if (parsed.data.odometer_unit !== undefined) {
+			const vehicle = await getVehicleById(params.id, locals.user!.id);
+			if (!vehicle) return fail(404, { error: 'Vehicle not found' });
+			if (
+				isMeasurementUnit(vehicle.odometer_unit) &&
+				getMeasurementBasis(vehicle.odometer_unit) !==
+					getMeasurementBasis(parsed.data.odometer_unit)
+			) {
+				return fail(400, { error: 'Vehicle measurement basis cannot be changed after creation' });
+			}
 		}
 
 		await updateVehicle(params.id, locals.user!.id, parsed.data);

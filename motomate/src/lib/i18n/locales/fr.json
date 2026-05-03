@@ -105,7 +105,9 @@
 		"odometer": {
 			"title": "Kilométrage actuel",
 			"description": "Définit la base pour les intervalles d'entretien basés sur les kilomètres.",
-			"placeholder": "0"
+			"placeholder": "0",
+			"hoursTitle": "Relevé horaire actuel",
+			"hoursDescription": "Définit la base pour les intervalles de maintenance basés sur les heures."
 		},
 		"presets": {
 			"title": "Quelles tâches d'entretien ?",
@@ -135,6 +137,14 @@
 			"descriptions": {
 				"chain_lube": "Nettoyer et graisser la chaîne",
 				"chain_tension": "Vérifier et ajuster la tension de la chaîne"
+			},
+			"hoursEmpty": "Les véhicules horaires démarrent sans préréglages de distance. Vous pouvez ajouter des intervalles horaires depuis Maintenance après la configuration.",
+			"hourIntervals": {
+				"oil": "toutes les 15 h",
+				"tire": "toutes les 20 h",
+				"chain_lube": "toutes les 5 h",
+				"chain_tension": "toutes les 10 h",
+				"brake": "toutes les 25 h"
 			}
 		},
 		"lastService": {
@@ -143,7 +153,8 @@
 			"date": "Date",
 			"odometer": "Kilométrage à l'entretien",
 			"skip": "Passer cette étape",
-			"setupNote": "Dernier entretien (saisi lors de la configuration)"
+			"setupNote": "Dernier entretien (saisi lors de la configuration)",
+			"hoursReading": "Heures lors du service"
 		},
 		"summary": {
 			"title": "Vous êtes prêt !",
@@ -228,14 +239,16 @@
 				"subtitle": "Tous vos enregistrements pour {name} en un seul endroit.",
 				"empty": {
 					"title": "Pas encore d'historique",
-					"description": "Enregistrez votre premier entretien ou contrôle du kilométrage pour démarrer la chronologie."
+					"description": "Enregistrez votre premier entretien ou contrôle du kilométrage pour démarrer la chronologie.",
+					"usageDescription": "Enregistrez votre premier service ou relevé de compteur pour démarrer la chronologie."
 				},
 				"filter": {
 					"service": "Entretien",
 					"odometer": "Kilométrage",
 					"notes": "Notes",
 					"travels": "Voyages",
-					"finance": "Finances"
+					"finance": "Finances",
+					"usage": "Usage"
 				}
 			},
 			"upcoming": "À venir",
@@ -257,7 +270,9 @@
 				"description": "Cette entrée sera définitivement supprimée de votre chronologie. Cette action ne peut pas être annulée.",
 				"confirm": "Supprimer",
 				"cancel": "Conserver"
-			}
+			},
+			"hideUsageReadings": "Masquer les relevés d'usage",
+			"showMoreUsageReadings": "Afficher {n} relevés d'usage supplémentaires"
 		},
 		"forms": {
 			"logService": "Enregistrer un entretien",
@@ -276,7 +291,8 @@
 				"usedTracker": "Entretien effectué pour",
 				"checkToReset": "(cocher pour réinitialiser)",
 				"currentReading": "Lecture actuelle ({unit})",
-				"attachments": "Pièces jointes {optional}"
+				"attachments": "Pièces jointes {optional}",
+				"usage": "Relevé d'usage ({unit})"
 			},
 			"placeholders": {
 				"partsUsed": "Pièces utilisées, observations…",
@@ -304,7 +320,8 @@
 			"warnings": {
 				"odoSame": "Vous avez déjà un relevé de {num} {unit} enregistré.",
 				"odoLower": "Inférieur au relevé le plus élevé enregistré ({current} {unit}), sauvegardé comme entrée historique."
-			}
+			},
+			"updateUsage": "Mettre à jour l'usage"
 		},
 		"add": {
 			"title": "Ajouter un véhicule",
@@ -348,7 +365,9 @@
 			"odometer": {
 				"title": "Mettre à jour le kilométrage",
 				"currentReading": "Lecture actuelle ({unit})",
-				"update": "Mettre à jour"
+				"update": "Mettre à jour",
+				"usageTitle": "Mettre à jour l'usage",
+				"currentUsage": "Usage actuel ({unit})"
 			},
 			"vehicleDetails": "Détails du véhicule",
 			"fields": {
@@ -440,7 +459,12 @@
 				"invalidImageFormat": "Format d'image invalide. Pris en charge : JPEG, PNG, WebP, GIF",
 				"invalidFileExt": "Extension de fichier invalide. Prise en charge : .jpg, .jpeg, .png, .webp, .gif",
 				"uploadFailed": "Échec du téléchargement : erreur de stockage"
-			}
+			},
+			"measurementUnit": {
+				"title": "Unité de mesure",
+				"locked": "Verrouillée après création"
+			},
+			"usageUpdated": "Usage mis à jour"
 		}
 	},
 	"maintenance": {
@@ -494,7 +518,8 @@
 			"placeholders": {
 				"name": "ex. Vidange",
 				"km": "ex. 5000",
-				"months": "ex. 12"
+				"months": "ex. 12",
+				"hours": "p. ex. 100"
 			},
 			"submit": "Ajouter la tâche"
 		},
@@ -532,7 +557,8 @@
 				"everyMonths": "Tous les (mois)",
 				"date": "Date",
 				"odometer": "Kilométrage ({unit})",
-				"autoCompute": "— laisser vide pour calcul automatique"
+				"autoCompute": "— laisser vide pour calcul automatique",
+				"usage": "Relevé d'usage ({unit})"
 			},
 			"submit": "Enregistrer les modifications"
 		},
@@ -609,7 +635,8 @@
 			"odometer": "Kilométrage ({unit})",
 			"odometerOptional": "Optionnel",
 			"notes": "Notes",
-			"notesPlaceholder": "Détails supplémentaires"
+			"notesPlaceholder": "Détails supplémentaires",
+			"usage": "Relevé d'usage ({unit})"
 		},
 		"deleteDialog": {
 			"title": "Supprimer cette transaction?",
@@ -898,7 +925,8 @@
 	},
 	"units": {
 		"km": "km",
-		"mi": "mi"
+		"mi": "mi",
+		"hours": "heures"
 	},
 	"currency": {
 		"eur": "€ Euro",
@@ -935,7 +963,9 @@
 			"mileage": "Kilométrage",
 			"mileageDesc": "Nombre sur votre tableau de bord",
 			"finance": "Finance",
-			"financeDesc": "Carburant, assurance ou pièces"
+			"financeDesc": "Carburant, assurance ou pièces",
+			"usage": "Usage",
+			"usageDesc": "Heures ou relevé sur votre compteur"
 		}
 	},
 	"notifications": {

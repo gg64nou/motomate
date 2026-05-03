@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { _ } from '$lib/i18n';
+	import { _, locale } from '$lib/i18n';
+	import { formatNumber } from '$lib/utils/format.js';
 	import {
 		DEFAULT_ODOMETER_UNIT,
-		DISTANCE_UNITS,
-		getDistanceUnitTranslationKey,
-		type DistanceUnit
+		MEASUREMENT_UNITS,
+		getMeasurementUnitTranslationKey,
+		type MeasurementUnit
 	} from '$lib/utils/measurement.js';
 
 	let { data: _data, form: _form } = $props<{
@@ -25,7 +26,7 @@
 	let vin = $state('');
 	let licensePlate = $state('');
 	let odometer = $state(0);
-	let odometerUnit = $state<DistanceUnit>(DEFAULT_ODOMETER_UNIT);
+	let odometerUnit = $state<MeasurementUnit>(DEFAULT_ODOMETER_UNIT);
 	let selectedCategories = $state(['oil', 'tire', 'chain_lube', 'chain_tension', 'brake']);
 	let lastServiceDate = $state('');
 	let lastServiceOdo = $state('');
@@ -48,9 +49,33 @@
 		bike: ['tire', 'chain_lube', 'brake', 'cable_check'],
 		other: ['oil', 'tire', 'brake', 'air_filter', 'battery']
 	};
+	const HOUR_PRESETS_BY_TYPE: Record<string, string[]> = {
+		motorcycle: ['oil', 'tire', 'chain_lube', 'chain_tension', 'brake'],
+		scooter: [],
+		bike: [],
+		other: ['oil', 'tire', 'chain_lube', 'chain_tension', 'brake']
+	};
 
-	const presetKeys = $derived(PRESETS_BY_TYPE[vehicleType] ?? PRESETS_BY_TYPE.motorcycle);
+	const presetKeys = $derived(
+		odometerUnit === 'h'
+			? (HOUR_PRESETS_BY_TYPE[vehicleType] ?? HOUR_PRESETS_BY_TYPE.motorcycle)
+			: (PRESETS_BY_TYPE[vehicleType] ?? PRESETS_BY_TYPE.motorcycle)
+	);
 	const presets = $derived(presetKeys.map((id) => ({ id, icon: PRESET_ICONS[id] ?? '🔧' })));
+	const isHoursVehicle = $derived(odometerUnit === 'h');
+	const currentReadingTitle = $derived(
+		isHoursVehicle ? $_('onboarding.odometer.hoursTitle') : $_('onboarding.odometer.title')
+	);
+	const currentReadingDescription = $derived(
+		isHoursVehicle
+			? $_('onboarding.odometer.hoursDescription')
+			: $_('onboarding.odometer.description')
+	);
+	const lastServiceReadingLabel = $derived(
+		isHoursVehicle
+			? $_('onboarding.lastService.hoursReading')
+			: $_('onboarding.lastService.odometer')
+	);
 
 	// Reset selection when vehicle type changes
 	$effect(() => {
@@ -214,8 +239,8 @@
 
 			<!-- ── Step 4: Odometer ── -->
 		{:else if step === 4}
-			<h2 class="step-title">{$_('onboarding.odometer.title')}</h2>
-			<p class="step-desc">{$_('onboarding.odometer.description')}</p>
+			<h2 class="step-title">{currentReadingTitle}</h2>
+			<p class="step-desc">{currentReadingDescription}</p>
 			<div class="odo-input-row">
 				<input
 					bind:value={odometer}
@@ -225,13 +250,13 @@
 					placeholder={$_('onboarding.odometer.placeholder')}
 				/>
 				<div class="unit-toggle">
-					{#each DISTANCE_UNITS as unit}
+					{#each MEASUREMENT_UNITS as unit}
 						<button
 							class="unit-btn"
 							class:unit-btn--active={odometerUnit === unit}
 							onclick={() => (odometerUnit = unit)}
 						>
-							{$_(getDistanceUnitTranslationKey(unit))}
+							{$_(getMeasurementUnitTranslationKey(unit))}
 						</button>
 					{/each}
 				</div>
@@ -241,29 +266,40 @@
 		{:else if step === 5}
 			<h2 class="step-title">{$_('onboarding.presets.title')}</h2>
 			<p class="step-desc">{$_('onboarding.presets.description')}</p>
-			<div class="preset-list">
-				{#each presets as preset}
-					<label
-						class="preset-item"
-						class:preset-item--checked={selectedCategories.includes(preset.id)}
-					>
-						<input
-							type="checkbox"
-							checked={selectedCategories.includes(preset.id)}
-							onchange={() => toggleCategory(preset.id)}
-							class="sr-only"
-						/>
-						<span class="preset-check" aria-hidden="true"
-							>{selectedCategories.includes(preset.id) ? '✓' : '○'}</span
+			{#if presets.length === 0}
+				<div class="empty-presets">
+					<span class="empty-presets-icon" aria-hidden="true">⏱</span>
+					<p class="empty-presets-desc">{$_('onboarding.presets.hoursEmpty')}</p>
+				</div>
+			{:else}
+				<div class="preset-list">
+					{#each presets as preset}
+						<label
+							class="preset-item"
+							class:preset-item--checked={selectedCategories.includes(preset.id)}
 						>
-						<span class="preset-icon" aria-hidden="true">{preset.icon}</span>
-						<div class="preset-text">
-							<span class="preset-label">{$_('onboarding.presets.tasks.' + preset.id)}</span>
-							<span class="preset-interval">{$_('onboarding.presets.intervals.' + preset.id)}</span>
-						</div>
-					</label>
-				{/each}
-			</div>
+							<input
+								type="checkbox"
+								checked={selectedCategories.includes(preset.id)}
+								onchange={() => toggleCategory(preset.id)}
+								class="sr-only"
+							/>
+							<span class="preset-check" aria-hidden="true"
+								>{selectedCategories.includes(preset.id) ? '✓' : '○'}</span
+							>
+							<span class="preset-icon" aria-hidden="true">{preset.icon}</span>
+							<div class="preset-text">
+								<span class="preset-label">{$_('onboarding.presets.tasks.' + preset.id)}</span>
+								<span class="preset-interval"
+									>{odometerUnit === 'h'
+										? $_('onboarding.presets.hourIntervals.' + preset.id)
+										: $_('onboarding.presets.intervals.' + preset.id)}</span
+								>
+							</div>
+						</label>
+					{/each}
+				</div>
+			{/if}
 
 			<!-- ── Step 6: Last oil change (optional) ── -->
 		{:else if step === 6}
@@ -280,7 +316,7 @@
 					/>
 				</label>
 				<label class="field">
-					<span class="field-label">Odometer at service</span>
+					<span class="field-label">{lastServiceReadingLabel}</span>
 					<input
 						bind:value={lastServiceOdo}
 						type="number"
@@ -314,7 +350,7 @@
 						</div>
 					</div>
 					<div class="summary-odo">
-						<span class="summary-odo-val">{odometer.toLocaleString()}</span>
+						<span class="summary-odo-val">{formatNumber(odometer, $locale ?? 'en')}</span>
 						<span class="summary-odo-unit">{odometerUnit}</span>
 					</div>
 					<div class="summary-presets">
@@ -554,10 +590,21 @@
 		padding: 0.5rem 0.875rem;
 		background: var(--bg-subtle);
 		border: none;
+		border-right: 1px solid var(--border);
 		cursor: pointer;
-		font-size: 0.875rem;
+		font-size: var(--text-sm);
 		font-weight: 500;
 		color: var(--text-muted);
+		transition:
+			background-color 0.15s ease,
+			color 0.15s ease;
+	}
+	.unit-btn:last-child {
+		border-right: none;
+	}
+	.unit-btn:hover:not(.unit-btn--active) {
+		background: var(--bg-muted);
+		color: var(--text);
 	}
 	.unit-btn--active {
 		background: var(--accent);
@@ -565,6 +612,25 @@
 	}
 
 	/* Presets */
+	.empty-presets {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-3);
+		padding: var(--space-7) var(--space-4);
+		text-align: center;
+	}
+	.empty-presets-icon {
+		font-size: 2.5rem;
+		line-height: 1;
+	}
+	.empty-presets-desc {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		line-height: var(--leading-base);
+		max-width: 32ch;
+		margin: 0;
+	}
 	.preset-list {
 		display: flex;
 		flex-direction: column;

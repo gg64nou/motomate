@@ -105,7 +105,9 @@
 		"odometer": {
 			"title": "Aktueller Kilometerstand",
 			"description": "Legt die Basis für kilometerbasierte Wartungsintervalle fest.",
-			"placeholder": "0"
+			"placeholder": "0",
+			"hoursTitle": "Aktueller Stundenstand",
+			"hoursDescription": "Legt die Basis für stundenbasierte Wartungsintervalle fest."
 		},
 		"presets": {
 			"title": "Welche Wartungsarbeiten?",
@@ -135,6 +137,14 @@
 			"descriptions": {
 				"chain_lube": "Kette reinigen und schmieren",
 				"chain_tension": "Kettenspannung prüfen und einstellen"
+			},
+			"hoursEmpty": "Stundenbasierte Fahrzeuge starten ohne Kilometervorgaben. Du kannst Stundenintervalle nach der Einrichtung unter Wartung hinzufügen.",
+			"hourIntervals": {
+				"oil": "alle 15 Std.",
+				"tire": "alle 20 Std.",
+				"chain_lube": "alle 5 Std.",
+				"chain_tension": "alle 10 Std.",
+				"brake": "alle 25 Std."
 			}
 		},
 		"lastService": {
@@ -143,7 +153,8 @@
 			"date": "Datum",
 			"odometer": "Kilometerstand beim Service",
 			"skip": "Diesen Schritt überspringen",
-			"setupNote": "Letzter Service (beim Setup eingegeben)"
+			"setupNote": "Letzter Service (beim Setup eingegeben)",
+			"hoursReading": "Stunden bei Service"
 		},
 		"summary": {
 			"title": "Sie sind fertig!",
@@ -228,14 +239,16 @@
 				"subtitle": "Alle Ihre Daten für {name} an einem Ort.",
 				"empty": {
 					"title": "Noch kein Verlauf",
-					"description": "Protokollieren Sie Ihren ersten Service oder Kilometerstand-Check-in, um die Zeitleiste zu starten."
+					"description": "Protokollieren Sie Ihren ersten Service oder Kilometerstand-Check-in, um die Zeitleiste zu starten.",
+					"usageDescription": "Erfasse deinen ersten Service oder Stundenstand, um die Zeitachse zu starten."
 				},
 				"filter": {
 					"service": "Wartung",
 					"odometer": "Kilometerstand",
 					"notes": "Notizen",
 					"travels": "Fahrten",
-					"finance": "Finanzen"
+					"finance": "Finanzen",
+					"usage": "Verbrauch"
 				}
 			},
 			"upcoming": "Bevorstehend",
@@ -257,7 +270,9 @@
 				"description": "Dieser Eintrag wird dauerhaft aus Ihrer Zeitleiste entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
 				"confirm": "Löschen",
 				"cancel": "Behalten"
-			}
+			},
+			"hideUsageReadings": "Stundenstände ausblenden",
+			"showMoreUsageReadings": "{n} weitere Stundenstände anzeigen"
 		},
 		"forms": {
 			"logService": "Serviceeintrag protokollieren",
@@ -276,7 +291,8 @@
 				"usedTracker": "Wartung durchgeführt für",
 				"checkToReset": "(zum Zurücksetzen anhaken)",
 				"currentReading": "Aktueller Stand ({unit})",
-				"attachments": "Anhänge {optional}"
+				"attachments": "Anhänge {optional}",
+				"usage": "Verbrauchsstand ({unit})"
 			},
 			"placeholders": {
 				"partsUsed": "Verwendete Teile, Beobachtungen…",
@@ -304,7 +320,8 @@
 			"warnings": {
 				"odoSame": "Du hast bereits einen Stand von {num} {unit} gespeichert.",
 				"odoLower": "Niedriger als der höchste aufgezeichnete Stand ({current} {unit}), wird als historischer Eintrag gespeichert."
-			}
+			},
+			"updateUsage": "Verbrauch aktualisieren"
 		},
 		"add": {
 			"title": "Fahrzeug hinzufügen",
@@ -348,7 +365,9 @@
 			"odometer": {
 				"title": "Kilometerstand aktualisieren",
 				"currentReading": "Aktueller Stand ({unit})",
-				"update": "Aktualisieren"
+				"update": "Aktualisieren",
+				"usageTitle": "Verbrauch aktualisieren",
+				"currentUsage": "Aktueller Stand ({unit})"
 			},
 			"vehicleDetails": "Fahrzeugdetails",
 			"fields": {
@@ -440,7 +459,12 @@
 				"invalidImageFormat": "Ungültiges Bildformat. Unterstützt: JPEG, PNG, WebP, GIF",
 				"invalidFileExt": "Ungültige Dateiendung. Unterstützt: .jpg, .jpeg, .png, .webp, .gif",
 				"uploadFailed": "Upload fehlgeschlagen: Speicherfehler"
-			}
+			},
+			"measurementUnit": {
+				"title": "Messeinheit",
+				"locked": "Nach Erstellung gesperrt"
+			},
+			"usageUpdated": "Verbrauch aktualisiert"
 		}
 	},
 	"maintenance": {
@@ -494,7 +518,8 @@
 			"placeholders": {
 				"name": "z.B. Ölwechsel",
 				"km": "z.B. 5000",
-				"months": "z.B. 12"
+				"months": "z.B. 12",
+				"hours": "z. B. 100"
 			},
 			"submit": "Aufgabe hinzufügen"
 		},
@@ -532,7 +557,8 @@
 				"everyMonths": "Alle (Monate)",
 				"date": "Datum",
 				"odometer": "Kilometerstand ({unit})",
-				"autoCompute": "— leer lassen für automatische Berechnung"
+				"autoCompute": "— leer lassen für automatische Berechnung",
+				"usage": "Verbrauchsstand ({unit})"
 			},
 			"submit": "Änderungen speichern"
 		},
@@ -609,7 +635,8 @@
 			"odometer": "Kilometerstand ({unit})",
 			"odometerOptional": "Optional",
 			"notes": "Notizen",
-			"notesPlaceholder": "Zusätzliche Details"
+			"notesPlaceholder": "Zusätzliche Details",
+			"usage": "Verbrauchsstand ({unit})"
 		},
 		"deleteDialog": {
 			"title": "Diese Transaktion löschen?",
@@ -898,7 +925,8 @@
 	},
 	"units": {
 		"km": "km",
-		"mi": "mi"
+		"mi": "mi",
+		"hours": "Stunden"
 	},
 	"currency": {
 		"eur": "€ Euro",
@@ -935,7 +963,9 @@
 			"mileage": "Kilometerstand",
 			"mileageDesc": "Zahl auf Ihrem Tacho",
 			"finance": "Finanzen",
-			"financeDesc": "Kraftstoff, Versicherung oder Teile"
+			"financeDesc": "Kraftstoff, Versicherung oder Teile",
+			"usage": "Verbrauch",
+			"usageDesc": "Stunden oder Stand am Zähler"
 		}
 	},
 	"notifications": {

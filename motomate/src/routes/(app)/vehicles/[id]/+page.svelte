@@ -12,8 +12,10 @@
 		formatDateShort,
 		formatYearMonth,
 		formatNumber,
+		formatMeasurement,
 		formatCurrency
 	} from '$lib/utils/format.js';
+	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
 
 	let { data, form }: { data: PageData; form: Record<string, unknown> | null } = $props();
 
@@ -23,6 +25,38 @@
 
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
 	const unit = $derived(data.vehicle.odometer_unit);
+	const isHoursVehicle = $derived(unit === 'h');
+	const unitLabel = $derived($_(getMeasurementUnitTranslationKey(unit)));
+	const measurementFieldLabel = $derived(
+		isHoursVehicle
+			? $_('vehicle.forms.fields.usage', { values: { unit: unitLabel } })
+			: $_('vehicle.forms.fields.odometer', { values: { unit: unitLabel } })
+	);
+	const currentReadingLabel = $derived(
+		$_('vehicle.forms.fields.currentReading', { values: { unit: unitLabel } })
+	);
+	const updateReadingTitle = $derived(
+		isHoursVehicle ? $_('vehicle.forms.updateUsage') : $_('vehicle.forms.updateOdo')
+	);
+	const readingFilterLabel = $derived(
+		isHoursVehicle
+			? $_('vehicle.detail.timeline.filter.usage')
+			: $_('vehicle.detail.timeline.filter.odometer')
+	);
+	const readingMenuLabel = $derived(
+		isHoursVehicle ? $_('layout.addEntry.usage') : $_('layout.addEntry.mileage')
+	);
+	const readingMenuDesc = $derived(
+		isHoursVehicle ? $_('layout.addEntry.usageDesc') : $_('layout.addEntry.mileageDesc')
+	);
+	const hideReadingsLabel = $derived(
+		isHoursVehicle ? $_('vehicle.detail.hideUsageReadings') : $_('vehicle.detail.hideOdoReadings')
+	);
+	const emptyTimelineDescription = $derived(
+		isHoursVehicle
+			? $_('vehicle.detail.timeline.empty.usageDescription')
+			: $_('vehicle.detail.timeline.empty.description')
+	);
 	const today = new Date().toISOString().slice(0, 10);
 
 	// Log dropdown
@@ -408,7 +442,7 @@
 		<h2 class="section-title">{$_('vehicle.detail.timeline.title')}</h2>
 		<p class="section-sub">
 			{#if data.logs.length === 0 && data.odoLogs.length === 0}
-				{$_('vehicle.detail.timeline.empty.description')}
+				{emptyTimelineDescription}
 			{:else}
 				{$_('vehicle.detail.timeline.subtitle', { values: { name: data.vehicle.name } })}
 			{/if}
@@ -501,7 +535,7 @@
 										aria-hidden="true"><polyline points="1.5 6.5 4.5 9.5 10.5 2.5" /></svg
 									>{/if}
 							</span>
-							<span class="filter-label">{$_('vehicle.detail.timeline.filter.odometer')}</span>
+							<span class="filter-label">{readingFilterLabel}</span>
 						</button>
 						<button
 							class="filter-row"
@@ -585,8 +619,8 @@
 						<span class="add-menu-desc">{$_('layout.addEntry.maintenanceDesc')}</span>
 					</button>
 					<button class="add-menu-item" onclick={() => openForm('odometer')}>
-						<span>{$_('layout.addEntry.mileage')}</span>
-						<span class="add-menu-desc">{$_('layout.addEntry.mileageDesc')}</span>
+						<span>{readingMenuLabel}</span>
+						<span class="add-menu-desc">{readingMenuDesc}</span>
 					</button>
 					<button class="add-menu-item" onclick={() => openForm('note')}>
 						<span>{$_('vehicle.forms.writeNote')}</span>
@@ -637,9 +671,7 @@
 					<input type="date" name="performed_at" value={today} class="input" required />
 				</label>
 				<label class="field">
-					<span class="field-label"
-						>{$_('vehicle.forms.fields.odometer', { values: { unit } })}</span
-					>
+					<span class="field-label">{measurementFieldLabel}</span>
 					<input
 						type="number"
 						name="odometer_at_service"
@@ -861,7 +893,7 @@
 				};
 			}}
 		>
-			<div class="inline-form-title">{$_('vehicle.forms.updateOdo')}</div>
+			<div class="inline-form-title">{updateReadingTitle}</div>
 			{#if (form as any)?.odoError}
 				<div class="form-err">{(form as any).odoError}</div>
 			{/if}
@@ -870,9 +902,7 @@
 			{/if}
 			<div class="form-row">
 				<label class="field">
-					<span class="field-label"
-						>{$_('vehicle.forms.fields.currentReading', { values: { unit } })}</span
-					>
+					<span class="field-label">{currentReadingLabel}</span>
 					<input
 						type="number"
 						name="odometer"
@@ -1032,7 +1062,7 @@
 		<EmptyState
 			icon="📋"
 			title={$_('vehicle.detail.timeline.empty.title')}
-			description={$_('vehicle.detail.timeline.empty.description')}
+			description={emptyTimelineDescription}
 		/>
 	{:else}
 		<!-- Single backdrop for all entry menus -->
@@ -1065,7 +1095,9 @@
 											>{/if}
 									</div>
 									<div class="entry-meta">
-										<span class="mono">{formatNumber(log.odometer_at_service, locale)} {unit}</span>
+										<span class="mono"
+											>{formatMeasurement(log.odometer_at_service, unit, locale)}</span
+										>
 										{#if log.cost_cents}
 											<span class="sep">·</span>
 											<span class="mono cost"
@@ -1155,9 +1187,7 @@
 												/>
 											</label>
 											<label class="field">
-												<span class="field-label"
-													>{$_('vehicle.forms.fields.odometer', { values: { unit } })}</span
-												>
+												<span class="field-label">{measurementFieldLabel}</span>
 												<input
 													type="number"
 													name="odometer_at_service"
@@ -1587,10 +1617,10 @@
 						{:else}
 							{@const log = entry.log}
 							<div class="timeline-entry odo-entry">
-								<div class="entry-icon" title="Mileage" aria-hidden="true"></div>
+								<div class="entry-icon" title={readingMenuLabel} aria-hidden="true"></div>
 								<div class="entry-body">
 									<div class="entry-title odo-title">
-										<span class="mono">{formatNumber(log.odometer, locale)} {unit}</span>
+										<span class="mono">{formatMeasurement(log.odometer, unit, locale)}</span>
 										{#if log.remark}<span class="odo-note"> · {log.remark}</span>{/if}
 									</div>
 								</div>
@@ -1643,9 +1673,7 @@
 									<input type="hidden" name="id" value={log.id} />
 									<div class="form-row">
 										<label class="field">
-											<span class="field-label"
-												>{$_('vehicle.forms.fields.odometer', { values: { unit } })}</span
-											>
+											<span class="field-label">{measurementFieldLabel}</span>
 											<input
 												type="number"
 												name="odometer"
@@ -1696,8 +1724,10 @@
 					{#if hiddenCount > 0}
 						<button class="collapse-toggle" onclick={() => toggleMonth(ym)}>
 							{expandedMonths.has(ym)
-								? $_('vehicle.detail.hideOdoReadings')
-								: $_('vehicle.detail.showMoreOdoReadings', { values: { n: hiddenCount } })}
+								? hideReadingsLabel
+								: isHoursVehicle
+									? $_('vehicle.detail.showMoreUsageReadings', { values: { n: hiddenCount } })
+									: $_('vehicle.detail.showMoreOdoReadings', { values: { n: hiddenCount } })}
 						</button>
 					{/if}
 				</div>

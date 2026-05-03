@@ -105,7 +105,9 @@
 		"odometer": {
 			"title": "Lettura attuale del contachilometri",
 			"description": "Imposta la base per gli intervalli di manutenzione basati sui km.",
-			"placeholder": "0"
+			"placeholder": "0",
+			"hoursTitle": "Lettura oraria attuale",
+			"hoursDescription": "Imposta la base per gli intervalli di manutenzione basati sulle ore."
 		},
 		"presets": {
 			"title": "Quali attività di manutenzione?",
@@ -135,6 +137,14 @@
 			"descriptions": {
 				"chain_lube": "Pulire e lubrificare la catena",
 				"chain_tension": "Controllare e regolare la tensione della catena"
+			},
+			"hoursEmpty": "I veicoli a ore partono senza preset di distanza. Puoi aggiungere intervalli orari da Manutenzione dopo la configurazione.",
+			"hourIntervals": {
+				"oil": "ogni 15 h",
+				"tire": "ogni 20 h",
+				"chain_lube": "ogni 5 h",
+				"chain_tension": "ogni 10 h",
+				"brake": "ogni 25 h"
 			}
 		},
 		"lastService": {
@@ -143,7 +153,8 @@
 			"date": "Data",
 			"odometer": "Contachilometri al servizio",
 			"skip": "Salta questo passaggio",
-			"setupNote": "Ultimo servizio (inserito durante la configurazione)"
+			"setupNote": "Ultimo servizio (inserito durante la configurazione)",
+			"hoursReading": "Ore al servizio"
 		},
 		"summary": {
 			"title": "Sei pronto!",
@@ -228,14 +239,16 @@
 				"subtitle": "Tutti i tuoi dati per {name} in un unico posto.",
 				"empty": {
 					"title": "Nessuna cronologia ancora",
-					"description": "Registra la tua prima manutenzione o controllo del chilometraggio per avviare la cronologia."
+					"description": "Registra la tua prima manutenzione o controllo del chilometraggio per avviare la cronologia.",
+					"usageDescription": "Registra il primo servizio o la lettura d'uso per avviare la cronologia."
 				},
 				"filter": {
 					"service": "Manutenzione",
 					"odometer": "Odometro",
 					"notes": "Note",
 					"travels": "Viaggi",
-					"finance": "Finanze"
+					"finance": "Finanze",
+					"usage": "Utilizzo"
 				}
 			},
 			"upcoming": "Prossimo",
@@ -257,7 +270,9 @@
 				"description": "Questa voce verrà rimossa definitivamente dalla tua cronologia. Questa azione non può essere annullata.",
 				"confirm": "Elimina",
 				"cancel": "Mantieni"
-			}
+			},
+			"hideUsageReadings": "Nascondi letture d'uso",
+			"showMoreUsageReadings": "Mostra altre {n} letture d'uso"
 		},
 		"forms": {
 			"logService": "Registra intervento",
@@ -276,7 +291,8 @@
 				"usedTracker": "Manutenzione eseguita per",
 				"checkToReset": "(seleziona per resettare)",
 				"currentReading": "Lettura attuale ({unit})",
-				"attachments": "Allegati {optional}"
+				"attachments": "Allegati {optional}",
+				"usage": "Lettura d'uso ({unit})"
 			},
 			"placeholders": {
 				"partsUsed": "Pezzi usati, osservazioni…",
@@ -304,7 +320,8 @@
 			"warnings": {
 				"odoSame": "Hai già una lettura di {num} {unit} salvata.",
 				"odoLower": "Inferiore alla lettura più alta registrata ({current} {unit}), sarà salvato come record storico."
-			}
+			},
+			"updateUsage": "Aggiorna utilizzo"
 		},
 		"add": {
 			"title": "Aggiungi veicolo",
@@ -322,7 +339,8 @@
 				"vin": "Telaio",
 				"licensePlate": "Targa",
 				"currentReading": "Lettura attuale",
-				"unit": "Unità"
+				"unit": "Unità",
+				"name": "Nome"
 			},
 			"placeholders": {
 				"name": "Il mio CB500F",
@@ -348,7 +366,9 @@
 			"odometer": {
 				"title": "Aggiorna chilometraggio",
 				"currentReading": "Lettura attuale ({unit})",
-				"update": "Aggiorna"
+				"update": "Aggiorna",
+				"usageTitle": "Aggiorna utilizzo",
+				"currentUsage": "Utilizzo attuale ({unit})"
 			},
 			"vehicleDetails": "Dettagli veicolo",
 			"fields": {
@@ -440,7 +460,12 @@
 				"invalidImageFormat": "Formato immagine non valido. Supportati: JPEG, PNG, WebP, GIF",
 				"invalidFileExt": "Estensione file non valida. Supportate: .jpg, .jpeg, .png, .webp, .gif",
 				"uploadFailed": "Caricamento fallito: errore di archiviazione"
-			}
+			},
+			"measurementUnit": {
+				"title": "Unità di misura",
+				"locked": "Bloccata dopo la creazione"
+			},
+			"usageUpdated": "Utilizzo aggiornato"
 		}
 	},
 	"maintenance": {
@@ -494,7 +519,8 @@
 			"placeholders": {
 				"name": "es. Cambio olio",
 				"km": "es. 5000",
-				"months": "es. 12"
+				"months": "es. 12",
+				"hours": "es. 100"
 			},
 			"submit": "Aggiungi attività"
 		},
@@ -515,7 +541,8 @@
 			"every": "Ogni {interval}",
 			"due": "Previsto {info}",
 			"last": "Ultima {info}",
-			"notScheduled": "Non pianificato"
+			"notScheduled": "Non pianificato",
+			"next": "Prossimo {info}"
 		},
 		"editTracker": {
 			"sections": {
@@ -531,7 +558,8 @@
 				"everyMonths": "Ogni (mesi)",
 				"date": "Data",
 				"odometer": "Contachilometri ({unit})",
-				"autoCompute": "— lascia vuoto per calcolo automatico"
+				"autoCompute": "— lascia vuoto per calcolo automatico",
+				"usage": "Lettura d'uso ({unit})"
 			},
 			"submit": "Salva modifiche"
 		},
@@ -608,7 +636,8 @@
 			"odometer": "Chilometraggio ({unit})",
 			"odometerOptional": "Opzionale",
 			"notes": "Note",
-			"notesPlaceholder": "Dettagli aggiuntivi"
+			"notesPlaceholder": "Dettagli aggiuntivi",
+			"usage": "Lettura d'uso ({unit})"
 		},
 		"deleteDialog": {
 			"title": "Eliminare questa transazione?",
@@ -897,7 +926,8 @@
 	},
 	"units": {
 		"km": "km",
-		"mi": "mi"
+		"mi": "mi",
+		"hours": "ore"
 	},
 	"currency": {
 		"eur": "€ Euro",
@@ -934,7 +964,9 @@
 			"mileage": "Chilometraggio",
 			"mileageDesc": "Numero sul tuo cruscotto",
 			"finance": "Finanze",
-			"financeDesc": "Carburante, assicurazione o ricambi"
+			"financeDesc": "Carburante, assicurazione o ricambi",
+			"usage": "Utilizzo",
+			"usageDesc": "Ore o lettura sul tuo contatore"
 		}
 	},
 	"notifications": {
