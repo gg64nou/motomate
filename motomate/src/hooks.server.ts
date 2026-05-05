@@ -1,6 +1,11 @@
 import { lucia } from '$lib/auth/index.js';
 import type { Handle } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
+import { runWorkflowChecks } from '$lib/workflow/engine.js';
+
+// Per-user timestamps to throttle passive workflow checks (in-memory, resets on server restart)
+const lastWorkflowCheck = new Map<string, number>();
+const WORKFLOW_CHECK_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
 
 /**
  * Runtime CSRF origin validation.
@@ -158,6 +163,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	event.locals.user = user;
 	event.locals.session = session;
+
+	// Passive workflow check: fire at most once per hour per user, non-blocking
+	if (user) {
+		const last = lastWorkflowCheck.get(user.id) ?? 0;
+		if (Date.now() - last > WORKFLOW_CHECK_INTERVAL_MS) {
+			lastWorkflowCheck.set(user.id, Date.now());
+			runWorkflowChecks(user.id).catch(() => {});
+		}
+	}
 
 	const response = await resolve(event, {
 		transformPageChunk({ html }) {
