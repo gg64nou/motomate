@@ -12,15 +12,11 @@ describe('export measurement contract', () => {
 	});
 
 	it('documents canonical measurement fields and retained legacy aliases', () => {
-		expect(EXPORT_MEASUREMENT_CONTRACT.canonicalFields.vehicles).toContain(
-			'current_measurement'
-		);
+		expect(EXPORT_MEASUREMENT_CONTRACT.canonicalFields.vehicles).toContain('current_measurement');
 		expect(EXPORT_MEASUREMENT_CONTRACT.canonicalFields.serviceLogs).toContain(
 			'measurement_at_service'
 		);
-		expect(EXPORT_MEASUREMENT_CONTRACT.retainedLegacyFields.vehicles).toContain(
-			'current_odometer'
-		);
+		expect(EXPORT_MEASUREMENT_CONTRACT.retainedLegacyFields.vehicles).toContain('current_odometer');
 		expect(EXPORT_MEASUREMENT_CONTRACT.legacyFieldPolicy).toContain(
 			'Canonical measurement fields are authoritative'
 		);
