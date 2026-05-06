@@ -9,6 +9,11 @@ import { getDocumentsByVehicle } from '$lib/db/repositories/documents.js';
 import { getWorkflowRulesByUser } from '$lib/db/repositories/workflow.js';
 import { getNotifications } from '$lib/workflow/channels/inapp.js';
 import { getStorage } from '$lib/storage/index.js';
+import {
+	EXPORT_FORMAT_VERSION,
+	EXPORT_MEASUREMENT_CONTRACT,
+	SUPPORTED_IMPORT_FORMATS
+} from '$lib/export-contract.js';
 
 export const GET: RequestHandler = async ({ locals, url }) => {
 	if (!locals.user) error(401, 'Unauthorized');
@@ -46,7 +51,9 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	const exportData = {
 		meta: {
 			exportedAt: new Date().toISOString(),
-			format: '1.0',
+			format: EXPORT_FORMAT_VERSION,
+			supportedImportFormats: SUPPORTED_IMPORT_FORMATS,
+			measurementContract: EXPORT_MEASUREMENT_CONTRACT,
 			userId
 		},
 		profile: safeUser,

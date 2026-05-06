@@ -51,7 +51,11 @@ npm run build        # Production build → ./build/
 npm run preview      # Preview production build locally
 ```
 
-The build uses `@sveltejs/adapter-node`, resulting in a Node.js server at `build/index.js`.
+The build uses `@sveltejs/adapter-node` and is served through `server.js`. Production and preview startup run pending migrations before importing the SvelteKit handler or listening for requests. If migration fails, startup exits loudly instead of serving against an out-of-date schema. You can still run the same migration path directly with `node migrate.js`; keep `npm run db:migrate` and `node migrate.js` both working when changing migrations.
+
+### Export and legacy measurement policy
+
+Exports are versioned. Format `2.0` is measurement-aware: importers should prefer canonical fields such as `current_measurement`, `measurement_at_service`, and `measurement_unit`. Legacy odometer-shaped fields remain in the export and database schema as compatibility aliases for existing UI/API callers, old `1.0` distance-only exports, and direct SQLite integrations. Do not physically remove legacy columns unless a later migration has an explicit safety plan for existing installs.
 
 ### Push Notifications
 

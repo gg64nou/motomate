@@ -37,7 +37,11 @@ services:
     restart: unless-stopped
 ```
 
-After downloading the image and starting the container, the application will be available after a few seconds.
+After downloading the image and starting the container, the application will be available after a few seconds. The production server applies pending database migrations before it starts listening; if migrations fail, MotoMate exits instead of serving traffic against an out-of-date schema.
+
+## Data export compatibility
+
+MotoMate exports use a versioned JSON contract. Export format `2.0` is measurement-aware and treats canonical `measurement*` fields as the source of truth while retaining legacy odometer-shaped fields as compatibility aliases for existing integrations and future import bridges. Old `1.0` exports are distance-only; any importer should hydrate canonical measurement fields from the legacy odometer values and the exported unit. Physical deletion of legacy SQLite columns is intentionally deferred for upgrade safety.
 
 ## Donate
 

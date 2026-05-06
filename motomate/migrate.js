@@ -1,12 +1,30 @@
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
 
-const url = process.env.DATABASE_URL ?? './data/motomate.db';
-const sqlite = new Database(url);
-const db = drizzle(sqlite);
+export function runMigrations({ logger = console.log } = {}) {
+	const url = process.env.DATABASE_URL ?? './data/motomate.db';
+	const sqlite = new Database(url);
 
-migrate(db, { migrationsFolder: './drizzle' });
-console.log('Migrations applied successfully');
+	try {
+		const db = drizzle(sqlite);
+		migrate(db, { migrationsFolder: './drizzle' });
+		logger('Migrations applied successfully');
+	} finally {
+		sqlite.close();
+	}
+}
 
-sqlite.close();
+const isDirectRun = process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+
+if (isDirectRun) {
+	try {
+		runMigrations();
+	} catch (err) {
+		console.error('Migration failed; database schema is not current.');
+		console.error(err);
+		process.exitCode = 1;
+	}
+}

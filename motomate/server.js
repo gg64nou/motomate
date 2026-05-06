@@ -1,6 +1,17 @@
-import { handler } from './build/handler.js';
 import express from 'express';
 import helmet from 'helmet';
+import { runMigrations } from './migrate.js';
+
+try {
+	console.log('[motomate] Applying database migrations before startup...');
+	runMigrations({ logger: (message) => console.log(`[motomate] ${message}`) });
+} catch (err) {
+	console.error('[motomate] Database migration failed; startup aborted before serving requests.');
+	console.error(err);
+	process.exit(1);
+}
+
+const { handler } = await import('./build/handler.js');
 
 const app = express();
 
