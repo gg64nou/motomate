@@ -12,7 +12,6 @@ export const PATCH: RequestHandler = async ({ locals, request }) => {
 	const incoming: PagePrefs = body.page_prefs ?? {};
 	const existing: PagePrefs = (locals.user as any).settings?.page_prefs ?? {};
 
-	// Deep merge one level — don't clobber sibling page prefs
 	const merged: PagePrefs = { ...existing };
 	for (const key of Object.keys(incoming) as (keyof PagePrefs)[]) {
 		(merged as any)[key] = { ...(existing[key] ?? {}), ...(incoming[key] ?? {}) };

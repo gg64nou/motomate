@@ -67,7 +67,7 @@ export const actions: Actions = {
 		const raw = Object.fromEntries(formData);
 		const currency = (locals.user as any)?.settings?.currency ?? 'EUR';
 
-		// getAll() required — Object.fromEntries drops duplicate keys for multi-checkboxes
+		// getAll() required > Object.fromEntries drops duplicate keys for multi-checkboxes
 		const resetTrackerIds = formData.getAll('reset_trackers').map(String).filter(Boolean);
 		const trackerId = (raw.tracker_id as string) || resetTrackerIds[0] || undefined;
 
@@ -199,12 +199,13 @@ export const actions: Actions = {
 
 		const vehicle = await getVehicleById(params.id, locals.user!.id);
 		const maxOdo = vehicle?.current_odometer ?? 0;
+		const unit = vehicle?.odometer_unit ?? 'km';
 		let warning: string | undefined;
 
 		if (raw === maxOdo) {
-			warning = `You already have a reading of ${raw} km. Saving anyway for your records.`;
+			warning = `You already have a reading of ${raw} ${unit}. Saving anyway for your records.`;
 		} else if (raw < maxOdo) {
-			warning = `Lower than the highest recorded reading (${maxOdo} km). Saved as a historical record.`;
+			warning = `Lower than the highest recorded reading (${maxOdo} ${unit}). Saved as a historical record.`;
 		} else {
 			await updateOdometer(params.id, locals.user!.id, raw, vehicle?.odometer_unit);
 		}

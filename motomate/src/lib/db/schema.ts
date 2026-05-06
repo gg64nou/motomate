@@ -111,7 +111,7 @@ export const sessions = sqliteTable('sessions', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	expiresAt: integer('expires_at').notNull() // unix timestamp — Lucia requires camelCase property names
+	expiresAt: integer('expires_at').notNull() // unix timestamp!
 });
 
 export const magic_link_tokens = sqliteTable('magic_link_tokens', {

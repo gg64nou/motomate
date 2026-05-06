@@ -30,8 +30,6 @@ export async function createServiceLog(userId: string, input: unknown): Promise<
 		measurement_at_service: parsed.odometer_at_service,
 		measurement_unit: vehicle?.odometer_unit
 	};
-
-	// Insert the log (sync — better-sqlite3)
 	db.insert(service_logs).values(row).run();
 
 	// Reset primary tracker
@@ -50,9 +48,7 @@ export async function createServiceLog(userId: string, input: unknown): Promise<
 		}
 	}
 
-	// Only advance the vehicle odometer/hours — never move it backwards.
-	// Logging historical entries (e.g. "oil change 400 km ago") must not
-	// overwrite a higher current reading.
+	// Only advance the vehicle odometer/hours; prevent to move it backwards.
 	const serviceMeasurement = resolveMeasurementValue(
 		row.measurement_at_service,
 		row.measurement_unit ?? null

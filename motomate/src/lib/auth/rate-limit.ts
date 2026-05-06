@@ -1,6 +1,4 @@
-// In-memory rate limiter — suitable for a single-process self-hosted server.
-// State resets on server restart, which is acceptable.
-
+// In-memory rate limiter (to be adjusted for distributed environments)
 interface Bucket {
 	count: number;
 	resetAt: number;

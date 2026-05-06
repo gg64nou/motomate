@@ -41,7 +41,7 @@ sw.addEventListener('fetch', (event) => {
 		const url = new URL(event.request.url);
 		const cache = await caches.open(CACHE);
 
-		// Precached assets (hashed) — always serve from cache
+		// Precached assets (hashed); we'll always serve from cache
 		if (ASSETS.includes(url.pathname)) {
 			const cached = await cache.match(url.pathname);
 			if (cached) return cached;

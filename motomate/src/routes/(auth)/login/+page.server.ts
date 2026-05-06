@@ -68,8 +68,7 @@ export const actions: Actions = {
 
 		const user = await getUserByEmail(parsed.data.email);
 
-		// Always run Argon2 verify — even when the user doesn't exist — so response
-		// time is constant and can't be used to enumerate valid email addresses.
+		// Always run Argon2 verify ; even when the user doesn't exist so response time is constant and can't be used to enumerate valid email addresses.
 		const hashToCheck = user?.password_hash ?? (await getDummyHash());
 		const valid = await verify(hashToCheck, parsed.data.password, ARGON2_OPTS);
 
@@ -77,8 +76,7 @@ export const actions: Actions = {
 			return fail(400, { error: errors.invalidCredentials, email: parsed.data.email });
 		}
 
-		// Apply pre-login locale/theme to DB, but only when the DB still has
-		// the default value — never overwrite a setting the user already customized.
+		// Apply pre-login locale/theme to DB, but only when the DB still has the default value; never overwrite a setting the user already customized.
 		const rawTheme = String(data.theme ?? '');
 		const rawLocale = String(data.locale ?? '');
 		const settingsPatch: Record<string, string> = {};

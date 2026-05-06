@@ -85,12 +85,11 @@ export const load: PageServerLoad = async ({ parent, params, locals }) => {
 		const year = new Date(tx.date).getFullYear();
 		byYear.set(year, (byYear.get(year) || 0) + tx.amountCents);
 
-		// Category breakdown — finance transactions use their category field;
-		// service logs (category: null) are grouped under 'service'
+		// Category breakdown. Note finance transactions use their category field; service logs (category: null) are grouped under 'service'
 		const catKey = tx.category ?? (tx.type === 'service' ? 'service' : 'other');
 		byCategory.set(catKey, (byCategory.get(catKey) || 0) + tx.amountCents);
 
-		// Description breakdown — first line of notes, fallback to category label or type
+		// Description breakdown; first line of notes, fallback to category label or type
 		const descKey =
 			tx.notes?.split('\n')[0]?.trim() ||
 			(tx.category ? (categoryLabels[tx.category] ?? tx.category) : 'Service entry');
