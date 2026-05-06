@@ -248,7 +248,7 @@
 					"notes": "Notities",
 					"travels": "Routes",
 					"finance": "Financieel",
-					"usage": "Verbruik"
+					"usage": "Draaiuren"
 				}
 			},
 			"upcoming": "Aankomende",
@@ -292,7 +292,7 @@
 				"checkToReset": "(vink aan om te resetten)",
 				"currentReading": "Huidige stand ({unit})",
 				"attachments": "Bijlagen {optional}",
-				"usage": "Verbruiksstand ({unit})"
+				"usage": "Draaiuren ({unit})"
 			},
 			"placeholders": {
 				"partsUsed": "Gebruikte onderdelen, observaties…",
@@ -321,7 +321,7 @@
 				"odoSame": "Je hebt al een stand van {num} {unit} opgeslagen in jouw administratie.",
 				"odoLower": "Lager dan de hoogste opgenomen stand ({current} {unit}), wordt opgeslagen als historisch record."
 			},
-			"updateUsage": "Verbruik bijwerken"
+			"updateUsage": "Draaiuren bijwerken"
 		},
 		"add": {
 			"title": "Voertuig toevoegen",
@@ -366,7 +366,7 @@
 				"title": "Kilometerstand bijwerken",
 				"currentReading": "Huidige stand ({unit})",
 				"update": "Bijwerken",
-				"usageTitle": "Verbruik bijwerken",
+				"usageTitle": "Draaiuren bijwerken",
 				"currentUsage": "Huidige stand ({unit})"
 			},
 			"vehicleDetails": "Voertuigdetails",
@@ -464,7 +464,7 @@
 				"title": "Meeteenheid",
 				"locked": "Eenheid kan je niet meer aanpassen na het aanmaken van je voertuig."
 			},
-			"usageUpdated": "Verbruik bijgewerkt"
+			"usageUpdated": "Draaiuren bijgewerkt"
 		}
 	},
 	"maintenance": {
@@ -558,7 +558,7 @@
 				"date": "Datum",
 				"odometer": "Kilometerstand ({unit})",
 				"autoCompute": "— leeglaten voor automatische berekening",
-				"usage": "Verbruiksstand ({unit})"
+				"usage": "Draaiuren ({unit})"
 			},
 			"submit": "Wijzigingen opslaan"
 		},
@@ -636,7 +636,7 @@
 			"odometerOptional": "Optioneel",
 			"notes": "Notities",
 			"notesPlaceholder": "Extra details",
-			"usage": "Verbruiksstand ({unit})"
+			"usage": "Draaiuren ({unit})"
 		},
 		"deleteDialog": {
 			"title": "Deze transactie verwijderen?",
@@ -964,7 +964,7 @@
 			"mileageDesc": "Nummer op je dashboard",
 			"finance": "Financiën",
 			"financeDesc": "Brandstof, onderdelen of andere kosten",
-			"usage": "Verbruik",
+			"usage": "Draaiuren",
 			"usageDesc": "Uren of stand op je teller"
 		}
 	},

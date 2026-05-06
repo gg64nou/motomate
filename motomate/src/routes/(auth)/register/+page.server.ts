@@ -51,7 +51,6 @@ export const actions: Actions = {
 
 		const existing = await getUserByEmail(parsed.data.email);
 		if (existing) {
-			// Neutral message — does not confirm whether the address is registered.
 			return fail(400, {
 				error: 'Check your details and try again, or log in if you already have an account.',
 				email: parsed.data.email

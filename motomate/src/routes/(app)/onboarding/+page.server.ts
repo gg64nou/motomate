@@ -95,7 +95,7 @@ export const actions: Actions = {
 		);
 
 		const lastServiceDate = String(data.last_service_date ?? '').trim();
-		// Clamp to current odometer — a service cannot have happened beyond what the vehicle shows
+		// Clamp to current odometer; a service cannot have happened beyond what the vehicle shows
 		const lastServiceOdo = Math.min(
 			Number(data.last_service_odometer),
 			vehicleInput.current_odometer
@@ -121,7 +121,7 @@ export const actions: Actions = {
 				await insertOdometerLog(vehicle.id, userId, vehicleInput.current_odometer);
 			}
 		} else if (vehicleInput.current_odometer > 0) {
-			// No service info entered — record the starting odometer as a baseline
+			// No service info entered; record the starting odometer as a baseline
 			await insertOdometerLog(vehicle.id, userId, vehicleInput.current_odometer);
 		}
 

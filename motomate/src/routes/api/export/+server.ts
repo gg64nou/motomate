@@ -74,7 +74,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 	// export.json in root
 	zipFiles['export.json'] = [strToU8(JSON.stringify(exportData, null, 2)), { mtime: now }];
 
-	// Fetch document files — organised by vehicle / doc_type / filename
+	// Fetch document files and add to zip under documents/{vehicleId}/{docType}/{docId}-{safeName}.ext
 	for (const { vehicle, documents } of vehicleData) {
 		for (const doc of documents) {
 			try {
@@ -85,7 +85,7 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 				const mtime = new Date(doc.created_at);
 				zipFiles[path] = [new Uint8Array(buf), { mtime }];
 			} catch {
-				// File missing from storage — skip gracefully
+				// File missing from storage
 			}
 		}
 	}

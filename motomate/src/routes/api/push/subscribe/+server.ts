@@ -10,7 +10,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const sub = await request.json();
 	if (!sub.endpoint || !sub.keys) error(400, 'Invalid subscription');
 
-	// Upsert — replace existing subscription for same endpoint
+	// Upsert
 	await db.delete(push_subscriptions).where(eq(push_subscriptions.endpoint, sub.endpoint));
 	await db.insert(push_subscriptions).values({
 		id: generateId(),
