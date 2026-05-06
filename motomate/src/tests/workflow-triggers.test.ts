@@ -9,13 +9,14 @@ import {
 describe('workflow trigger normalization', () => {
 	it('normalizes legacy odometer triggers into maintenance triggers', () => {
 		const normalized = normalizeWorkflowTrigger({ type: 'odometer_upcoming', km_before: 500 });
-		expect(normalized).toEqual({
+		expect(normalized).toMatchObject({
 			kind: 'maintenance',
 			phase: 'upcoming',
-			basis: 'distance',
 			threshold: 500,
 			legacyType: 'odometer_upcoming'
 		});
+		// basis is intentionally absent — resolved at evaluation time from vehicle/tracker
+		expect((normalized as { basis?: unknown }).basis).toBeUndefined();
 	});
 
 	it('normalizes document expiry triggers without changing persisted shape assumptions', () => {
@@ -78,6 +79,32 @@ describe('workflow trigger evaluation', () => {
 		);
 
 		expect(evaluation).toBeNull();
+	});
+
+	it('evaluates maintenance triggers for hours-based vehicles', () => {
+		const trigger = normalizeWorkflowTrigger({ type: 'odometer_overdue', km_past: 0 });
+		if (trigger.kind !== 'maintenance') throw new Error('expected maintenance trigger');
+
+		const evaluation = evaluateMaintenanceTrigger(
+			trigger,
+			{
+				current_measurement: 20,
+				current_measurement_unit: 'h',
+				current_odometer: 20,
+				odometer_unit: 'h'
+			},
+			{
+				next_due_measurement: 15,
+				next_due_odometer: null,
+				measurement_unit: 'h'
+			},
+			{ name: 'Oil change', interval_km: null }
+		);
+
+		expect(evaluation).not.toBeNull();
+		expect(evaluation?.matches).toBe(true);
+		expect(evaluation?.measurement.basis).toBe('duration');
+		expect(evaluation?.measurement.unit).toBe('h');
 	});
 
 	it('evaluates date overdue triggers and preserves overdue relation metadata', () => {

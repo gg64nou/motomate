@@ -1,8 +1,13 @@
 import PDFDocumentClass from 'pdfkit';
 import { PDFDocument as LibPDFDocument, StandardFonts, rgb } from 'pdf-lib';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 import type { Vehicle, ServiceLog, Document as DocRecord } from '$lib/db/schema.js';
+import en_locale from '../i18n/locales/en.json';
+import nl_locale from '../i18n/locales/nl.json';
+import de_locale from '../i18n/locales/de.json';
+import es_locale from '../i18n/locales/es.json';
+import fr_locale from '../i18n/locales/fr.json';
+import it_locale from '../i18n/locales/it.json';
+import pt_locale from '../i18n/locales/pt.json';
 
 type PDFDoc = InstanceType<typeof PDFDocumentClass>;
 
@@ -50,6 +55,17 @@ const SUBTLE = '#9ca3af';
 const ACCENT = '#2563eb';
 const RULE = '#e5e7eb';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const LOCALE_DATA: Record<string, any> = {
+	en: en_locale,
+	nl: nl_locale,
+	de: de_locale,
+	es: es_locale,
+	fr: fr_locale,
+	it: it_locale,
+	pt: pt_locale
+};
+
 function loadTranslations(locale: string): ReportTranslations {
 	const supported = ['en', 'nl', 'de', 'es', 'fr', 'it', 'pt'];
 	const lang = supported.includes(locale) ? locale : 'en';
@@ -72,16 +88,9 @@ function loadTranslations(locale: string): ReportTranslations {
 		seeFollowingPages: 'See following {count} pages',
 		fileNotEmbeddable: 'File not embeddable in PDF'
 	};
-	try {
-		const raw = readFileSync(resolve('src/lib/i18n/locales', `${lang}.json`), 'utf-8');
-		const json = JSON.parse(raw) as any;
-		const loaded = json?.vehicle?.edit?.settings?.report?.pdf as Partial<ReportTranslations>;
-		if (loaded) {
-			return { ...fallbacks, ...loaded };
-		}
-	} catch {
-		// fall through to fallbacks
-	}
+	const json = LOCALE_DATA[lang];
+	const loaded = json?.vehicle?.edit?.settings?.report?.pdf as Partial<ReportTranslations>;
+	if (loaded) return { ...fallbacks, ...loaded };
 	return fallbacks;
 }
 
@@ -116,6 +125,14 @@ function fmtDateShort(iso: string, locale: string): string {
 		}).format(new Date(iso));
 	} catch {
 		return iso.slice(0, 10);
+	}
+}
+
+function fmtCurrency(cents: number, currency: string, locale: string): string {
+	try {
+		return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(cents / 100);
+	} catch {
+		return `${(cents / 100).toFixed(2)} ${currency}`;
 	}
 }
 
@@ -326,37 +343,8 @@ function drawServiceLogs(
 
 		const attachIds = (log.attachments as string[] | null) ?? [];
 		const parts = (log.parts_used as Array<{ name: string; part_number?: string }> | null) ?? [];
-		const lines = 1 + (log.notes ? 1 : 0) + (log.remark ? 1 : 0) + (parts.length > 0 ? 1 : 0);
-		ensureSpace(doc, lines * 14 + 16);
 
-		const entryTop = doc.y;
-
-		const dateStr = fmtDateShort(log.performed_at, locale);
-		const odoStr =
-			log.odometer_at_service != null
-				? `${log.odometer_at_service.toLocaleString(locale)} ${vehicle.odometer_unit ?? 'km'}`
-				: '';
-		const metaLine = odoStr ? `${dateStr}  ·  ${odoStr}` : dateStr;
-		doc
-			.fontSize(9)
-			.font('Courier')
-			.fillColor(MUTED)
-			.text(metaLine, ML, entryTop, { lineBreak: false });
-
-		const refs = attachIds
-			.filter((id) => attachmentIndex.has(id))
-			.map((id) => `[A${attachmentIndex.get(id)}]`)
-			.join('  ');
-		if (refs) {
-			doc.fontSize(9).font('Courier').fillColor(ACCENT).text(refs, ML, entryTop, {
-				width: CW,
-				align: 'right',
-				lineBreak: false
-			});
-		}
-
-		let cy = entryTop + 14;
-
+		// Resolve tracker names (deleted trackers won't be in the map)
 		const names: string[] = [];
 		if (log.tracker_id) {
 			const n = trackerNames.get(log.tracker_id);
@@ -368,21 +356,69 @@ function drawServiceLogs(
 				if (n && !names.includes(n)) names.push(n);
 			}
 		}
-		if (names.length > 0) {
+
+		// Title: tracker names, or first line of notes as fallback
+		const trackerTitle = names.join(', ');
+		const notesFirstLine = log.notes?.split('\n')[0]?.trim() ?? '';
+		const entryTitle = trackerTitle || notesFirstLine;
+		// Notes body: if first line was used as title, skip it
+		const notesBody = trackerTitle
+			? (log.notes ?? '')
+			: log.notes?.includes('\n')
+				? log.notes.split('\n').slice(1).join('\n').trim()
+				: '';
+
+		const lineCount =
+			(entryTitle ? 1 : 0) +
+			1 +
+			(notesBody ? 1 : 0) +
+			(log.remark ? 1 : 0) +
+			(parts.length > 0 ? 1 : 0);
+		ensureSpace(doc, lineCount * 14 + 20);
+
+		const entryTop = doc.y;
+
+		// Title row (bold, ink)
+		if (entryTitle) {
 			doc
 				.fontSize(10)
-				.font('Helvetica')
+				.font('Helvetica-Bold')
 				.fillColor(INK)
-				.text(names.join(', '), ML, cy, { width: CW });
-			cy = doc.y + 2;
+				.text(entryTitle, ML, entryTop, { width: CW });
 		}
 
-		if (log.notes) {
+		let cy = entryTitle ? doc.y + 2 : entryTop;
+
+		// Meta row: date · odometer [· cost]  +  attachment refs right-aligned
+		const dateStr = fmtDateShort(log.performed_at, locale);
+		const odoStr =
+			log.odometer_at_service != null
+				? `${log.odometer_at_service.toLocaleString(locale)} ${vehicle.odometer_unit ?? 'km'}`
+				: '';
+		const costStr = log.cost_cents != null ? fmtCurrency(log.cost_cents, log.currency, locale) : '';
+		const metaLine = [dateStr, odoStr, costStr].filter(Boolean).join('  ·  ');
+		doc.fontSize(9).font('Courier').fillColor(MUTED).text(metaLine, ML, cy, { lineBreak: false });
+
+		const refs = attachIds
+			.filter((id) => attachmentIndex.has(id))
+			.map((id) => `[A${attachmentIndex.get(id)}]`)
+			.join('  ');
+		if (refs) {
+			doc.fontSize(9).font('Courier').fillColor(ACCENT).text(refs, ML, cy, {
+				width: CW,
+				align: 'right',
+				lineBreak: false
+			});
+		}
+
+		cy = doc.y + 5;
+
+		if (notesBody) {
 			doc
 				.fontSize(9)
 				.font('Helvetica')
 				.fillColor(MUTED)
-				.text(`${t.notes}: ${log.notes}`, ML, cy, { width: CW });
+				.text(`${t.notes}: ${notesBody}`, ML, cy, { width: CW });
 			cy = doc.y + 2;
 		}
 

@@ -537,9 +537,11 @@ export async function createTracker(
 	let next_due_odometer: number | null = null;
 	let next_due_at: string | null = null;
 
-	if (interval?.basis === 'distance' && interval.interval_measurement != null) {
+	if (interval?.interval_measurement != null) {
 		next_due_measurement = interval.interval_measurement;
-		next_due_odometer = interval.interval_measurement;
+		if (interval.basis === 'distance') {
+			next_due_odometer = interval.interval_measurement;
+		}
 	}
 	if (template?.interval_months) {
 		next_due_at = formatISO(addMonths(parseISO(today), template.interval_months), {
@@ -933,15 +935,12 @@ export async function recomputeTrackerStatuses(
 		const needsInit = lastDoneMeasurement === null && t.last_done_at === null;
 		const fields: Partial<typeof active_trackers.$inferInsert> = {};
 
-		if (
-			needsInit &&
-			nextDueMeasurement === null &&
-			interval.basis === 'distance' &&
-			interval.interval_measurement != null
-		) {
+		if (needsInit && nextDueMeasurement === null && interval.interval_measurement != null) {
 			nextDueMeasurement = interval.interval_measurement;
 			fields.next_due_measurement = nextDueMeasurement;
-			fields.next_due_odometer = nextDueMeasurement;
+			if (interval.basis === 'distance') {
+				fields.next_due_odometer = nextDueMeasurement;
+			}
 		}
 		if (needsInit && nextDueAt === null && template.interval_months) {
 			nextDueAt = formatISO(addMonths(parseISO(today), template.interval_months), {
@@ -985,9 +984,13 @@ export async function recomputeTrackerStatuses(
 			// TODO: expose DUE_SOON_FACTOR as a user setting in profile settings page
 			const DUE_SOON_FACTOR = 0.2;
 			const intervalMeasurement = interval.interval_measurement ?? template.interval_km;
+			// Min window is unit-aware: 50 for km/mi (meaningful look-ahead), 1 for hours
+			const minWindow = interval.basis === 'duration' ? 1 : 50;
 			const kmWindow = intervalMeasurement
-				? Math.min(500, Math.max(50, Math.round(intervalMeasurement * DUE_SOON_FACTOR)))
-				: 500;
+				? Math.min(500, Math.max(minWindow, Math.round(intervalMeasurement * DUE_SOON_FACTOR)))
+				: interval.basis === 'duration'
+					? 1
+					: 500;
 			const kmDueSoon =
 				nextDueMeasurementValue != null &&
 				areMeasurementsComparable(vehicleMeasurement, nextDueMeasurementValue) &&
@@ -1015,7 +1018,7 @@ export async function recomputeTrackerStatuses(
 			patches.push({ id: t.id, fields });
 		}
 
-		// Return tracker with locally computed values — no second DB read needed
+		// Return tracker with locally computed values
 		results.push({
 			...hydrateTracker(t),
 			measurement_unit:

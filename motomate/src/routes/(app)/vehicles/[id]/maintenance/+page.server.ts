@@ -147,7 +147,7 @@ export const actions: Actions = {
 		const lastDoneOdo =
 			String(raw.last_done_odometer || '').trim() !== '' ? Number(raw.last_done_odometer) : null;
 
-		// Explicit overrides — undefined means "auto-compute"
+		// Explicit overrides; undefined means "auto-compute"
 		const nextDueOdoRaw = String(raw.next_due_odometer || '').trim();
 		const nextDueAtRaw = String(raw.next_due_at || '').trim();
 		const nextDueOdometer = nextDueOdoRaw !== '' ? Number(nextDueOdoRaw) : undefined;
@@ -186,7 +186,7 @@ export const actions: Actions = {
 		const raw = Object.fromEntries(formData);
 		const id = String(raw.id);
 
-		// Must use getAll() — Object.fromEntries drops duplicate keys for multi-checkboxes
+		// Must use getAll(); Object.fromEntries drops duplicate keys for multi-checkboxes
 		const resetTrackerIds = formData.getAll('reset_trackers').map(String);
 
 		await updateServiceLog(id, params.id, locals.user!.id, {

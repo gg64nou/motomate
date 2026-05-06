@@ -107,7 +107,7 @@ async function dispatchNotification(
 	await Promise.allSettled(tasks);
 }
 
-// Returns an array — one entry per matching tracker (or document/date condition).
+// Returns an array > one entry per matching tracker (or document/date condition).
 // Empty array means nothing fired.
 async function evalTrigger(
 	trigger: RuleTrigger,

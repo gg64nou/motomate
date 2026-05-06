@@ -14,7 +14,7 @@ import {
 export type WorkflowMaintenanceTrigger = {
 	kind: 'maintenance';
 	phase: 'upcoming' | 'overdue';
-	basis: 'distance';
+	basis?: MeasurementBasis;
 	threshold: number;
 	legacyType: 'odometer_upcoming' | 'odometer_overdue';
 };
@@ -159,7 +159,6 @@ export function normalizeWorkflowTrigger(trigger: RuleTrigger): NormalizedWorkfl
 			return {
 				kind: 'maintenance',
 				phase: 'upcoming',
-				basis: 'distance',
 				threshold: trigger.km_before,
 				legacyType: trigger.type
 			};
@@ -167,7 +166,6 @@ export function normalizeWorkflowTrigger(trigger: RuleTrigger): NormalizedWorkfl
 			return {
 				kind: 'maintenance',
 				phase: 'overdue',
-				basis: 'distance',
 				threshold: trigger.km_past,
 				legacyType: trigger.type
 			};
