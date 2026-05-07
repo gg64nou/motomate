@@ -1,13 +1,14 @@
 import PDFDocumentClass from 'pdfkit';
 import { PDFDocument as LibPDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import type { Vehicle, ServiceLog, Document as DocRecord } from '$lib/db/schema.js';
-import en_locale from '../i18n/locales/en.json';
-import nl_locale from '../i18n/locales/nl.json';
-import de_locale from '../i18n/locales/de.json';
-import es_locale from '../i18n/locales/es.json';
-import fr_locale from '../i18n/locales/fr.json';
-import it_locale from '../i18n/locales/it.json';
-import pt_locale from '../i18n/locales/pt.json';
+
+import en from '$lib/i18n/locales/en.json';
+import de from '$lib/i18n/locales/de.json';
+import fr from '$lib/i18n/locales/fr.json';
+import es from '$lib/i18n/locales/es.json';
+import it from '$lib/i18n/locales/it.json';
+import nl from '$lib/i18n/locales/nl.json';
+import pt from '$lib/i18n/locales/pt.json';
 
 type PDFDoc = InstanceType<typeof PDFDocumentClass>;
 
@@ -55,15 +56,14 @@ const SUBTLE = '#9ca3af';
 const ACCENT = '#2563eb';
 const RULE = '#e5e7eb';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LOCALE_DATA: Record<string, any> = {
-	en: en_locale,
-	nl: nl_locale,
-	de: de_locale,
-	es: es_locale,
-	fr: fr_locale,
-	it: it_locale,
-	pt: pt_locale
+	en: en,
+	nl: nl,
+	de: de,
+	es: es,
+	fr: fr,
+	it: it,
+	pt: pt
 };
 
 function loadTranslations(locale: string): ReportTranslations {
