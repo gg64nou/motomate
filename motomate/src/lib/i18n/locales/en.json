@@ -542,7 +542,8 @@
 			"logNow": "Log now -",
 			"edit": "Edit",
 			"delete": "Delete",
-			"notScheduled": "Not scheduled"
+			"notScheduled": "Not scheduled",
+			"reminderBadge": "reminder"
 		},
 		"editTracker": {
 			"sections": {
@@ -559,7 +560,9 @@
 				"date": "Date",
 				"odometer": "Odometer ({unit})",
 				"usage": "Usage reading ({unit})",
-				"autoCompute": "— leave empty to auto-compute"
+				"autoCompute": "— leave empty to auto-compute",
+				"reminderOnly": "Reminder only",
+				"reminderOnlyHint": "Logging resets the reminder without creating a timeline entry or appearing in reports."
 			},
 			"submit": "Save changes"
 		},

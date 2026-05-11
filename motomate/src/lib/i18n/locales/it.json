@@ -542,7 +542,8 @@
 			"due": "Previsto {info}",
 			"last": "Ultima {info}",
 			"notScheduled": "Non pianificato",
-			"next": "Prossimo {info}"
+			"next": "Prossimo {info}",
+			"reminderBadge": "promemoria"
 		},
 		"editTracker": {
 			"sections": {
@@ -559,7 +560,9 @@
 				"date": "Data",
 				"odometer": "Contachilometri ({unit})",
 				"autoCompute": "— lascia vuoto per calcolo automatico",
-				"usage": "Lettura d'uso ({unit})"
+				"usage": "Lettura d'uso ({unit})",
+				"reminderOnly": "Solo promemoria",
+				"reminderOnlyHint": "La registrazione reimposta il promemoria senza creare una voce nella cronologia o apparire nei rapporti."
 			},
 			"submit": "Salva modifiche"
 		},

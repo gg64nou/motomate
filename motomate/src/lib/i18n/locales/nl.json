@@ -541,7 +541,8 @@
 			},
 			"logNow": "Nu loggen →",
 			"edit": "Bewerken",
-			"delete": "Verwijderen"
+			"delete": "Verwijderen",
+			"reminderBadge": "herinnering"
 		},
 		"editTracker": {
 			"sections": {
@@ -558,7 +559,9 @@
 				"date": "Datum",
 				"odometer": "Kilometerstand ({unit})",
 				"autoCompute": "— leeglaten voor automatische berekening",
-				"usage": "Draaiuren ({unit})"
+				"usage": "Draaiuren ({unit})",
+				"reminderOnly": "Alleen herinnering",
+				"reminderOnlyHint": "Bijhouden reset de herinnering zonder een tijdlijnvermelding aan te maken of in rapporten te verschijnen."
 			},
 			"submit": "Wijzigingen opslaan"
 		},

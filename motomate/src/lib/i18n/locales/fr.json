@@ -541,7 +541,8 @@
 			"next": "Suivant {info}",
 			"due": "Prévu {info}",
 			"last": "Dernière fois {info}",
-			"notScheduled": "Non planifié"
+			"notScheduled": "Non planifié",
+			"reminderBadge": "rappel"
 		},
 		"editTracker": {
 			"sections": {
@@ -558,7 +559,9 @@
 				"date": "Date",
 				"odometer": "Kilométrage ({unit})",
 				"autoCompute": "— laisser vide pour calcul automatique",
-				"usage": "Relevé d'usage ({unit})"
+				"usage": "Relevé d'usage ({unit})",
+				"reminderOnly": "Rappel uniquement",
+				"reminderOnlyHint": "L'enregistrement réinitialise le rappel sans créer d'entrée dans la chronologie ni apparaître dans les rapports."
 			},
 			"submit": "Enregistrer les modifications"
 		},

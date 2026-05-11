@@ -541,7 +541,8 @@
 			"next": "Nächste {info}",
 			"due": "Fällig {info}",
 			"last": "Zuletzt {info}",
-			"notScheduled": "Nicht geplant"
+			"notScheduled": "Nicht geplant",
+			"reminderBadge": "Erinnerung"
 		},
 		"editTracker": {
 			"sections": {
@@ -558,7 +559,9 @@
 				"date": "Datum",
 				"odometer": "Kilometerstand ({unit})",
 				"autoCompute": "— leer lassen für automatische Berechnung",
-				"usage": "Verbrauchsstand ({unit})"
+				"usage": "Verbrauchsstand ({unit})",
+				"reminderOnly": "Nur Erinnerung",
+				"reminderOnlyHint": "Das Protokollieren setzt die Erinnerung zurück, ohne einen Zeitleisteneintrag zu erstellen oder in Berichten zu erscheinen."
 			},
 			"submit": "Änderungen speichern"
 		},

@@ -541,7 +541,8 @@
 			"due": "Previsto {info}",
 			"last": "Último {info}",
 			"notScheduled": "Sin programar",
-			"next": "Siguiente {info}"
+			"next": "Siguiente {info}",
+			"reminderBadge": "recordatorio"
 		},
 		"editTracker": {
 			"sections": {
@@ -558,7 +559,9 @@
 				"date": "Fecha",
 				"odometer": "Odómetro ({unit})",
 				"autoCompute": "— dejar vacío para cálculo automático",
-				"usage": "Lectura de uso ({unit})"
+				"usage": "Lectura de uso ({unit})",
+				"reminderOnly": "Solo recordatorio",
+				"reminderOnlyHint": "Registrar restablece el recordatorio sin crear una entrada en la cronología ni aparecer en los informes."
 			},
 			"submit": "Guardar cambios"
 		},
