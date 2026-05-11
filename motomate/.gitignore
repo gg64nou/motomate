@@ -8,5 +8,4 @@ uploads/
 *.db
 *.db-shm
 *.db-wal
-!src/tests/fixtures/pre-pr-2-motomate.db
 .qwen/

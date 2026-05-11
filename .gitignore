@@ -8,5 +8,3 @@ uploads/*
 !CONTRIBUTING.md
 *.db
 *.db*
-!motomate/src/tests/fixtures/pre-pr-2-motomate.db
-!motomate/src/tests/fixtures/README.md
