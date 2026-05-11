@@ -695,7 +695,11 @@
 								<input type="checkbox" name="reset_trackers" value={t.id} />
 								<span class="tracker-check-label">
 									<span class="tracker-check-name">{t.template.name}</span>
-									{#if t.status === 'due'}
+									{#if t.reminder_only}
+										<span class="tracker-check-status"
+											>{$_('maintenance.tracker.reminderBadge')}</span
+										>
+									{:else if t.status === 'due'}
 										<span class="tracker-check-status tracker-check-status--due"
 											>{$_('maintenance.tracker.status.due')}</span
 										>

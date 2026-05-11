@@ -129,7 +129,12 @@
 >
 	<div class="tracker-main">
 		<div class="tracker-info">
-			<div class="tracker-name">{tracker.template.name}</div>
+			<div class="tracker-name">
+				{tracker.template.name}
+				{#if tracker.reminder_only}
+					<span class="reminder-badge">{$_('maintenance.tracker.reminderBadge')}</span>
+				{/if}
+			</div>
 			<div class="tracker-meta">
 				<span>{$_('maintenance.tracker.every', { values: { interval: formatInterval() } })}</span>
 				{#if !forecastMode && (tracker.next_due_measurement || tracker.next_due_odometer || tracker.next_due_at)}
@@ -354,6 +359,19 @@
 	}
 	.tracker-card:has(.history-btn:hover) .tracker-name {
 		color: var(--accent);
+	}
+	.reminder-badge {
+		display: inline-block;
+		font-size: var(--text-xs);
+		font-weight: 500;
+		color: var(--text-subtle);
+		background: var(--bg-muted);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 0.1em 0.4em;
+		vertical-align: middle;
+		margin-left: 0.4rem;
+		letter-spacing: 0.03em;
 	}
 	.tracker-meta {
 		font-size: var(--text-sm);

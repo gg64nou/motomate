@@ -19,8 +19,10 @@ import {
 } from '$lib/db/repositories/vehicles.js';
 import {
 	getTrackersByVehicle,
-	recomputeTrackerStatuses
+	recomputeTrackerStatuses,
+	updateTrackerAfterService
 } from '$lib/db/repositories/maintenance.js';
+import { shouldCreateServiceLog } from '$lib/utils/reminder-only.js';
 import { getDocumentsByVehicle, createDocument } from '$lib/db/repositories/documents.js';
 import { getStorage } from '$lib/storage/index.js';
 import { attachmentStorageKey } from '$lib/utils/storage.js';
@@ -130,10 +132,30 @@ export const actions: Actions = {
 		// Collect any existing doc IDs linked from the picker in the new form
 		const linkedDocIds = formData.getAll('linked_doc_id').map(String).filter(Boolean);
 
-		await createServiceLog(locals.user!.id, {
-			...parsed.data,
-			attachments: [...attachmentDocIds, ...linkedDocIds]
-		});
+		const trackers = await getTrackersByVehicle(params.id, locals.user!.id);
+		const primaryTracker = parsed.data.tracker_id
+			? trackers.find((t) => t.id === parsed.data.tracker_id)
+			: undefined;
+
+		if (primaryTracker && !shouldCreateServiceLog(primaryTracker)) {
+			await updateTrackerAfterService(
+				primaryTracker.id,
+				parsed.data.performed_at,
+				parsed.data.odometer_at_service
+			);
+			for (const id of parsed.data.serviced_tracker_ids ?? []) {
+				await updateTrackerAfterService(
+					id,
+					parsed.data.performed_at,
+					parsed.data.odometer_at_service
+				);
+			}
+		} else {
+			await createServiceLog(locals.user!.id, {
+				...parsed.data,
+				attachments: [...attachmentDocIds, ...linkedDocIds]
+			});
+		}
 
 		const trueOdo = await recomputeCurrentOdometer(params.id, locals.user!.id);
 		await recomputeTrackerStatuses(params.id, trueOdo);
