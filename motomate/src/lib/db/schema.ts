@@ -228,6 +228,7 @@ export const active_trackers = sqliteTable(
 			.$type<TrackerState>()
 			.notNull()
 			.default(sql`'{}'`),
+		reminder_only: integer('reminder_only', { mode: 'boolean' }).notNull().default(false),
 		created_at: text('created_at')
 			.notNull()
 			.default(sql`(datetime('now'))`),
