@@ -173,8 +173,6 @@
 	.back-link::before {
 		content: '← ';
 	}
-
-	/* Header text actions — bare text links, not buttons */
 	.text-action {
 		font-size: var(--text-sm);
 		font-weight: 500;
@@ -192,7 +190,7 @@
 		color: var(--status-overdue);
 	}
 
-	/* Filter tabs — underline pattern matching nav */
+	/* Filter tabs; underline pattern matching nav */
 	.filter-tabs {
 		display: flex;
 		border-bottom: 1px solid var(--border);
@@ -276,7 +274,7 @@
 		font-variant-numeric: tabular-nums;
 	}
 
-	/* Inline row actions — intentionally smaller than Button component */
+	/* Inline row actions; intentionally smaller than Button component */
 	.notif-actions {
 		display: flex;
 		flex-direction: column;

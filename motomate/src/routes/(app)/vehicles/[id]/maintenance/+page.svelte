@@ -1270,8 +1270,6 @@
 		outline-offset: -1px;
 		border-color: transparent;
 	}
-
-	/* Tracker list — open, no outer box */
 	.tracker-list {
 		display: flex;
 		flex-direction: column;

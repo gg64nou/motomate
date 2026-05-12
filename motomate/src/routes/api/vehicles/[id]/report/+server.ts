@@ -21,8 +21,9 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 
 	const reportTrackers = filterTrackersForReport(trackers);
 	const trackerNames = new Map(reportTrackers.map((t) => [t.id, t.template.name]));
+	const reportLogs = serviceLogs.filter((l) => !l.is_reminder);
 
-	const allDocIds = [...new Set(serviceLogs.flatMap((l) => (l.attachments as string[]) ?? []))];
+	const allDocIds = [...new Set(reportLogs.flatMap((l) => (l.attachments as string[]) ?? []))];
 	const docs = allDocIds.length ? await getDocumentsByIds(allDocIds, locals.user.id) : [];
 
 	const storage = getStorage();
@@ -46,7 +47,7 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 
 	const pdf = await buildMaintenanceReport({
 		vehicle,
-		serviceLogs,
+		serviceLogs: reportLogs,
 		trackerNames,
 		docs,
 		docBuffers,

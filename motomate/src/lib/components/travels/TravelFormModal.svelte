@@ -558,15 +558,12 @@
 </Modal>
 
 <style>
-	/* Scrollable modal body */
 	.form-scroll {
 		max-height: calc(85vh - 160px);
 		overflow-y: auto;
 		overflow-x: hidden;
 		padding-right: var(--space-1);
 	}
-
-	/* Field groups — matches documents page pattern */
 	.form-group {
 		display: flex;
 		flex-direction: column;
@@ -585,7 +582,7 @@
 		}
 	}
 
-	/* Labels — matches .field-label across documents + Input.svelte */
+	/* Labels; matches .field-label across documents + Input.svelte */
 	.field-label {
 		font-size: var(--text-sm);
 		font-weight: 500;
@@ -605,7 +602,7 @@
 		margin: var(--space-2) 0 0;
 	}
 
-	/* Inputs — matches .input across documents + Input.svelte */
+	/* Inputs; matches .input across documents + Input.svelte */
 	.input {
 		padding: 0.75rem;
 		border: 1px solid var(--border);
@@ -674,7 +671,7 @@
 		border-color: transparent;
 	}
 
-	/* File chip — matches documents page pattern exactly */
+	/* File chip; matches documents page pattern exactly */
 	.file-chip {
 		display: flex;
 		align-items: center;
@@ -769,7 +766,7 @@
 		color: var(--text-subtle);
 	}
 
-	/* Upload slot — compact upload zone matching documents page aesthetic */
+	/* Upload slot; compact upload zone matching documents page aesthetic */
 	.upload-slot {
 		flex: 1;
 		display: flex;
@@ -798,7 +795,7 @@
 		display: none;
 	}
 
-	/* Form actions — matches documents page */
+	/* Form actions; matches documents page */
 	.form-actions {
 		display: flex;
 		gap: var(--space-3);

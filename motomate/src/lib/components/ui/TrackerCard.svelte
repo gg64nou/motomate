@@ -18,6 +18,7 @@
 		currency: string;
 		notes: string | null;
 		remark: string | null;
+		is_reminder: boolean;
 		created_at: string;
 	};
 
@@ -242,16 +243,20 @@
 						<span class="history-month-line"></span>
 					</div>
 					{#each logs as log}
-						<div class="history-entry">
-							<span class="history-dot"></span>
-							<span class="history-title">{tracker.template.name}</span>
+						<div class="history-entry" class:history-entry--reminder={log.is_reminder}>
+							<span class="history-dot" class:history-dot--reminder={log.is_reminder}></span>
+							<span class="history-title"
+								>{log.is_reminder
+									? $_('maintenance.tracker.reminderBadge')
+									: tracker.template.name}</span
+							>
 							<span class="history-meta">
 								{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
 									log.measurement_at_service ?? log.odometer_at_service,
 									tl(log.measurement_unit ?? vehicleUnit),
 									locale
 								)}
-								{#if log.cost_cents}
+								{#if log.cost_cents && !log.is_reminder}
 									<span class="history-cost">
 										· {formatCurrency(log.cost_cents, log.currency, locale)}</span
 									>
@@ -273,7 +278,6 @@
 		background: var(--bg);
 		transition: border-left-color 0.15s cubic-bezier(0.25, 1, 0.5, 1);
 	}
-	/* Hover tint via pseudo-element — opacity-only = GPU composited, no repaint */
 	.tracker-card::before {
 		content: '';
 		position: absolute;
@@ -298,7 +302,7 @@
 	.tracker-card--overdue {
 		border-left-color: var(--status-overdue);
 	}
-	/* Log success flash — border animates directly (3px strip, cheap), tint via ::after opacity */
+	/* Log success flash; border animates directly (3px strip, cheap), tint via ::after opacity */
 	.tracker-card::after {
 		content: '';
 		position: absolute;
@@ -572,6 +576,15 @@
 		background: var(--text-subtle);
 		flex-shrink: 0;
 		margin-top: 0.35rem;
+	}
+	.history-dot--reminder {
+		background: none;
+		border: 1.5px solid var(--text-subtle);
+	}
+	.history-entry--reminder .history-title {
+		color: var(--text-muted);
+		font-weight: 400;
+		text-transform: capitalize;
 	}
 	.history-title {
 		font-size: var(--text-base);

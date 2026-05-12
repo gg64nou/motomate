@@ -11,7 +11,7 @@
 		waitLocale();
 	});
 
-	// Channel toggles — intentionally snapshot initial values from props
+	// Channel toggles
 	const initialChannels = untrack(() => data.channels ?? {});
 	let pushEnabled = $state(initialChannels.push?.enabled ?? false);
 	let emailEnabled = $state(initialChannels.email?.enabled ?? false);

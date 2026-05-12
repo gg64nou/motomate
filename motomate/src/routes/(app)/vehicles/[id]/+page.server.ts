@@ -19,8 +19,7 @@ import {
 } from '$lib/db/repositories/vehicles.js';
 import {
 	getTrackersByVehicle,
-	recomputeTrackerStatuses,
-	updateTrackerAfterService
+	recomputeTrackerStatuses
 } from '$lib/db/repositories/maintenance.js';
 import { shouldCreateServiceLog } from '$lib/utils/reminder-only.js';
 import { getDocumentsByVehicle, createDocument } from '$lib/db/repositories/documents.js';
@@ -136,30 +135,13 @@ export const actions: Actions = {
 		const primaryTracker = parsed.data.tracker_id
 			? trackers.find((t) => t.id === parsed.data.tracker_id)
 			: undefined;
+		const isReminder = primaryTracker ? !shouldCreateServiceLog(primaryTracker) : false;
 
-		if (primaryTracker && !shouldCreateServiceLog(primaryTracker)) {
-			const validTrackerIds = new Set(trackers.map((t) => t.id));
-			await updateTrackerAfterService(
-				primaryTracker.id,
-				params.id,
-				parsed.data.performed_at,
-				parsed.data.odometer_at_service
-			);
-			for (const id of parsed.data.serviced_tracker_ids ?? []) {
-				if (!validTrackerIds.has(id)) continue;
-				await updateTrackerAfterService(
-					id,
-					params.id,
-					parsed.data.performed_at,
-					parsed.data.odometer_at_service
-				);
-			}
-		} else {
-			await createServiceLog(locals.user!.id, {
-				...parsed.data,
-				attachments: [...attachmentDocIds, ...linkedDocIds]
-			});
-		}
+		await createServiceLog(locals.user!.id, {
+			...parsed.data,
+			attachments: [...attachmentDocIds, ...linkedDocIds],
+			is_reminder: isReminder
+		});
 
 		const trueOdo = await recomputeCurrentOdometer(params.id, locals.user!.id);
 		await recomputeTrackerStatuses(params.id, trueOdo);

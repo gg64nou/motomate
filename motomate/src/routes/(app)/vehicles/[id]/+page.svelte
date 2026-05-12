@@ -174,19 +174,24 @@
 		return diff > 0 ? diff : null;
 	}
 
-	// Timeline filter state — persisted to page_prefs.timeline
 	let filters = $state({
 		service: untrack(() => data.timelinePrefs?.showService ?? true),
 		odometer: untrack(() => data.timelinePrefs?.showOdometer ?? true),
 		note: untrack(() => data.timelinePrefs?.showNotes ?? true),
 		travel: untrack(() => data.timelinePrefs?.showTravel ?? true),
-		finance: untrack(() => data.timelinePrefs?.showFinance ?? false)
+		finance: untrack(() => data.timelinePrefs?.showFinance ?? false),
+		reminder: untrack(() => data.timelinePrefs?.showReminder ?? false)
 	});
 
 	let filterOpen = $state(false);
 
 	const filtersNonDefault = $derived(
-		!filters.service || !filters.odometer || !filters.note || !filters.travel || filters.finance
+		!filters.service ||
+			!filters.odometer ||
+			!filters.note ||
+			!filters.travel ||
+			filters.finance ||
+			filters.reminder
 	);
 
 	let _prefTimer: ReturnType<typeof setTimeout>;
@@ -219,6 +224,7 @@
 		const note = filters.note;
 		const travel = filters.travel;
 		const finance = filters.finance;
+		const reminder = filters.reminder;
 		if (_prefFirstRun) {
 			_prefFirstRun = false;
 			return;
@@ -228,7 +234,8 @@
 			showOdometer: odometer,
 			showNotes: note,
 			showTravel: travel,
-			showFinance: finance
+			showFinance: finance,
+			showReminder: reminder
 		};
 		clearTimeout(_prefTimer);
 		_prefTimer = setTimeout(flushTimelinePrefs, 600);
@@ -239,6 +246,7 @@
 		| { kind: 'service'; date: string; odometer: number; log: (typeof data.logs)[0] }
 		| { kind: 'odometer'; date: string; odometer: number; log: (typeof data.odoLogs)[0] }
 		| { kind: 'note'; date: string; odometer: number; log: (typeof data.odoLogs)[0] }
+		| { kind: 'reminder'; date: string; odometer: number; log: (typeof data.logs)[0] }
 		| { kind: 'travel'; date: string; travel: (typeof data.travelEntries)[0] }
 		| { kind: 'finance'; date: string; tx: (typeof data.financeEntries)[0] };
 
@@ -246,12 +254,26 @@
 		const entries: Entry[] = [];
 		if (filters.service) {
 			entries.push(
-				...data.logs.map((log: (typeof data.logs)[number]) => ({
-					kind: 'service' as const,
-					date: log.performed_at,
-					odometer: log.odometer_at_service,
-					log
-				}))
+				...data.logs
+					.filter((log: (typeof data.logs)[number]) => !log.is_reminder)
+					.map((log: (typeof data.logs)[number]) => ({
+						kind: 'service' as const,
+						date: log.performed_at,
+						odometer: log.odometer_at_service,
+						log
+					}))
+			);
+		}
+		if (filters.reminder) {
+			entries.push(
+				...data.logs
+					.filter((log: (typeof data.logs)[number]) => log.is_reminder)
+					.map((log: (typeof data.logs)[number]) => ({
+						kind: 'reminder' as const,
+						date: log.performed_at,
+						odometer: log.odometer_at_service,
+						log
+					}))
 			);
 		}
 		entries.push(
@@ -407,7 +429,7 @@
 		newLinkedDocIds = next;
 	}
 
-	// Attachment state — edit service log form
+	// Attachment state; edit service log form
 	let editAttachFile = $state<File | null>(null);
 	let editAttachType = $state('service');
 	let editShowLink = $state(false);
@@ -600,6 +622,27 @@
 									>{/if}
 							</span>
 							<span class="filter-label">{$_('vehicle.detail.timeline.filter.finance')}</span>
+						</button>
+						<button
+							class="filter-row"
+							role="checkbox"
+							aria-checked={filters.reminder}
+							onclick={() => (filters.reminder = !filters.reminder)}
+						>
+							<span class="filter-check" class:filter-check--on={filters.reminder}>
+								{#if filters.reminder}<svg
+										width="9"
+										height="9"
+										viewBox="0 0 12 12"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										aria-hidden="true"><polyline points="1.5 6.5 4.5 9.5 10.5 2.5" /></svg
+									>{/if}
+							</span>
+							<span class="filter-label">{$_('vehicle.detail.timeline.filter.reminders')}</span>
 						</button>
 					</div>
 				{/if}
@@ -1618,6 +1661,51 @@
 									{/if}
 								</div>
 							</div>
+						{:else if entry.kind === 'reminder'}
+							{@const log = entry.log}
+							{@const trackerName = data.trackers.find((t) => t.id === log.tracker_id)?.template
+								.name}
+							<div class="timeline-entry reminder-entry">
+								<div class="entry-icon" title="Reminder" aria-hidden="true"></div>
+								<div class="entry-body">
+									<div class="entry-title">
+										{trackerName ?? $_('vehicle.detail.timeline.reminder.label')}
+									</div>
+									<div class="entry-meta">
+										<span class="entry-meta-item"
+											>{$_('vehicle.detail.timeline.reminder.label')}</span
+										>
+										{#if log.odometer_at_service}
+											<span class="entry-meta-sep">·</span>
+											<span class="entry-meta-item mono"
+												>{formatMeasurement(log.odometer_at_service, unit, locale)}</span
+											>
+										{/if}
+									</div>
+								</div>
+								<span class="entry-date">{formatDateShort(log.performed_at, locale)}</span>
+								<div class="entry-actions" class:entry-actions--open={entryMenu === log.id}>
+									<button
+										class="entry-menu-btn"
+										class:active={entryMenu === log.id}
+										onclick={() => toggleEntryMenu(log.id)}
+										aria-label="Entry options"
+										aria-haspopup="true">⋮</button
+									>
+									{#if entryMenu === log.id}
+										<div class="entry-menu-dropdown" role="menu">
+											<button
+												role="menuitem"
+												class="entry-menu-item entry-menu-item--danger"
+												onclick={() => {
+													deletingEntry = { id: log.id, kind: 'service' };
+													entryMenu = null;
+												}}>{$_('common.delete')}</button
+											>
+										</div>
+									{/if}
+								</div>
+							</div>
 						{:else}
 							{@const log = entry.log}
 							<div class="timeline-entry odo-entry">
@@ -2297,6 +2385,10 @@
 	.finance-entry .entry-icon {
 		background: var(--status-ok);
 		opacity: 0.75;
+	}
+	.reminder-entry .entry-icon {
+		background: none;
+		border: 1.5px solid var(--text-subtle);
 	}
 	.timeline-entry:hover .entry-icon {
 		transform: scale(1.35);

@@ -248,7 +248,11 @@
 					"notes": "Notities",
 					"travels": "Routes",
 					"finance": "Financieel",
-					"usage": "Draaiuren"
+					"usage": "Draaiuren",
+					"reminders": "Herinneringen"
+				},
+				"reminder": {
+					"label": "Herinnering"
 				}
 			},
 			"upcoming": "Aankomende",

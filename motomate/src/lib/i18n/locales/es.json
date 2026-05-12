@@ -248,7 +248,11 @@
 					"notes": "Notas",
 					"travels": "Viajes",
 					"finance": "Finanzas",
-					"usage": "Uso"
+					"usage": "Uso",
+					"reminders": "Recordatorios"
+				},
+				"reminder": {
+					"label": "Recordatorio reiniciado"
 				}
 			},
 			"upcoming": "Próximo",

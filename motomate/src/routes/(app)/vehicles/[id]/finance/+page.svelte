@@ -31,7 +31,7 @@
 		}
 	});
 
-	// Handle ?edit=txid — auto-open edit form and highlight the entry
+	// Handle ?edit=txid; auto-open edit form and highlight the entry
 	let highlightId = $state<string | null>(null);
 	$effect(() => {
 		const editId = $page.url.searchParams.get('edit');
@@ -1077,7 +1077,7 @@
 								</div>
 							</form>
 
-							<!-- Attachment management — separate form actions -->
+							<!-- Attachment management; separate form actions -->
 							<div class="edit-attachments">
 								<span class="field-label"
 									>{$_('vehicle.forms.fields.attachments', {

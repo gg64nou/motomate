@@ -27,6 +27,7 @@ export type PagePrefs = {
 		showNotes?: boolean;
 		showTravel?: boolean;
 		showFinance?: boolean;
+		showReminder?: boolean;
 	};
 	maintenance_report_pdf?: Record<string, string[]>; // vehicle_id > array of tracker_ids to exclude from PDF
 };
@@ -271,6 +272,7 @@ export const service_logs = sqliteTable(
 			.notNull()
 			.default(sql`'[]'`),
 		remark: text('remark'),
+		is_reminder: integer('is_reminder', { mode: 'boolean' }).notNull().default(false),
 		created_at: text('created_at')
 			.notNull()
 			.default(sql`(datetime('now'))`)

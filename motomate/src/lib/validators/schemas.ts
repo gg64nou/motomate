@@ -92,7 +92,8 @@ const PagePrefsSchema = z.object({
 			showOdometer: z.boolean().optional(),
 			showNotes: z.boolean().optional(),
 			showTravel: z.boolean().optional(),
-			showFinance: z.boolean().optional()
+			showFinance: z.boolean().optional(),
+			showReminder: z.boolean().optional()
 		})
 		.optional(),
 	maintenance_report_pdf: z.record(z.string(), z.array(z.string())).optional()
@@ -195,7 +196,8 @@ export const CreateServiceLogSchema = z.object({
 		.default([]),
 	attachments: z.array(z.string()).default([]),
 	remark: optStr(200),
-	serviced_tracker_ids: z.array(z.string()).default([])
+	serviced_tracker_ids: z.array(z.string()).default([]),
+	is_reminder: z.boolean().optional().default(false)
 });
 
 export const CreateDocumentSchema = z.object({

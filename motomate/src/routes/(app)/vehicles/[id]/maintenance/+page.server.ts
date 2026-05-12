@@ -5,7 +5,6 @@ import {
 	createTracker,
 	recomputeTrackerStatuses,
 	updateTrackerState,
-	updateTrackerAfterService,
 	deleteTracker,
 	applyDefaultTrackersFromHistory,
 	getTrackersByVehicle
@@ -69,28 +68,9 @@ export const actions: Actions = {
 		const tracker = parsed.data.tracker_id
 			? trackers.find((t) => t.id === parsed.data.tracker_id)
 			: undefined;
+		const isReminder = tracker ? !shouldCreateServiceLog(tracker) : false;
 
-		if (tracker && !shouldCreateServiceLog(tracker)) {
-			const validTrackerIds = new Set(trackers.map((t) => t.id));
-			// Reminder-only: reset tracker state without creating a service log
-			await updateTrackerAfterService(
-				tracker.id,
-				params.id,
-				parsed.data.performed_at,
-				parsed.data.odometer_at_service
-			);
-			for (const id of parsed.data.serviced_tracker_ids ?? []) {
-				if (!validTrackerIds.has(id)) continue;
-				await updateTrackerAfterService(
-					id,
-					params.id,
-					parsed.data.performed_at,
-					parsed.data.odometer_at_service
-				);
-			}
-		} else {
-			await createServiceLog(locals.user!.id, parsed.data);
-		}
+		await createServiceLog(locals.user!.id, { ...parsed.data, is_reminder: isReminder });
 
 		const trueOdo = await recomputeCurrentOdometer(params.id, locals.user!.id);
 		await recomputeTrackerStatuses(params.id, trueOdo);
