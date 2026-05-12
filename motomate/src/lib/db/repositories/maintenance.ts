@@ -742,11 +742,12 @@ async function createTrackerWithHistory(
 
 export async function updateTrackerAfterService(
 	trackerId: string,
+	vehicleId: string,
 	performedAt: string,
 	odometerAtService: number
 ): Promise<void> {
 	const tracker = await db.query.active_trackers.findFirst({
-		where: eq(active_trackers.id, trackerId),
+		where: and(eq(active_trackers.id, trackerId), eq(active_trackers.vehicle_id, vehicleId)),
 		with: { template: true }
 	});
 	if (!tracker) return;
@@ -786,7 +787,7 @@ export async function updateTrackerAfterService(
 			state: { ...currentState, notified_by: {} },
 			updated_at: new Date().toISOString()
 		})
-		.where(eq(active_trackers.id, trackerId));
+		.where(and(eq(active_trackers.id, trackerId), eq(active_trackers.vehicle_id, vehicleId)));
 }
 
 /**

@@ -76,7 +76,9 @@
 	let editingTracker = $state<string | null>(null);
 	let editingReminderOnly = $state(false);
 	$effect(() => {
-		const t = editingTracker ? data.trackers.find((t) => t.id === editingTracker) : null;
+		const t = editingTracker
+			? data.trackers.find((tracker) => tracker.id === editingTracker)
+			: null;
 		editingReminderOnly = t?.reminder_only ?? false;
 	});
 	let editSubmitting = $state(false);

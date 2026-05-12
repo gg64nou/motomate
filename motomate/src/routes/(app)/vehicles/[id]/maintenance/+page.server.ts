@@ -71,15 +71,19 @@ export const actions: Actions = {
 			: undefined;
 
 		if (tracker && !shouldCreateServiceLog(tracker)) {
+			const validTrackerIds = new Set(trackers.map((t) => t.id));
 			// Reminder-only: reset tracker state without creating a service log
 			await updateTrackerAfterService(
 				tracker.id,
+				params.id,
 				parsed.data.performed_at,
 				parsed.data.odometer_at_service
 			);
 			for (const id of parsed.data.serviced_tracker_ids ?? []) {
+				if (!validTrackerIds.has(id)) continue;
 				await updateTrackerAfterService(
 					id,
+					params.id,
 					parsed.data.performed_at,
 					parsed.data.odometer_at_service
 				);

@@ -54,6 +54,7 @@
 			last_done_at?: string | null;
 			last_done_odometer?: number | null;
 			last_done_measurement?: number | null;
+			reminder_only?: boolean | null;
 		};
 		vehicleUnit: string;
 		locale: string;

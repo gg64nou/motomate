@@ -138,14 +138,18 @@ export const actions: Actions = {
 			: undefined;
 
 		if (primaryTracker && !shouldCreateServiceLog(primaryTracker)) {
+			const validTrackerIds = new Set(trackers.map((t) => t.id));
 			await updateTrackerAfterService(
 				primaryTracker.id,
+				params.id,
 				parsed.data.performed_at,
 				parsed.data.odometer_at_service
 			);
 			for (const id of parsed.data.serviced_tracker_ids ?? []) {
+				if (!validTrackerIds.has(id)) continue;
 				await updateTrackerAfterService(
 					id,
+					params.id,
 					parsed.data.performed_at,
 					parsed.data.odometer_at_service
 				);
