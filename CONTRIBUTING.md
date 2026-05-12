@@ -51,7 +51,7 @@ npm run build        # Production build → ./build/
 npm run preview      # Preview production build locally
 ```
 
-The build uses `@sveltejs/adapter-node`, resulting in a Node.js server at `build/index.js`.
+The build uses `@sveltejs/adapter-node` and is served through `server.js`. Production and preview startup run pending migrations before importing the SvelteKit handler or listening for requests. If migration fails, startup exits loudly instead of serving against an out-of-date schema. You can still run the same migration path directly with `node migrate.js`; keep `npm run db:migrate` and `node migrate.js` both working when changing migrations.
 
 ### Push Notifications
 

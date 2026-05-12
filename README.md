@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
 ```
 
-After downloading the image and starting the container, the application will be available after a few seconds.
+After downloading the image and starting the container, the application will be available after a few seconds. The production server applies pending database migrations before it starts listening; if migrations fail, MotoMate exits instead of serving traffic against an out-of-date schema.
 
 ## Donate
 

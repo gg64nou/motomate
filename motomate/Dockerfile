@@ -49,5 +49,5 @@ ENV STORAGE_LOCAL_PATH=/app/uploads
 # Expose port
 EXPOSE 3000
 
-# Run migrations and start server
-CMD ["sh", "-c", "node migrate.js && node server.js"]
+# Start server; server.js applies migrations before listening.
+CMD ["node", "server.js"]
