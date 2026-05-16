@@ -2,6 +2,9 @@ import { lucia } from '$lib/auth/index.js';
 import type { Handle } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { runWorkflowChecks } from '$lib/workflow/engine.js';
+import { initScheduler } from '$lib/server/scheduler.js';
+
+initScheduler();
 
 // Per-user timestamps to throttle passive workflow checks (in-memory, resets on server restart)
 const lastWorkflowCheck = new Map<string, number>();
