@@ -307,7 +307,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-		max-width: 420px;
 		margin-bottom: var(--space-6);
 	}
 	.pref-form {
