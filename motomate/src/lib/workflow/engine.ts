@@ -252,13 +252,8 @@ export async function runWorkflowChecks(
 
 			for (const result of results) {
 				if (result.trackerId) {
-					// Tracker-based triggers use cycle-based dedup: once any rule has fired
-					// for this tracker in the current service cycle, all rules are blocked
-					// until the user logs a service (which clears notified_by).
-					// This ensures exactly one notification per cycle regardless of how
-					// many matching rules are enabled (e.g. upcoming + overdue both on).
 					const notifiedBy = (result.trackerState?.notified_by ?? {}) as Record<string, string>;
-					if (Object.keys(notifiedBy).length > 0) continue;
+					if (notifiedBy[rule.id]) continue;
 				} else {
 					// Non-tracker triggers (calendar, no_odometer_update, etc.) use 23h cooldown
 					if (rule.last_triggered_at) {
@@ -287,9 +282,11 @@ export async function runWorkflowChecks(
 						})
 						.where(eq(active_trackers.id, result.trackerId));
 				} else {
+					const now = new Date().toISOString();
+					rule.last_triggered_at = now;
 					await db
 						.update(workflow_rules)
-						.set({ last_triggered_at: new Date().toISOString() })
+						.set({ last_triggered_at: now })
 						.where(eq(workflow_rules.id, rule.id));
 				}
 			}
