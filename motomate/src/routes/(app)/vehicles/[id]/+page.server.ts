@@ -21,7 +21,7 @@ import {
 	getTrackersByVehicle,
 	recomputeTrackerStatuses
 } from '$lib/db/repositories/maintenance.js';
-import { shouldCreateServiceLog } from '$lib/utils/reminder-only.js';
+import { isReminderTracker } from '$lib/utils/reminder-only.js';
 import { getDocumentsByVehicle, createDocument } from '$lib/db/repositories/documents.js';
 import { getStorage } from '$lib/storage/index.js';
 import { attachmentStorageKey } from '$lib/utils/storage.js';
@@ -135,7 +135,7 @@ export const actions: Actions = {
 		const primaryTracker = parsed.data.tracker_id
 			? trackers.find((t) => t.id === parsed.data.tracker_id)
 			: undefined;
-		const isReminder = primaryTracker ? !shouldCreateServiceLog(primaryTracker) : false;
+		const isReminder = primaryTracker ? isReminderTracker(primaryTracker) : false;
 
 		await createServiceLog(locals.user!.id, {
 			...parsed.data,

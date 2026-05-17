@@ -7,6 +7,7 @@
 	} from '$lib/utils/format';
 	import { _, waitLocale } from '$lib/i18n';
 	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement';
+	import type { MeasurementUnit } from '$lib/utils/measurement';
 
 	type ServiceLog = {
 		id: string;
@@ -55,7 +56,7 @@
 			last_done_at?: string | null;
 			last_done_odometer?: number | null;
 			last_done_measurement?: number | null;
-			reminder_only?: boolean | null;
+			reminder_only?: boolean;
 		};
 		vehicleUnit: string;
 		locale: string;
@@ -76,8 +77,6 @@
 	$effect(() => {
 		waitLocale();
 	});
-
-	import type { MeasurementUnit } from '$lib/utils/measurement';
 
 	function tl(unit: string) {
 		return $_(getMeasurementUnitTranslationKey(unit as MeasurementUnit));

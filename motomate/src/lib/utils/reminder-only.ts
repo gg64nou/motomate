@@ -1,5 +1,5 @@
-export function shouldCreateServiceLog(tracker: { reminder_only?: boolean | null }): boolean {
-	return !tracker.reminder_only;
+export function isReminderTracker(tracker: { reminder_only?: boolean | null }): boolean {
+	return tracker.reminder_only ?? false;
 }
 
 export function filterTrackersForReport<T extends { reminder_only?: boolean | null }>(

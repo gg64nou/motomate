@@ -9,7 +9,7 @@ import {
 	applyDefaultTrackersFromHistory,
 	getTrackersByVehicle
 } from '$lib/db/repositories/maintenance.js';
-import { shouldCreateServiceLog } from '$lib/utils/reminder-only.js';
+import { isReminderTracker } from '$lib/utils/reminder-only.js';
 import { getVehicleById, recomputeCurrentOdometer } from '$lib/db/repositories/vehicles.js';
 import {
 	createServiceLog,
@@ -68,7 +68,7 @@ export const actions: Actions = {
 		const tracker = parsed.data.tracker_id
 			? trackers.find((t) => t.id === parsed.data.tracker_id)
 			: undefined;
-		const isReminder = tracker ? !shouldCreateServiceLog(tracker) : false;
+		const isReminder = tracker ? isReminderTracker(tracker) : false;
 
 		await createServiceLog(locals.user!.id, { ...parsed.data, is_reminder: isReminder });
 

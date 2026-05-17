@@ -1,21 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { shouldCreateServiceLog, filterTrackersForReport } from '$lib/utils/reminder-only.js';
+import { isReminderTracker, filterTrackersForReport } from '$lib/utils/reminder-only.js';
 
-describe('shouldCreateServiceLog', () => {
-	it('returns false for reminder_only tracker', () => {
-		expect(shouldCreateServiceLog({ reminder_only: true })).toBe(false);
+describe('isReminderTracker', () => {
+	it('returns true for reminder_only tracker', () => {
+		expect(isReminderTracker({ reminder_only: true })).toBe(true);
 	});
 
-	it('returns true for normal tracker', () => {
-		expect(shouldCreateServiceLog({ reminder_only: false })).toBe(true);
+	it('returns false for normal tracker', () => {
+		expect(isReminderTracker({ reminder_only: false })).toBe(false);
 	});
 
-	it('returns true when reminder_only is undefined', () => {
-		expect(shouldCreateServiceLog({})).toBe(true);
+	it('returns false when reminder_only is undefined', () => {
+		expect(isReminderTracker({})).toBe(false);
 	});
 
-	it('returns true when reminder_only is null', () => {
-		expect(shouldCreateServiceLog({ reminder_only: null })).toBe(true);
+	it('returns false when reminder_only is null', () => {
+		expect(isReminderTracker({ reminder_only: null })).toBe(false);
 	});
 });
 
