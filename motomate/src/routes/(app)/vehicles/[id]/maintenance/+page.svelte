@@ -74,6 +74,13 @@
 	let showAddTask = $state(false);
 	let trackerMenu = $state<string | null>(null);
 	let editingTracker = $state<string | null>(null);
+	let editingReminderOnly = $state(false);
+	$effect(() => {
+		const t = editingTracker
+			? data.trackers.find((tracker) => tracker.id === editingTracker)
+			: null;
+		editingReminderOnly = t?.reminder_only ?? false;
+	});
 	let editSubmitting = $state(false);
 	let deletingTracker = $state<{ id: string; name: string } | null>(null);
 	let skippingTracker = $state<{ id: string; name: string } | null>(null);
@@ -915,6 +922,33 @@
 										</div>
 									</div>
 
+									<div class="edit-section">
+										<div class="field-toggle">
+											<span class="field-label"
+												>{$_('maintenance.editTracker.fields.reminderOnly')}</span
+											>
+											<input
+												type="hidden"
+												name="reminder_only"
+												value={editingReminderOnly ? 'true' : 'false'}
+											/>
+											<button
+												type="button"
+												class="toggle-btn"
+												class:toggle-btn--on={editingReminderOnly}
+												onclick={() => (editingReminderOnly = !editingReminderOnly)}
+												aria-label={editingReminderOnly
+													? 'Disable reminder mode'
+													: 'Enable reminder mode'}
+											>
+												<span class="toggle-thumb"></span>
+											</button>
+										</div>
+										<p class="toggle-hint">
+											{$_('maintenance.editTracker.fields.reminderOnlyHint')}
+										</p>
+									</div>
+
 									<div class="edit-actions">
 										<button type="submit" class="btn-primary" disabled={editSubmitting}>
 											{editSubmitting
@@ -1236,8 +1270,6 @@
 		outline-offset: -1px;
 		border-color: transparent;
 	}
-
-	/* Tracker list — open, no outer box */
 	.tracker-list {
 		display: flex;
 		flex-direction: column;
@@ -1403,6 +1435,50 @@
 	}
 
 	/* Shared form elements */
+	.field-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.field-toggle .field-label {
+		font-size: var(--text-sm);
+		font-weight: 500;
+		color: var(--text-muted);
+	}
+	.toggle-btn {
+		width: 2.25rem;
+		height: 1.25rem;
+		border-radius: 999px;
+		border: none;
+		cursor: pointer;
+		background: var(--border-strong);
+		position: relative;
+		flex-shrink: 0;
+		transition: background 0.15s;
+	}
+	.toggle-btn--on {
+		background: var(--accent);
+	}
+	.toggle-thumb {
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: calc(1.25rem - 4px);
+		height: calc(1.25rem - 4px);
+		border-radius: 50%;
+		background: #fff;
+		transition: transform 0.15s;
+	}
+	.toggle-btn--on .toggle-thumb {
+		transform: translateX(1rem);
+	}
+	.toggle-hint {
+		font-size: var(--text-xs);
+		color: var(--text-subtle);
+		line-height: var(--leading-base);
+		font-weight: 400;
+		margin: 0.25rem 0 0;
+	}
 	.field {
 		display: flex;
 		flex-direction: column;

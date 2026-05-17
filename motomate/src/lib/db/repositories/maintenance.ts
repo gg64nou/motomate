@@ -742,11 +742,12 @@ async function createTrackerWithHistory(
 
 export async function updateTrackerAfterService(
 	trackerId: string,
+	vehicleId: string,
 	performedAt: string,
 	odometerAtService: number
 ): Promise<void> {
 	const tracker = await db.query.active_trackers.findFirst({
-		where: eq(active_trackers.id, trackerId),
+		where: and(eq(active_trackers.id, trackerId), eq(active_trackers.vehicle_id, vehicleId)),
 		with: { template: true }
 	});
 	if (!tracker) return;
@@ -786,7 +787,7 @@ export async function updateTrackerAfterService(
 			state: { ...currentState, notified_by: {} },
 			updated_at: new Date().toISOString()
 		})
-		.where(eq(active_trackers.id, trackerId));
+		.where(and(eq(active_trackers.id, trackerId), eq(active_trackers.vehicle_id, vehicleId)));
 }
 
 /**
@@ -806,6 +807,7 @@ export async function updateTrackerState(
 		last_done_odometer?: number | null;
 		next_due_odometer?: number | null; // undefined = auto-compute
 		next_due_at?: string | null; // undefined = auto-compute
+		reminder_only?: boolean;
 	}
 ): Promise<void> {
 	const tracker = await db.query.active_trackers.findFirst({
@@ -874,18 +876,21 @@ export async function updateTrackerState(
 		nextDueAt = null;
 	}
 
+	const trackerPatch: Partial<typeof active_trackers.$inferInsert> = {
+		last_done_at: lastDoneAt,
+		last_done_measurement: lastDoneMeasurement,
+		last_done_odometer: effectiveInterval.basis === 'distance' ? lastDoneMeasurement : null,
+		next_due_measurement: nextDueMeasurement,
+		next_due_odometer: effectiveInterval.basis === 'distance' ? nextDueMeasurement : null,
+		next_due_at: nextDueAt,
+		measurement_unit: effectiveInterval.interval_unit,
+		updated_at: new Date().toISOString()
+	};
+	if (data.reminder_only !== undefined) trackerPatch.reminder_only = data.reminder_only;
+
 	await db
 		.update(active_trackers)
-		.set({
-			last_done_at: lastDoneAt,
-			last_done_measurement: lastDoneMeasurement,
-			last_done_odometer: effectiveInterval.basis === 'distance' ? lastDoneMeasurement : null,
-			next_due_measurement: nextDueMeasurement,
-			next_due_odometer: effectiveInterval.basis === 'distance' ? nextDueMeasurement : null,
-			next_due_at: nextDueAt,
-			measurement_unit: effectiveInterval.interval_unit,
-			updated_at: new Date().toISOString()
-		})
+		.set(trackerPatch)
 		.where(and(eq(active_trackers.id, trackerId), eq(active_trackers.vehicle_id, vehicleId)));
 }
 

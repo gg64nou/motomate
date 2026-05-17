@@ -229,7 +229,7 @@
 				)
 				.map((docId, i) => ({
 					travelId: t.id,
-					label: `${t.title} — Day ${i + 1}`,
+					label: `${t.title}; Day ${i + 1}`,
 					url: data.gpxUrls[docId],
 					num: i + 1,
 					dayIndex: i
@@ -491,7 +491,7 @@
 		margin-bottom: var(--space-5);
 	}
 
-	/* Filters — matches documents page pattern */
+	/* Filters; matches documents page pattern */
 	.filters {
 		display: flex;
 		flex-wrap: wrap;

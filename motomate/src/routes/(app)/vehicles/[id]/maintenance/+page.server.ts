@@ -9,6 +9,7 @@ import {
 	applyDefaultTrackersFromHistory,
 	getTrackersByVehicle
 } from '$lib/db/repositories/maintenance.js';
+import { isReminderTracker } from '$lib/utils/reminder-only.js';
 import { getVehicleById, recomputeCurrentOdometer } from '$lib/db/repositories/vehicles.js';
 import {
 	createServiceLog,
@@ -63,7 +64,14 @@ export const actions: Actions = {
 			return fail(400, { error: parsed.error.issues[0]?.message ?? 'Invalid input' });
 		}
 
-		await createServiceLog(locals.user!.id, parsed.data);
+		const trackers = await getTrackersByVehicle(params.id, locals.user!.id);
+		const tracker = parsed.data.tracker_id
+			? trackers.find((t) => t.id === parsed.data.tracker_id)
+			: undefined;
+		const isReminder = tracker ? isReminderTracker(tracker) : false;
+
+		await createServiceLog(locals.user!.id, { ...parsed.data, is_reminder: isReminder });
+
 		const trueOdo = await recomputeCurrentOdometer(params.id, locals.user!.id);
 		await recomputeTrackerStatuses(params.id, trueOdo);
 		runWorkflowChecks(locals.user!.id).catch(() => {});
@@ -158,6 +166,8 @@ export const actions: Actions = {
 		if (nextDueAt && !nextDueAt.match(/^\d{4}-\d{2}-\d{2}$/))
 			return fail(400, { trackerError: 'Invalid next due date' });
 
+		const reminderOnly = raw.reminder_only === 'true';
+
 		await updateTrackerState(id, params.id, {
 			name,
 			description,
@@ -166,7 +176,8 @@ export const actions: Actions = {
 			last_done_at: lastDoneAt,
 			last_done_odometer: lastDoneOdo,
 			next_due_odometer: nextDueOdometer,
-			next_due_at: nextDueAt
+			next_due_at: nextDueAt,
+			reminder_only: reminderOnly
 		});
 
 		const vehicle = await getVehicleById(params.id, locals.user!.id);

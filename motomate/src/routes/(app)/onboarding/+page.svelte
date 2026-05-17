@@ -415,8 +415,6 @@
 		padding: var(--space-6) var(--space-4);
 		min-height: 100%;
 	}
-
-	/* Step dots — replaces progress bar */
 	.step-dots {
 		display: flex;
 		gap: 0.5rem;

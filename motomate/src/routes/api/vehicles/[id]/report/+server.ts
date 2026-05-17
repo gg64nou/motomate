@@ -6,6 +6,7 @@ import { getTrackersByVehicle } from '$lib/db/repositories/maintenance.js';
 import { getDocumentsByIds } from '$lib/db/repositories/documents.js';
 import { getStorage } from '$lib/storage/index.js';
 import { buildMaintenanceReport } from '$lib/pdf/maintenance-report.js';
+import { filterTrackersForReport } from '$lib/utils/reminder-only.js';
 
 export const GET: RequestHandler = async ({ locals, params }) => {
 	if (!locals.user) error(401, 'Unauthorized');
@@ -18,9 +19,11 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 		getTrackersByVehicle(params.id, locals.user.id)
 	]);
 
-	const trackerNames = new Map(trackers.map((t) => [t.id, t.template.name]));
+	const reportTrackers = filterTrackersForReport(trackers);
+	const trackerNames = new Map(reportTrackers.map((t) => [t.id, t.template.name]));
+	const reportLogs = serviceLogs.filter((l) => !l.is_reminder);
 
-	const allDocIds = [...new Set(serviceLogs.flatMap((l) => (l.attachments as string[]) ?? []))];
+	const allDocIds = [...new Set(reportLogs.flatMap((l) => (l.attachments as string[]) ?? []))];
 	const docs = allDocIds.length ? await getDocumentsByIds(allDocIds, locals.user.id) : [];
 
 	const storage = getStorage();
@@ -44,7 +47,7 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 
 	const pdf = await buildMaintenanceReport({
 		vehicle,
-		serviceLogs,
+		serviceLogs: reportLogs,
 		trackerNames,
 		docs,
 		docBuffers,

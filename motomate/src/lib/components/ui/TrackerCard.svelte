@@ -7,6 +7,7 @@
 	} from '$lib/utils/format';
 	import { _, waitLocale } from '$lib/i18n';
 	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement';
+	import type { MeasurementUnit } from '$lib/utils/measurement';
 
 	type ServiceLog = {
 		id: string;
@@ -18,6 +19,7 @@
 		currency: string;
 		notes: string | null;
 		remark: string | null;
+		is_reminder: boolean;
 		created_at: string;
 	};
 
@@ -54,6 +56,7 @@
 			last_done_at?: string | null;
 			last_done_odometer?: number | null;
 			last_done_measurement?: number | null;
+			reminder_only?: boolean;
 		};
 		vehicleUnit: string;
 		locale: string;
@@ -74,8 +77,6 @@
 	$effect(() => {
 		waitLocale();
 	});
-
-	import type { MeasurementUnit } from '$lib/utils/measurement';
 
 	function tl(unit: string) {
 		return $_(getMeasurementUnitTranslationKey(unit as MeasurementUnit));
@@ -129,7 +130,12 @@
 >
 	<div class="tracker-main">
 		<div class="tracker-info">
-			<div class="tracker-name">{tracker.template.name}</div>
+			<div class="tracker-name">
+				{tracker.template.name}
+				{#if tracker.reminder_only}
+					<span class="reminder-badge">{$_('maintenance.tracker.reminderBadge')}</span>
+				{/if}
+			</div>
 			<div class="tracker-meta">
 				<span>{$_('maintenance.tracker.every', { values: { interval: formatInterval() } })}</span>
 				{#if !forecastMode && (tracker.next_due_measurement || tracker.next_due_odometer || tracker.next_due_at)}
@@ -236,16 +242,20 @@
 						<span class="history-month-line"></span>
 					</div>
 					{#each logs as log}
-						<div class="history-entry">
-							<span class="history-dot"></span>
-							<span class="history-title">{tracker.template.name}</span>
+						<div class="history-entry" class:history-entry--reminder={log.is_reminder}>
+							<span class="history-dot" class:history-dot--reminder={log.is_reminder}></span>
+							<span class="history-title"
+								>{log.is_reminder
+									? $_('maintenance.tracker.reminderBadge')
+									: tracker.template.name}</span
+							>
 							<span class="history-meta">
 								{formatDateShort(log.performed_at, locale)} · {formatMeasurement(
 									log.measurement_at_service ?? log.odometer_at_service,
 									tl(log.measurement_unit ?? vehicleUnit),
 									locale
 								)}
-								{#if log.cost_cents}
+								{#if log.cost_cents && !log.is_reminder}
 									<span class="history-cost">
 										· {formatCurrency(log.cost_cents, log.currency, locale)}</span
 									>
@@ -267,7 +277,6 @@
 		background: var(--bg);
 		transition: border-left-color 0.15s cubic-bezier(0.25, 1, 0.5, 1);
 	}
-	/* Hover tint via pseudo-element — opacity-only = GPU composited, no repaint */
 	.tracker-card::before {
 		content: '';
 		position: absolute;
@@ -292,7 +301,7 @@
 	.tracker-card--overdue {
 		border-left-color: var(--status-overdue);
 	}
-	/* Log success flash — border animates directly (3px strip, cheap), tint via ::after opacity */
+	/* Log success flash; border animates directly (3px strip, cheap), tint via ::after opacity */
 	.tracker-card::after {
 		content: '';
 		position: absolute;
@@ -354,6 +363,19 @@
 	}
 	.tracker-card:has(.history-btn:hover) .tracker-name {
 		color: var(--accent);
+	}
+	.reminder-badge {
+		display: inline-block;
+		font-size: var(--text-xs);
+		font-weight: 500;
+		color: var(--text-subtle);
+		background: var(--bg-muted);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 0.1em 0.4em;
+		vertical-align: middle;
+		margin-left: 0.4rem;
+		letter-spacing: 0.03em;
 	}
 	.tracker-meta {
 		font-size: var(--text-sm);
@@ -553,6 +575,15 @@
 		background: var(--text-subtle);
 		flex-shrink: 0;
 		margin-top: 0.35rem;
+	}
+	.history-dot--reminder {
+		background: none;
+		border: 1.5px solid var(--text-subtle);
+	}
+	.history-entry--reminder .history-title {
+		color: var(--text-muted);
+		font-weight: 400;
+		text-transform: capitalize;
 	}
 	.history-title {
 		font-size: var(--text-base);

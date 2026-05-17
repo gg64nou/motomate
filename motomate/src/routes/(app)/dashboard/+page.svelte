@@ -292,7 +292,6 @@
 	}
 
 	/* Open entry list */
-	/* No outer border/box — separation is whitespace + thin entry divider */
 	.entry-list {
 		display: flex;
 		flex-direction: column;

@@ -113,7 +113,7 @@ export const actions: Actions = {
 
 			// Apply last service to all seeded trackers so next_due_odometer = lastServiceOdo + interval_km
 			for (const { tracker } of seeded) {
-				await updateTrackerAfterService(tracker.id, lastServiceDate, lastServiceOdo);
+				await updateTrackerAfterService(tracker.id, vehicle.id, lastServiceDate, lastServiceOdo);
 			}
 
 			// If the current odometer is ahead of the last service reading, record it as a baseline entry

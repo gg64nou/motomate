@@ -27,6 +27,7 @@ export type PagePrefs = {
 		showNotes?: boolean;
 		showTravel?: boolean;
 		showFinance?: boolean;
+		showReminder?: boolean;
 	};
 	maintenance_report_pdf?: Record<string, string[]>; // vehicle_id > array of tracker_ids to exclude from PDF
 };
@@ -228,6 +229,7 @@ export const active_trackers = sqliteTable(
 			.$type<TrackerState>()
 			.notNull()
 			.default(sql`'{}'`),
+		reminder_only: integer('reminder_only', { mode: 'boolean' }).notNull().default(false),
 		created_at: text('created_at')
 			.notNull()
 			.default(sql`(datetime('now'))`),
@@ -270,6 +272,7 @@ export const service_logs = sqliteTable(
 			.notNull()
 			.default(sql`'[]'`),
 		remark: text('remark'),
+		is_reminder: integer('is_reminder', { mode: 'boolean' }).notNull().default(false),
 		created_at: text('created_at')
 			.notNull()
 			.default(sql`(datetime('now'))`)

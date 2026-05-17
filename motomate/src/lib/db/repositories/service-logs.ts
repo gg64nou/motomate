@@ -36,6 +36,7 @@ export async function createServiceLog(userId: string, input: unknown): Promise<
 	if (parsed.tracker_id) {
 		await updateTrackerAfterService(
 			parsed.tracker_id,
+			parsed.vehicle_id,
 			parsed.performed_at,
 			parsed.odometer_at_service
 		);
@@ -44,7 +45,12 @@ export async function createServiceLog(userId: string, input: unknown): Promise<
 	// Reset any additional trackers selected alongside this entry
 	for (const id of parsed.serviced_tracker_ids) {
 		if (id !== parsed.tracker_id) {
-			await updateTrackerAfterService(id, parsed.performed_at, parsed.odometer_at_service);
+			await updateTrackerAfterService(
+				id,
+				parsed.vehicle_id,
+				parsed.performed_at,
+				parsed.odometer_at_service
+			);
 		}
 	}
 

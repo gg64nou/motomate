@@ -1,0 +1,1 @@
+ALTER TABLE `active_trackers` ADD `reminder_only` integer DEFAULT false NOT NULL;

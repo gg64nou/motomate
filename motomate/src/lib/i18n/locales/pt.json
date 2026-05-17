@@ -248,7 +248,11 @@
 					"notes": "Notas",
 					"travels": "Viagens",
 					"finance": "Finanças",
-					"usage": "Uso"
+					"usage": "Uso",
+					"reminders": "Lembretes"
+				},
+				"reminder": {
+					"label": "Lembrete reiniciado"
 				}
 			},
 			"upcoming": "Próximo",
@@ -541,7 +545,8 @@
 			"due": "Previsto {info}",
 			"last": "Último {info}",
 			"notScheduled": "Não agendado",
-			"next": "Próximo {info}"
+			"next": "Próximo {info}",
+			"reminderBadge": "lembrete"
 		},
 		"editTracker": {
 			"sections": {
@@ -558,7 +563,9 @@
 				"date": "Data",
 				"odometer": "Odómetro ({unit})",
 				"autoCompute": "— deixar vazio para cálculo automático",
-				"usage": "Leitura de uso ({unit})"
+				"usage": "Leitura de uso ({unit})",
+				"reminderOnly": "Apenas lembrete",
+				"reminderOnlyHint": "Registar repõe o lembrete sem criar uma entrada na linha do tempo ou aparecer nos relatórios."
 			},
 			"submit": "Guardar alterações"
 		},

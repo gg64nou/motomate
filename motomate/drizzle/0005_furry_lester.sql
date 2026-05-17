@@ -1,0 +1,1 @@
+ALTER TABLE `service_logs` ADD `is_reminder` integer DEFAULT false NOT NULL;

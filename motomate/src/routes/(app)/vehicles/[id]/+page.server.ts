@@ -21,6 +21,7 @@ import {
 	getTrackersByVehicle,
 	recomputeTrackerStatuses
 } from '$lib/db/repositories/maintenance.js';
+import { isReminderTracker } from '$lib/utils/reminder-only.js';
 import { getDocumentsByVehicle, createDocument } from '$lib/db/repositories/documents.js';
 import { getStorage } from '$lib/storage/index.js';
 import { attachmentStorageKey } from '$lib/utils/storage.js';
@@ -130,9 +131,16 @@ export const actions: Actions = {
 		// Collect any existing doc IDs linked from the picker in the new form
 		const linkedDocIds = formData.getAll('linked_doc_id').map(String).filter(Boolean);
 
+		const trackers = await getTrackersByVehicle(params.id, locals.user!.id);
+		const primaryTracker = parsed.data.tracker_id
+			? trackers.find((t) => t.id === parsed.data.tracker_id)
+			: undefined;
+		const isReminder = primaryTracker ? isReminderTracker(primaryTracker) : false;
+
 		await createServiceLog(locals.user!.id, {
 			...parsed.data,
-			attachments: [...attachmentDocIds, ...linkedDocIds]
+			attachments: [...attachmentDocIds, ...linkedDocIds],
+			is_reminder: isReminder
 		});
 
 		const trueOdo = await recomputeCurrentOdometer(params.id, locals.user!.id);

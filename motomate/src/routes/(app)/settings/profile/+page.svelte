@@ -37,8 +37,6 @@
 
 	let gridSeeds = $state<string[]>(buildGrid());
 	let selectedSeed = $state(untrack(() => data.user.settings.avatar_seed ?? gridSeeds[0]));
-
-	// Data URIs — recompute when seeds change
 	const gridUris = $derived(gridSeeds.map(dicebearUri));
 
 	$effect(() => {
@@ -405,7 +403,7 @@
 		background: var(--bg-muted);
 	}
 
-	/* User avatar button — mirrors .vehicle-avatar */
+	/* User avatar button; mirrors .vehicle-avatar */
 	.user-avatar {
 		position: relative;
 		width: 56px;
@@ -463,7 +461,7 @@
 		opacity: 1;
 	}
 
-	/* Avatar popover — mirrors vehicle avatar popover */
+	/* Avatar popover; mirrors vehicle avatar popover */
 	.avatar-popover-overlay {
 		position: fixed;
 		inset: 0;
