@@ -5,23 +5,16 @@ import { initScheduler } from '$lib/server/scheduler.js';
 
 initScheduler();
 
-/**
- * Runtime CSRF origin validation.
- * Reads PUBLIC_APP_ORIGINS at runtime so self-hosted users can configure their own origins.
- */
 function isOriginTrusted(origin: string | null, referer: string | null, url: string): boolean {
 	const configuredOrigins = process.env.PUBLIC_APP_ORIGINS
 		? process.env.PUBLIC_APP_ORIGINS.split(',')
 		: [];
 
-	// Normalize: convert string 'null'/'undefined' to actual null
 	const normalizedOrigin =
 		origin === null || origin === 'null' || origin === 'undefined' ? null : origin;
 
-	// Extract request origin from headers or from request URL
 	let requestOrigin: string | null = normalizedOrigin;
 
-	// Try referer header
 	if (!requestOrigin && referer) {
 		try {
 			requestOrigin = new URL(referer).origin;
@@ -30,7 +23,6 @@ function isOriginTrusted(origin: string | null, referer: string | null, url: str
 		}
 	}
 
-	// Try request URL
 	if (!requestOrigin && url) {
 		try {
 			requestOrigin = new URL(url).origin;
@@ -39,7 +31,6 @@ function isOriginTrusted(origin: string | null, referer: string | null, url: str
 		}
 	}
 
-	// If we have a request origin, check against configured origins
 	if (requestOrigin) {
 		for (const trusted of configuredOrigins) {
 			try {
@@ -49,8 +40,7 @@ function isOriginTrusted(origin: string | null, referer: string | null, url: str
 				const originUrl = new URL(requestOrigin);
 				const trustedUrl = new URL(trustedOrigin);
 
-				// Match hostname, allow flexible protocol/port
-				if (originUrl.hostname === trustedUrl.hostname) {
+					if (originUrl.hostname === trustedUrl.hostname) {
 					return true;
 				}
 			} catch {
@@ -58,14 +48,11 @@ function isOriginTrusted(origin: string | null, referer: string | null, url: str
 			}
 		}
 
-		// If origins are configured but none matched, reject
 		if (configuredOrigins.length > 0) {
 			return false;
 		}
 	}
 
-	// No request origin and no configured origins = allow (dev mode)
-	// No request origin but origins configured = allow if request URL matches one of them
 	return true;
 }
 
@@ -115,7 +102,6 @@ function buildCorsHeaders(requestOrigin: string | null): Record<string, string> 
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
-	// Handle CORS preflight before anything else
 	if (event.request.method === 'OPTIONS') {
 		return new Response(null, {
 			status: 204,
@@ -123,7 +109,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 
-	// CSRF check for non-safe methods
 	if (event.request.method !== 'GET' && event.request.method !== 'HEAD') {
 		const origin = event.request.headers.get('origin');
 		const referer = event.request.headers.get('referer');
@@ -172,7 +157,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	});
 
-	// Apply CORS headers to all responses
 	const corsHeaders = buildCorsHeaders(event.request.headers.get('origin'));
 	if (corsHeaders['Access-Control-Allow-Origin']) {
 		response.headers.set('Access-Control-Allow-Origin', corsHeaders['Access-Control-Allow-Origin']);
