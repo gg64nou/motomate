@@ -40,7 +40,7 @@ function isOriginTrusted(origin: string | null, referer: string | null, url: str
 				const originUrl = new URL(requestOrigin);
 				const trustedUrl = new URL(trustedOrigin);
 
-					if (originUrl.hostname === trustedUrl.hostname) {
+				if (originUrl.hostname === trustedUrl.hostname) {
 					return true;
 				}
 			} catch {
