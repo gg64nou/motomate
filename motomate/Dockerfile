@@ -6,6 +6,11 @@ ENV VITE_APP_VERSION=${BUILD_VERSION}
 
 WORKDIR /app
 
+# Install build tools required by better-sqlite3
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy package files
 COPY package*.json ./
 
