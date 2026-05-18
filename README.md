@@ -33,6 +33,7 @@ services:
       - PUBLIC_APP_ORIGINS=http://localhost
       - AUTH_COOKIE_SECURE=false
       - AUTH_SECRET=change-me-in-production-min-32-chars
+      - AUTH_ALLOW_REGISTRATION=true
       - STORAGE_ADAPTER=local
       - BODY_SIZE_LIMIT=20971520
     restart: unless-stopped

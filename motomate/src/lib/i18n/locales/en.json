@@ -42,7 +42,8 @@
 				"rateLimited": "Too many attempts. Please try again later.",
 				"invalidFormat": "Invalid email or password format",
 				"invalidCredentials": "Invalid email or password",
-				"invalidEmail": "Please enter a valid email address"
+				"invalidEmail": "Please enter a valid email address",
+				"registrationClosed": "Unfortunately, you can't sign up right now. Contact your administrator for access."
 			}
 		},
 		"register": {

@@ -42,7 +42,8 @@
 				"rateLimited": "Te veel pogingen. Probeer het later opnieuw.",
 				"invalidFormat": "Ongeldig e-mailadres of wachtwoordformaat",
 				"invalidCredentials": "Ongeldig e-mailadres of wachtwoord",
-				"invalidEmail": "Voer een geldig e-mailadres in"
+				"invalidEmail": "Voer een geldig e-mailadres in",
+				"registrationClosed": "Aanmelden is nu niet mogelijk. Neem contact op met uw beheerder voor toegang."
 			}
 		},
 		"register": {

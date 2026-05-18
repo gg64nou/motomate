@@ -42,7 +42,8 @@
 				"rateLimited": "Demasiadas tentativas. Por favor, tenta novamente mais tarde.",
 				"invalidFormat": "Formato de e-mail ou palavra-passe inválido",
 				"invalidCredentials": "E-mail ou palavra-passe inválidos",
-				"invalidEmail": "Por favor, introduz um endereço de e-mail válido"
+				"invalidEmail": "Por favor, introduz um endereço de e-mail válido",
+				"registrationClosed": "O registo está fechado. Contacte o seu administrador para obter acesso."
 			}
 		},
 		"register": {

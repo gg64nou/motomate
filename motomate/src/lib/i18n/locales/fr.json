@@ -42,7 +42,8 @@
 				"rateLimited": "Trop de tentatives. Veuillez réessayer plus tard.",
 				"invalidFormat": "Format d'e-mail ou de mot de passe invalide",
 				"invalidCredentials": "E-mail ou mot de passe invalide",
-				"invalidEmail": "Veuillez entrer une adresse e-mail valide"
+				"invalidEmail": "Veuillez entrer une adresse e-mail valide",
+				"registrationClosed": "L'inscription est fermée. Contactez votre administrateur pour obtenir l'accès."
 			}
 		},
 		"register": {

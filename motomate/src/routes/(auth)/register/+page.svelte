@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { _ } from '$lib/i18n';
-	let { form } = $props<{
+	let { data, form } = $props<{
+		data: { registrationDisabled: boolean };
 		form: { error?: string; email?: string; fieldErrors?: Record<string, string> } | null;
 	}>();
 
@@ -11,90 +12,103 @@
 	const mismatch = $derived(confirmValue.length > 0 && confirmValue !== passwordValue);
 </script>
 
-<svelte:head><title>{$_('auth.register.title')} &middot; MotoMate</title></svelte:head>
-
-<div class="page-header">
-	<h1 class="page-title">{$_('auth.register.title')}</h1>
-	<p class="page-subtitle">{$_('auth.register.subtitle')}</p>
-</div>
-
-{#if form?.error}
-	<div class="form-error">{form.error}</div>
-{/if}
-
-<form
-	method="POST"
-	use:enhance={({ formData }) => {
-		formData.set('theme', localStorage.getItem('theme') ?? 'system');
-		formData.set('locale', localStorage.getItem('locale') ?? 'en');
-		loading = true;
-		return async ({ update }) => {
-			await update();
-			loading = false;
-		};
-	}}
-	class="auth-form"
+<svelte:head
+	><title
+		>{data.registrationDisabled ? $_('auth.register.closedTitle') : $_('auth.register.title')} &middot;
+		MotoMate</title
+	></svelte:head
 >
-	<label class="field">
-		<span class="field-label">{$_('auth.register.email')}</span>
-		<input
-			name="email"
-			type="email"
-			autocomplete="email"
-			value={form?.email ?? ''}
-			required
-			class="input"
-			class:input--err={form?.fieldErrors?.email}
-		/>
-		{#if form?.fieldErrors?.email}
-			<span class="field-err">{form.fieldErrors.email}</span>
-		{/if}
-	</label>
-	<label class="field">
-		<span class="field-label">{$_('auth.register.password')}</span>
-		<input
-			name="password"
-			type="password"
-			autocomplete="new-password"
-			minlength="8"
-			required
-			class="input"
-			class:input--err={form?.fieldErrors?.password}
-			bind:value={passwordValue}
-		/>
-		{#if form?.fieldErrors?.password}
-			<span class="field-err">{form.fieldErrors.password}</span>
-		{:else}
-			<span class="field-hint">{$_('auth.register.passwordHint')}</span>
-		{/if}
-	</label>
-	<label class="field">
-		<span class="field-label">{$_('auth.register.confirmPassword')}</span>
-		<input
-			name="confirm_password"
-			type="password"
-			autocomplete="new-password"
-			minlength="8"
-			required
-			class="input"
-			class:input--err={mismatch || !!form?.fieldErrors?.confirm_password}
-			bind:value={confirmValue}
-		/>
-		{#if form?.fieldErrors?.confirm_password}
-			<span class="field-err">{form.fieldErrors.confirm_password}</span>
-		{:else if mismatch}
-			<span class="field-err">{$_('auth.register.passwordMismatch')}</span>
-		{/if}
-	</label>
-	<button type="submit" class="btn-primary" disabled={mismatch || loading}>
-		{#if loading}<span class="spinner" aria-hidden="true"></span>{/if}
-		{$_('auth.register.submit')}</button
-	>
-</form>
 
-<p class="footer-link">
-	{$_('auth.register.hasAccount')} <a href="/login">{$_('auth.register.login')}</a>
-</p>
+{#if data.registrationDisabled}
+	<div class="page-header">
+		<h1 class="page-title">{$_('auth.register.closedTitle')}</h1>
+		<p class="page-subtitle">{$_('auth.register.closedBody')}</p>
+	</div>
+	<a href="/login" class="btn-primary">{$_('auth.register.closedAction')}</a>
+{:else}
+	<div class="page-header">
+		<h1 class="page-title">{$_('auth.register.title')}</h1>
+		<p class="page-subtitle">{$_('auth.register.subtitle')}</p>
+	</div>
+
+	{#if form?.error}
+		<div class="form-error">{form.error}</div>
+	{/if}
+
+	<form
+		method="POST"
+		use:enhance={({ formData }) => {
+			formData.set('theme', localStorage.getItem('theme') ?? 'system');
+			formData.set('locale', localStorage.getItem('locale') ?? 'en');
+			loading = true;
+			return async ({ update }) => {
+				await update();
+				loading = false;
+			};
+		}}
+		class="auth-form"
+	>
+		<label class="field">
+			<span class="field-label">{$_('auth.register.email')}</span>
+			<input
+				name="email"
+				type="email"
+				autocomplete="email"
+				value={form?.email ?? ''}
+				required
+				class="input"
+				class:input--err={form?.fieldErrors?.email}
+			/>
+			{#if form?.fieldErrors?.email}
+				<span class="field-err">{form.fieldErrors.email}</span>
+			{/if}
+		</label>
+		<label class="field">
+			<span class="field-label">{$_('auth.register.password')}</span>
+			<input
+				name="password"
+				type="password"
+				autocomplete="new-password"
+				minlength="8"
+				required
+				class="input"
+				class:input--err={form?.fieldErrors?.password}
+				bind:value={passwordValue}
+			/>
+			{#if form?.fieldErrors?.password}
+				<span class="field-err">{form.fieldErrors.password}</span>
+			{:else}
+				<span class="field-hint">{$_('auth.register.passwordHint')}</span>
+			{/if}
+		</label>
+		<label class="field">
+			<span class="field-label">{$_('auth.register.confirmPassword')}</span>
+			<input
+				name="confirm_password"
+				type="password"
+				autocomplete="new-password"
+				minlength="8"
+				required
+				class="input"
+				class:input--err={mismatch || !!form?.fieldErrors?.confirm_password}
+				bind:value={confirmValue}
+			/>
+			{#if form?.fieldErrors?.confirm_password}
+				<span class="field-err">{form.fieldErrors.confirm_password}</span>
+			{:else if mismatch}
+				<span class="field-err">{$_('auth.register.passwordMismatch')}</span>
+			{/if}
+		</label>
+		<button type="submit" class="btn-primary" disabled={mismatch || loading}>
+			{#if loading}<span class="spinner" aria-hidden="true"></span>{/if}
+			{$_('auth.register.submit')}</button
+		>
+	</form>
+
+	<p class="footer-link">
+		{$_('auth.register.hasAccount')} <a href="/login">{$_('auth.register.login')}</a>
+	</p>
+{/if}
 
 <style>
 	.page-header {
@@ -166,6 +180,7 @@
 		font-weight: 500;
 		cursor: pointer;
 		font-size: var(--text-sm);
+		text-decoration: none;
 		transition:
 			background 150ms ease,
 			transform 50ms ease;
