@@ -42,7 +42,8 @@
 				"rateLimited": "Trop de tentatives. Veuillez réessayer plus tard.",
 				"invalidFormat": "Format d'e-mail ou de mot de passe invalide",
 				"invalidCredentials": "E-mail ou mot de passe invalide",
-				"invalidEmail": "Veuillez entrer une adresse e-mail valide"
+				"invalidEmail": "Veuillez entrer une adresse e-mail valide",
+				"registrationClosed": "L'inscription est fermée. Contactez votre administrateur pour obtenir l'accès."
 			}
 		},
 		"register": {
@@ -55,7 +56,10 @@
 			"passwordMismatch": "Les mots de passe ne correspondent pas",
 			"submit": "Créer un compte",
 			"hasAccount": "Déjà un compte ?",
-			"login": "Se connecter"
+			"login": "Se connecter",
+			"closedTitle": "Inscription fermée",
+			"closedBody": "Les nouveaux comptes ne sont pas acceptés pour l'instant. Contactez votre administrateur pour obtenir l'accès.",
+			"closedAction": "Aller à la connexion"
 		},
 		"magicLink": {
 			"verifying": "Connexion en cours…",
@@ -927,7 +931,14 @@
 			"workflows": "Flux de travail",
 			"sourceCode": "Code source",
 			"reportIssue": "Signaler un probleme",
-			"tapAgain": "Appuyez a nouveau pour ouvrir"
+			"tapAgain": "Appuyez a nouveau pour ouvrir",
+			"changelog": "Changelog"
+		},
+		"changelog": {
+			"title": "Quoi de neuf ?",
+			"subtitle": "Découvrez ce qui a changé dans les dernières versions.",
+			"refresh": "Actualiser",
+			"noContent": "Aucune modification trouvée. Réessayez plus tard."
 		}
 	},
 	"units": {

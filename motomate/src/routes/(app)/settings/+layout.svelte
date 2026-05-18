@@ -124,7 +124,12 @@
 				</svg>
 			</a>
 
-			<div class="settings-nav-version">v{appVersion}</div>
+			<a
+				href="/settings/changelog"
+				class="settings-nav-version"
+				class:settings-nav-version--active={$page.url.pathname === '/settings/changelog'}
+				data-tooltip={$_('settings.nav.changelog')}>v{appVersion}</a
+			>
 		</nav>
 		<div class="settings-content">
 			{#if children}
@@ -210,11 +215,53 @@
 		transform: translateX(0);
 	}
 	.settings-nav-version {
+		position: relative;
 		font-family: 'JetBrains Mono', monospace;
 		font-size: var(--text-xs);
 		color: var(--text-subtle);
 		padding: 0.5rem 1rem;
 		opacity: 0.7;
+		text-decoration: none;
+		display: block;
+		transition:
+			color 0.1s,
+			opacity 0.1s;
+	}
+	.settings-nav-version:hover {
+		color: var(--text-muted);
+		opacity: 1;
+	}
+	.settings-nav-version--active {
+		color: var(--accent);
+		opacity: 1;
+	}
+	.settings-nav-version::after {
+		content: attr(data-tooltip);
+		position: absolute;
+		top: calc(100% + 4px);
+		left: 1rem;
+		background: var(--bg-muted);
+		border: 1px solid var(--border-strong);
+		color: var(--text);
+		font-family: Inter, system-ui, sans-serif;
+		font-size: var(--text-xs);
+		font-weight: 500;
+		padding: 0.2rem 0.5rem;
+		border-radius: 6px;
+		white-space: nowrap;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.15s ease;
+		z-index: 10;
+	}
+	.settings-nav-version:hover::after,
+	.settings-nav-version:focus-visible::after {
+		opacity: 1;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.settings-nav-version::after {
+			transition: none;
+		}
 	}
 	.settings-nav-divider {
 		height: 1px;
@@ -266,6 +313,21 @@
 			transform: translateX(0);
 		}
 		.settings-nav-version {
+			border-left: none;
+			border-bottom: 2px solid transparent;
+			border-radius: 0;
+			white-space: nowrap;
+			padding: 0.625rem 0.875rem;
+			min-height: 44px;
+			display: flex;
+			align-items: center;
+			opacity: 1;
+			font-family: 'JetBrains Mono', monospace;
+		}
+		.settings-nav-version--active {
+			border-bottom-color: var(--accent);
+		}
+		.settings-nav-version::after {
 			display: none;
 		}
 	}

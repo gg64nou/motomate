@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+
+- You can now disable public sign-up by setting `AUTH_ALLOW_REGISTRATION=false`
+- The changelog is now accessible from your profile settings
+- Fix: Magic link sign-in no longer creates new accounts when registration is disabled
+
 ## 0.2.3
 
 - Maintenance trackers can now be set to reminder-only. You can get notified when service is due without polluting your timeline

@@ -42,7 +42,8 @@
 				"rateLimited": "Zu viele Versuche. Bitte versuche es später erneut.",
 				"invalidFormat": "Ungültiges E-Mail- oder Passwortformat",
 				"invalidCredentials": "Ungültige E-Mail oder Passwort",
-				"invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein"
+				"invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
+				"registrationClosed": "Die Registrierung ist geschlossen. Wenden Sie sich an Ihren Administrator."
 			}
 		},
 		"register": {
@@ -55,7 +56,10 @@
 			"passwordMismatch": "Passwörter stimmen nicht überein",
 			"submit": "Konto erstellen",
 			"hasAccount": "Bereits ein Konto?",
-			"login": "Anmelden"
+			"login": "Anmelden",
+			"closedTitle": "Registrierung geschlossen",
+			"closedBody": "Neue Konten werden derzeit nicht angenommen. Wenden Sie sich an Ihren Administrator.",
+			"closedAction": "Zur Anmeldung"
 		},
 		"magicLink": {
 			"verifying": "Wir melden Sie an…",
@@ -927,7 +931,14 @@
 			"workflows": "Workflows",
 			"sourceCode": "Quellcode",
 			"reportIssue": "Problem melden",
-			"tapAgain": "Nochmal tippen zum Offnen"
+			"tapAgain": "Nochmal tippen zum Offnen",
+			"changelog": "Changelog"
+		},
+		"changelog": {
+			"title": "Was ist neu?",
+			"subtitle": "Sieh nach, was sich in den neuesten Versionen geändert hat.",
+			"refresh": "Aktualisieren",
+			"noContent": "Keine Änderungen gefunden. Versuche es später erneut."
 		}
 	},
 	"units": {

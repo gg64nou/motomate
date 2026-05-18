@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/auth/index.js';
 import { getUserByEmail, createUser, updateUserSettings } from '$lib/db/repositories/users.js';
+import { isRegistrationOpen } from '$lib/auth/registration.js';
 import { createMagicLinkToken, sendMagicLinkEmail } from '$lib/auth/magic-link.js';
 import { LoginSchema, MagicLinkRequestSchema } from '$lib/validators/schemas.js';
 import { rateLimit } from '$lib/auth/rate-limit.js';
@@ -22,6 +23,7 @@ type AuthErrors = {
 				invalidFormat: string;
 				invalidCredentials: string;
 				invalidEmail: string;
+				registrationClosed: string;
 			};
 		};
 	};
@@ -31,8 +33,7 @@ const localeMessages: Record<string, AuthErrors> = { en, de, fr, es, it, nl, pt 
 
 const ARGON2_OPTS = { memoryCost: 19456, timeCost: 2, outputLen: 32, parallelism: 1 };
 
-// Uses a pre-computed hash to ensure every login attempt takes the same amount of time.
-// This prevents abusers from using response speeds to guess if an email address exists in the database.
+// Uses a pre-computed hash to ensure every login attempt takes same amount of time
 let _dummyHash: string | undefined;
 async function getDummyHash(): Promise<string> {
 	if (!_dummyHash) _dummyHash = await hash('_timing_dummy_', ARGON2_OPTS);
@@ -41,7 +42,7 @@ async function getDummyHash(): Promise<string> {
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/dashboard');
-	return {};
+	return { registrationEnabled: await isRegistrationOpen() };
 };
 
 export const actions: Actions = {
@@ -130,6 +131,9 @@ export const actions: Actions = {
 		// Find or create user (passwordless)
 		let user = await getUserByEmail(parsed.data.email);
 		if (!user) {
+			if (!(await isRegistrationOpen())) {
+				return fail(400, { error: errors.registrationClosed });
+			}
 			user = await createUser({ email: parsed.data.email });
 		}
 

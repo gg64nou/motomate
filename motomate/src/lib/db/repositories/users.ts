@@ -72,6 +72,11 @@ export async function markOnboardingDone(userId: string): Promise<void> {
 		.where(eq(users.id, userId));
 }
 
+export async function hasAnyUser(): Promise<boolean> {
+	const row = await db.query.users.findFirst();
+	return row !== undefined;
+}
+
 export async function deleteUser(userId: string): Promise<void> {
 	await db.delete(users).where(eq(users.id, userId));
 }

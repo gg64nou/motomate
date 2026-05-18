@@ -2,8 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { _ } from '$lib/i18n';
 
-	let { form } = $props<{
-		data: Record<string, never>;
+	let { data, form } = $props<{
+		data: { registrationEnabled: boolean };
 		form: {
 			error?: string;
 			email?: string;
@@ -146,9 +146,11 @@
 		</form>
 	{/if}
 
-	<p class="footer-link">
-		{$_('auth.login.noAccount')} <a href="/register">{$_('auth.login.signUp')}</a>
-	</p>
+	{#if data.registrationEnabled}
+		<p class="footer-link">
+			{$_('auth.login.noAccount')} <a href="/register">{$_('auth.login.signUp')}</a>
+		</p>
+	{/if}
 {/if}
 
 <style>

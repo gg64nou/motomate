@@ -42,7 +42,8 @@
 				"rateLimited": "Too many attempts. Please try again later.",
 				"invalidFormat": "Invalid email or password format",
 				"invalidCredentials": "Invalid email or password",
-				"invalidEmail": "Please enter a valid email address"
+				"invalidEmail": "Please enter a valid email address",
+				"registrationClosed": "Unfortunately, you can't sign up right now. Contact your administrator for access."
 			}
 		},
 		"register": {
@@ -55,7 +56,10 @@
 			"passwordMismatch": "Passwords do not match",
 			"submit": "Create account",
 			"hasAccount": "Already have an account?",
-			"login": "Log in"
+			"login": "Log in",
+			"closedTitle": "Registration closed",
+			"closedBody": "New accounts are not accepted at this time. Contact your administrator for access.",
+			"closedAction": "Go to log in"
 		},
 		"magicLink": {
 			"title": "Magic link",
@@ -737,6 +741,7 @@
 			"account": "Account",
 			"notifications": "Notifications",
 			"workflows": "Workflows",
+			"changelog": "Changelog",
 			"sourceCode": "Source Code",
 			"reportIssue": "Report an Issue",
 			"tapAgain": "Tap again to open"
@@ -929,6 +934,12 @@
 			"prevPage": "Previous",
 			"nextPage": "Next",
 			"pageOf": "Page {page} of {total}"
+		},
+		"changelog": {
+			"title": "What's new?",
+			"subtitle": "See what changed in the latest versions.",
+			"refresh": "Refresh",
+			"noContent": "No changes found. Try again later."
 		}
 	},
 	"layout": {

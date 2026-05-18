@@ -2,6 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { hash } from '@node-rs/argon2';
 import { lucia } from '$lib/auth/index.js';
 import { getUserByEmail, createUser } from '$lib/db/repositories/users.js';
+import { isRegistrationOpen } from '$lib/auth/registration.js';
 import { CreateUserSchema } from '$lib/validators/schemas.js';
 import { rateLimit } from '$lib/auth/rate-limit.js';
 import type { UserSettings } from '$lib/db/schema.js';
@@ -9,11 +10,16 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/dashboard');
-	return {};
+	const open = await isRegistrationOpen();
+	return { registrationDisabled: !open };
 };
 
 export const actions: Actions = {
 	default: async ({ request, cookies, getClientAddress }) => {
+		if (!(await isRegistrationOpen())) {
+			return fail(403, { error: 'Registration is closed.', email: '' });
+		}
+
 		const ip = getClientAddress();
 		if (!rateLimit(`register:${ip}`, 5, 60 * 60_000)) {
 			return fail(429, { error: 'Too many attempts. Please try again later.', email: '' });
