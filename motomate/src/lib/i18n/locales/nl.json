@@ -55,7 +55,10 @@
 			"passwordMismatch": "Wachtwoorden komen niet overeen",
 			"submit": "Account maken",
 			"hasAccount": "Heb je al een account?",
-			"login": "Inloggen"
+			"login": "Inloggen",
+			"closedTitle": "Registratie gesloten",
+			"closedBody": "Nieuwe accounts worden momenteel niet geaccepteerd. Neem contact op met uw beheerder voor toegang.",
+			"closedAction": "Ga naar inloggen"
 		},
 		"magicLink": {
 			"verifying": "Je wordt ingelogd…",
@@ -927,7 +930,14 @@
 			"workflows": "Regels",
 			"sourceCode": "Broncode",
 			"reportIssue": "Probleem melden",
-			"tapAgain": "Tik nogmaals om te openen"
+			"tapAgain": "Tik nogmaals om te openen",
+			"changelog": "Bekijk changelog"
+		},
+		"changelog": {
+			"title": "Wat is er nieuw?",
+			"subtitle": "Bekijk wat er veranderd is in de nieuwste versies.",
+			"refresh": "Vernieuwen",
+			"noContent": "Geen gewijzigen gevonden. Probeer het later opnieuw."
 		}
 	},
 	"units": {

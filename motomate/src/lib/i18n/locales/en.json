@@ -55,7 +55,10 @@
 			"passwordMismatch": "Passwords do not match",
 			"submit": "Create account",
 			"hasAccount": "Already have an account?",
-			"login": "Log in"
+			"login": "Log in",
+			"closedTitle": "Registration closed",
+			"closedBody": "New accounts are not accepted at this time. Contact your administrator for access.",
+			"closedAction": "Go to log in"
 		},
 		"magicLink": {
 			"title": "Magic link",
@@ -737,6 +740,7 @@
 			"account": "Account",
 			"notifications": "Notifications",
 			"workflows": "Workflows",
+			"changelog": "Changelog",
 			"sourceCode": "Source Code",
 			"reportIssue": "Report an Issue",
 			"tapAgain": "Tap again to open"
@@ -929,6 +933,12 @@
 			"prevPage": "Previous",
 			"nextPage": "Next",
 			"pageOf": "Page {page} of {total}"
+		},
+		"changelog": {
+			"title": "What's new?",
+			"subtitle": "See what changed in the latest versions.",
+			"refresh": "Refresh",
+			"noContent": "No changes found. Try again later."
 		}
 	},
 	"layout": {

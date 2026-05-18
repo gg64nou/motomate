@@ -55,7 +55,10 @@
 			"passwordMismatch": "Le password non corrispondono",
 			"submit": "Crea account",
 			"hasAccount": "Hai già un account?",
-			"login": "Accedi"
+			"login": "Accedi",
+			"closedTitle": "Registrazione chiusa",
+			"closedBody": "I nuovi account non sono accettati al momento. Contatta il tuo amministratore per l'accesso.",
+			"closedAction": "Vai al login"
 		},
 		"magicLink": {
 			"verifying": "Accesso in corso…",
@@ -928,7 +931,14 @@
 			"workflows": "Flussi di lavoro",
 			"sourceCode": "Codice sorgente",
 			"reportIssue": "Segnala un problema",
-			"tapAgain": "Tocca di nuovo per aprire"
+			"tapAgain": "Tocca di nuovo per aprire",
+			"changelog": "Changelog"
+		},
+		"changelog": {
+			"title": "Cosa c'è di nuovo?",
+			"subtitle": "Scopri cosa è cambiato nelle ultime versioni.",
+			"refresh": "Aggiorna",
+			"noContent": "Nessuna modifica trovata. Riprova più tardi."
 		}
 	},
 	"units": {
