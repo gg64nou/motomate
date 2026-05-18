@@ -55,9 +55,7 @@
 </script>
 
 <PageHeader title={$_('settings.changelog.title')} subtitle={$_('settings.changelog.subtitle')}>
-	{#snippet children()}
-		<Button href="?refresh=1" variant="ghost" size="md">{$_('settings.changelog.refresh')}</Button>
-	{/snippet}
+	<Button href="?refresh=1" variant="ghost" size="md">{$_('settings.changelog.refresh')}</Button>
 </PageHeader>
 
 {#if blocks.length === 0}
