@@ -5,10 +5,10 @@
 [![GitHub Tag](https://img.shields.io/github/v/tag/hawkinslabdev/motomate?label=version)](#)
 [![Support](https://img.shields.io/badge/Support-Buy%20me%20a%20coffee-fdd734?logo=buy-me-a-coffee)](https://coff.ee/hawkinslabdev)
 
-MotoMate is a self-hosted maintenance tracker for vehicles. Manage your own maintenance journals easily, in a web interface available from your (mobile) device. You can log custom maintenance tasks directly from the garage. All service history and data remain strictly on your own hardware.
+Take control of your **vehicle maintenance** with MotoMate, a self-hosted (maintenance) tracking web application. Access your digital maintenance journal from any mobile device to log tasks right from the garage. Because it is self-hosted, your data and service history never leave your own hardware.
 
 > [!WARNING]
-> We need your help! MotoMate is still in development. You may encounter bugs, feel free to help improve the project by reporting any issues you find or features you find lacking; or preferably submitting a pull request.
+> **We need your help!** MotoMate is still under _active_ development and you may encounter bugs. Please help improve the project by reporting issues, suggesting missing features, or, preferably, submitting a pull request.
 
 <img width="100%" alt="MotoMate screenshot" src=".github/images/example.webp" />
 
@@ -39,14 +39,14 @@ services:
     restart: unless-stopped
 ```
 
-After downloading the image and starting the container, the application will be available after a few seconds. The production server applies pending database migrations before it starts listening; if migrations fail, MotoMate exits instead of serving traffic against an out-of-date schema.
+After downloading the image and starting the container, the application will be ready in a few seconds once database migrations complete.
 
 ## Donate
 
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy_me_a_coffee-fdd734?\&logo=buy-me-a-coffee\&logoColor=black\&style=for-the-badge)](https://coff.ee/hawkinslabdev)
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub_Sponsors-30363d?style=for-the-badge\&logo=github\&logoColor=white)](https://github.com/sponsors/hawkinslabdev)
 
-If MotoMate replaces your existing spreadsheet or saves you time, you can support the project through GitHub Sponsors or Buy Me A Coffee.
+Want to support MotoMate? Drop a star on GitHub, or consider supporting development via GitHub Sponsors or Buy Me a Coffee.
 
 ## License
 
