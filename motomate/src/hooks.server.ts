@@ -1,9 +1,12 @@
 import { lucia } from '$lib/auth/index.js';
 import type { Handle } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
+import { env as pubEnv } from '$env/dynamic/public';
 import { initScheduler } from '$lib/server/scheduler.js';
 
 initScheduler();
+
+let _demoSeeded = false;
 
 function isOriginTrusted(origin: string | null, referer: string | null, url: string): boolean {
 	const configuredOrigins = process.env.PUBLIC_APP_ORIGINS
@@ -102,11 +105,35 @@ function buildCorsHeaders(requestOrigin: string | null): Record<string, string> 
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
+	if (!_demoSeeded && pubEnv.PUBLIC_DEMO_ENABLED === 'true') {
+		_demoSeeded = true;
+		const { seedDemo } = await import('$lib/db/demo-seed.js');
+		await seedDemo();
+	}
+
 	if (event.request.method === 'OPTIONS') {
 		return new Response(null, {
 			status: 204,
 			headers: buildCorsHeaders(event.request.headers.get('origin'))
 		});
+	}
+
+	if (
+		pubEnv.PUBLIC_DEMO_ENABLED === 'true' &&
+		event.request.method !== 'GET' &&
+		event.request.method !== 'HEAD' &&
+		!event.url.pathname.startsWith('/login') &&
+		!event.url.pathname.startsWith('/register') &&
+		!event.url.pathname.startsWith('/magic-link') &&
+		event.url.pathname !== '/auth/logout'
+	) {
+		if (event.request.headers.get('x-sveltekit-action') === 'true') {
+			return new Response(JSON.stringify({ type: 'success', status: 200 }), {
+				status: 200,
+				headers: { 'content-type': 'application/json' }
+			});
+		}
+		return new Response(null, { status: 303, headers: { Location: event.url.pathname } });
 	}
 
 	if (event.request.method !== 'GET' && event.request.method !== 'HEAD') {
