@@ -2,6 +2,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import crypto from 'crypto';
 import { env } from '$env/dynamic/private';
+import { env as pubEnv } from '$env/dynamic/public';
 import { getStorage } from '$lib/storage/index.js';
 import { getDocumentByStorageKey } from '$lib/db/repositories/documents.js';
 import { getVehicleByCoverImageKey } from '$lib/db/repositories/vehicles.js';
@@ -9,9 +10,11 @@ import { getVehicleByCoverImageKey } from '$lib/db/repositories/vehicles.js';
 function isSafePath(key: string): boolean {
 	// Only allow keys starting with files/{userId}/ or avatars/{userId}/ and containing no path traversal
 	const normalized = key.replace(/\\/g, '/');
+	if (normalized.includes('..')) return false;
 	const isFiles = normalized.startsWith('files/');
 	const isAvatars = normalized.startsWith('avatars/');
-	if (!isFiles && !isAvatars) return false;
+	const isDemo = normalized.startsWith('demo/');
+	if (!isFiles && !isAvatars && !isDemo) return false;
 	if (isFiles && !normalized.match(/^files\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/))
 		return false;
 	if (isAvatars) {
@@ -23,7 +26,7 @@ function isSafePath(key: string): boolean {
 		);
 		if (!isUserAvatar && !isVehicleAvatar) return false;
 	}
-	if (normalized.includes('..')) return false;
+	if (isDemo && !normalized.match(/^demo\/[a-zA-Z0-9._-]+$/)) return false;
 	return true;
 }
 
@@ -41,19 +44,35 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	// Validate path to prevent traversal attacks
 	if (!isSafePath(key)) error(400, 'Invalid file key');
 
-	// Check if this is an avatar (cover image) or a document
+	// Check if this is an avatar (cover image), a document, or a demo asset
 	const isAvatar = key.startsWith('avatars/');
 	const isDoc = key.startsWith('files/');
+	const isDemo = key.startsWith('demo/');
+
+	// Demo assets are only accessible when demo mode is explicitly enabled
+	if (isDemo && pubEnv.PUBLIC_DEMO_ENABLED !== 'true') error(404, 'File not found');
+
+	// Only local adapter serves files via this endpoint
+	if (env.STORAGE_ADAPTER === 's3') error(400, 'Use pre-signed S3 URL directly');
+
+	// Resolve document record once
+	let docRecord: Awaited<ReturnType<typeof getDocumentByStorageKey>> = undefined;
+	if (isDoc || isDemo) {
+		docRecord = await getDocumentByStorageKey(key);
+	}
 
 	if (expires && sig) {
 		// Signed URL: verify signature and expiry. No session required.
 		const now = Math.floor(Date.now() / 1000);
-		if (parseInt(expires) < now) error(410, 'Link expired');
+		if (parseInt(expires, 10) < now) error(410, 'Link expired');
 
 		const secret = env.AUTH_SECRET ?? 'dev-secret';
 		const expected = crypto.createHmac('sha256', secret).update(`${key}:${expires}`).digest('hex');
 
-		if (!crypto.timingSafeEqual(Buffer.from(sig, 'hex'), Buffer.from(expected, 'hex'))) {
+		// Validate hex length before timingSafeEqual to avoid TypeError on malformed input
+		const expectedBuf = Buffer.from(expected, 'hex');
+		const sigBuf = Buffer.from(sig.length === expected.length ? sig : '', 'hex');
+		if (sigBuf.length !== expectedBuf.length || !crypto.timingSafeEqual(sigBuf, expectedBuf)) {
 			error(403, 'Invalid signature');
 		}
 	} else {
@@ -61,9 +80,10 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		const user = locals.user;
 		if (!user) error(401, 'Unauthorized');
 
-		if (isDoc) {
-			const doc = await getDocumentByStorageKey(key);
-			if (!doc || doc.user_id !== user.id) error(403, 'Access denied');
+		if (isDemo) {
+			// Demo assets are accessible to any authenticated user
+		} else if (isDoc) {
+			if (!docRecord || docRecord.user_id !== user.id) error(403, 'Access denied');
 		} else if (isAvatar) {
 			// User profile avatar: avatars/users/{userId}.{ext}
 			const isUserAvatar = key.startsWith('avatars/users/');
@@ -81,41 +101,38 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
 	const adapter = getStorage();
 
-	// Only local adapter serves files via this endpoint
-	if (env.STORAGE_ADAPTER === 's3') error(400, 'Use pre-signed S3 URL directly');
-
+	let fileBuffer: Buffer;
 	try {
-		const stream = await adapter.getStream(key);
-		// Infer content type from key extension
-		const ext = key.split('.').pop()?.toLowerCase() ?? '';
-		const mimeMap: Record<string, string> = {
-			pdf: 'application/pdf',
-			jpg: 'image/jpeg',
-			jpeg: 'image/jpeg',
-			png: 'image/png',
-			webp: 'image/webp',
-			gif: 'image/gif',
-			gpx: 'application/gpx+xml'
-		};
-		const contentType = mimeMap[ext] ?? 'application/octet-stream';
-
-		const headers: Record<string, string> = {
-			'Content-Type': contentType,
-			'Cache-Control': 'private, max-age=3600'
-		};
-
-		// Documents get Content-Disposition: attachment for download; avatars are served inline
-		if (isDoc) {
-			const doc = await getDocumentByStorageKey(key);
-			const filename = doc?.name ?? key.split('/').pop() ?? null;
-			if (filename) {
-				headers['Content-Disposition'] =
-					`attachment; filename="${filename.replace(/"/g, '\\"')}"; filename*=UTF-8''${encodeURIComponent(filename)}`;
-			}
-		}
-
-		return new Response(stream as unknown as ReadableStream, { headers });
+		fileBuffer = await adapter.getBuffer(key);
 	} catch {
 		error(404, 'File not found');
 	}
+
+	const ext = key.split('.').pop()?.toLowerCase() ?? '';
+	const mimeMap: Record<string, string> = {
+		pdf: 'application/pdf',
+		jpg: 'image/jpeg',
+		jpeg: 'image/jpeg',
+		png: 'image/png',
+		webp: 'image/webp',
+		gif: 'image/gif',
+		gpx: 'application/gpx+xml'
+	};
+	const contentType = mimeMap[ext] ?? 'application/octet-stream';
+
+	const headers: Record<string, string> = {
+		'Content-Type': contentType,
+		'Content-Length': String(fileBuffer.length),
+		'Cache-Control': 'private, max-age=3600'
+	};
+
+	if (isDoc || isDemo) {
+		const filename = docRecord?.name ?? key.split('/').pop() ?? null;
+		if (filename) {
+			headers['Content-Disposition'] =
+				`attachment; filename="${filename.replace(/"/g, '\\"')}"; filename*=UTF-8''${encodeURIComponent(filename)}`;
+		}
+	}
+
+	return new Response(fileBuffer.buffer as ArrayBuffer, { headers });
 };

@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+import { env } from '$env/dynamic/public';
 import type { LayoutServerLoad } from './$types';
 import { getVehiclesByUser } from '$lib/db/repositories/vehicles.js';
 import { getUnreadCount } from '$lib/workflow/channels/inapp.js';
@@ -25,5 +26,10 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
 
 	const unreadCount = await getUnreadCount(locals.user.id);
 
-	return { user: locals.user, vehicles, unreadCount };
+	return {
+		user: locals.user,
+		vehicles,
+		unreadCount,
+		demoMode: env.PUBLIC_DEMO_ENABLED === 'true'
+	};
 };

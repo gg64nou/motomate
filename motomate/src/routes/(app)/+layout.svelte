@@ -25,7 +25,7 @@
 
 	let { children, data } = $props<{
 		children: import('svelte').Snippet;
-		data: { user: any; vehicles: NavVehicle[] };
+		data: { user: any; vehicles: NavVehicle[]; demoMode?: boolean };
 	}>();
 
 	// Initialize i18n with user's locale preference
@@ -220,6 +220,11 @@
 <svelte:window onkeydown={handleKeydown} onclick={handleClickOutside} />
 
 <div class="app-shell">
+	{#if data.demoMode}
+		<div class="demo-banner">
+			Demo mode: changes are disabled &middot; intended for demonstration purposes only.
+		</div>
+	{/if}
 	<header class="topnav">
 		<div class="topnav-inner">
 			<a href="/dashboard" class="topnav-logo">
@@ -672,6 +677,16 @@
 />
 
 <style>
+	.demo-banner {
+		background: color-mix(in srgb, var(--status-due) 6%, var(--bg));
+		border-bottom: 1px solid color-mix(in srgb, var(--status-due) 20%, var(--border));
+		padding: 0.5rem var(--space-6);
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		text-align: center;
+		user-select: none;
+	}
+
 	.app-shell {
 		display: flex;
 		flex-direction: column;
@@ -704,6 +719,7 @@
 		color: var(--text);
 		text-decoration: none;
 		flex-shrink: 0;
+		user-select: none;
 	}
 
 	.topnav-links {
@@ -920,6 +936,7 @@
 		border-radius: 50%;
 		object-fit: cover;
 		flex-shrink: 0;
+		user-select: none;
 	}
 	.topnav-avatar-initials {
 		width: 26px;

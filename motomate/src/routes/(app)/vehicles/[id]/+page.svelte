@@ -916,6 +916,9 @@
 				{/if}
 			</div>
 
+			{#if (data as any).demoMode}
+				<p class="demo-form-note">Demo mode: entries are not saved.</p>
+			{/if}
 			<div class="form-actions">
 				<button type="submit" class="btn-primary" disabled={submitting}
 					>{submitting ? $_('common.saving') : $_('vehicle.forms.submit.service')}</button
@@ -1959,6 +1962,11 @@
 	.mono {
 		font-family: var(--font-mono);
 		font-variant-numeric: tabular-nums;
+	}
+	.demo-form-note {
+		font-size: var(--text-xs);
+		color: var(--text-subtle);
+		margin: 0 0 0.25rem;
 	}
 	.form-actions {
 		display: flex;

@@ -11,12 +11,16 @@ try {
 	process.exit(1);
 }
 
+if (process.env.PUBLIC_DEMO_ENABLED === 'true') {
+	const { seedDemo } = await import('./demo-seed.js');
+	await seedDemo();
+}
+
 const { handler } = await import('./build/handler.js');
 
 const app = express();
 
-// Helmet CSP conflicts with SvelteKit's inline scripts, so we disable it.
-// SvelteKit handles its own CSP via <meta> tags in app.html.
+// Helmet CSP conflicts with SvelteKit's inline scripts, so we disable it. SvelteKit handles its own CSP via <meta> tags in app.html.
 app.use(
 	helmet({
 		contentSecurityPolicy: false
