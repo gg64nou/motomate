@@ -44,6 +44,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/build ./build
 COPY --from=build /app/server.js ./
 COPY --from=build /app/migrate.js ./
+COPY --from=build /app/demo-seed.js ./
 COPY --from=build /app/drizzle ./drizzle
 
 # Set environment variables
