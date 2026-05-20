@@ -261,7 +261,7 @@
 		margin-bottom: 0.75rem;
 		background: var(--bg-subtle);
 		border: 1px solid var(--border);
-		border-left: 3px solid var(--status-due);
+		border-top: 3px solid var(--status-due);
 		border-radius: 10px;
 		font-size: var(--text-sm);
 		color: var(--text-muted);
