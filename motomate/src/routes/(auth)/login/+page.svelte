@@ -3,7 +3,7 @@
 	import { _ } from '$lib/i18n';
 
 	let { data, form } = $props<{
-		data: { registrationEnabled: boolean };
+		data: { registrationEnabled: boolean; demoMode?: boolean };
 		form: {
 			error?: string;
 			email?: string;
@@ -39,20 +39,22 @@
 		<div class="form-error">{form.error}</div>
 	{/if}
 
-	<div class="mode-tabs">
-		<button
-			type="button"
-			class="mode-btn"
-			class:mode-btn--active={mode === 'password'}
-			onclick={() => (mode = 'password')}>{$_('auth.login.tabs.password')}</button
-		>
-		<button
-			type="button"
-			class="mode-btn"
-			class:mode-btn--active={mode === 'magic'}
-			onclick={() => (mode = 'magic')}>{$_('auth.login.tabs.magicLink')}</button
-		>
-	</div>
+	{#if !data.demoMode}
+		<div class="mode-tabs">
+			<button
+				type="button"
+				class="mode-btn"
+				class:mode-btn--active={mode === 'password'}
+				onclick={() => (mode = 'password')}>{$_('auth.login.tabs.password')}</button
+			>
+			<button
+				type="button"
+				class="mode-btn"
+				class:mode-btn--active={mode === 'magic'}
+				onclick={() => (mode = 'magic')}>{$_('auth.login.tabs.magicLink')}</button
+			>
+		</div>
+	{/if}
 
 	{#if mode === 'password'}
 		<form
@@ -113,9 +115,11 @@
 					/>
 					<span>{$_('auth.login.rememberMe')}</span>
 				</label>
-				<button type="button" class="link-btn" onclick={() => (mode = 'magic')}
-					>{$_('auth.login.forgotPassword')}</button
-				>
+				{#if !data.demoMode}
+					<button type="button" class="link-btn" onclick={() => (mode = 'magic')}
+						>{$_('auth.login.forgotPassword')}</button
+					>
+				{/if}
 			</div>
 			<button type="submit" class="btn-primary" disabled={loading}>
 				{#if loading}<span class="spinner" aria-hidden="true"></span>{/if}
@@ -146,7 +150,7 @@
 		</form>
 	{/if}
 
-	{#if data.registrationEnabled}
+	{#if data.registrationEnabled && !data.demoMode}
 		<p class="footer-link">
 			{$_('auth.login.noAccount')} <a href="/register">{$_('auth.login.signUp')}</a>
 		</p>

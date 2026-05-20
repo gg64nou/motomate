@@ -6,9 +6,33 @@
 	import Moon from '$lib/components/icons/Moon.svelte';
 	import Monitor from '$lib/components/icons/Monitor.svelte';
 
-	let { children } = $props<{
+	let { children, data } = $props<{
 		children: any;
+		data: { demoMode?: boolean };
 	}>();
+
+	let copied = $state<'email' | 'password' | null>(null);
+
+	async function copyToClipboard(text: string, field: 'email' | 'password') {
+		try {
+			if (navigator.clipboard?.writeText) {
+				await navigator.clipboard.writeText(text);
+			} else {
+				const el = document.createElement('textarea');
+				el.value = text;
+				el.style.position = 'fixed';
+				el.style.opacity = '0';
+				document.body.appendChild(el);
+				el.select();
+				document.execCommand('copy');
+				document.body.removeChild(el);
+			}
+			copied = field;
+			setTimeout(() => (copied = null), 1800);
+		} catch {
+			// perhaps clipboard unavailable
+		}
+	}
 
 	const themes = [
 		{ id: 'light', label: 'Light', icon: Sun },
@@ -108,6 +132,22 @@
 	}}
 />
 <div class="auth-shell">
+	{#if data.demoMode}
+		<div class="demo-banner">
+			<span class="demo-label">Demo instance</span>
+			<div class="demo-creds">
+				<button class="demo-cred" onclick={() => copyToClipboard('demo@motomate.local', 'email')}>
+					demo@motomate.local
+					<span class="demo-copy-hint">{copied === 'email' ? 'copied' : 'copy'}</span>
+				</button>
+				<span class="demo-sep">/</span>
+				<button class="demo-cred" onclick={() => copyToClipboard('password123', 'password')}>
+					password123
+					<span class="demo-copy-hint">{copied === 'password' ? 'copied' : 'copy'}</span>
+				</button>
+			</div>
+		</div>
+	{/if}
 	<div class="auth-card">
 		<div class="auth-header">
 			<div class="auth-logo select-none">
@@ -163,30 +203,110 @@
 		{@render children()}
 	</div>
 
-	<p class="footer-subtle select-none">
+	<div class="footer-actions select-none">
 		<a
 			href="https://github.com/hawkinslabdev/motomate"
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="MotoMate on GitHub"
+			class="footer-btn"
 		>
-			<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+			<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
 				<path
 					d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
 				/>
 			</svg>
 			Star
 		</a>
-		<span class="sep">·</span>
+		<div class="footer-divider"></div>
 		<a
 			href="https://github.com/hawkinslabdev/motomate/issues"
 			target="_blank"
-			rel="noopener noreferrer">Report</a
+			rel="noopener noreferrer"
+			class="footer-btn"
 		>
-	</p>
+			<svg
+				viewBox="0 0 24 24"
+				width="14"
+				height="14"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<path d="m8 2 1.88 1.88" /><path d="M14.12 3.88 16 2" /><path
+					d="M9 7.13v-1a3 3 0 1 1 6 0v1"
+				/><path
+					d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"
+				/><path d="M12 20v-9" /><path d="M6.53 9C4.6 8.8 3 7.1 3 5" /><path
+					d="M17.47 9c1.93-.2 3.53-1.9 3.53-4"
+				/><path d="M8 14H4" /><path d="M20 14h-4" /><path d="M6.9 19c-1.7 2.1-4.9 3-4.9 3" /><path
+					d="M17.1 19c1.7 2.1 4.9 3 4.9 3"
+				/>
+			</svg>
+			Report
+		</a>
+	</div>
 </div>
 
 <style>
+	.demo-banner {
+		width: 100%;
+		max-width: 400px;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 0.625rem 1rem;
+		margin-bottom: 0.75rem;
+		background: var(--bg-subtle);
+		border: 1px solid var(--border);
+		border-left: 3px solid var(--status-due);
+		border-radius: 10px;
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+	}
+	.demo-label {
+		font-size: var(--text-s);
+		font-weight: 500;
+		color: var(--text-muted);
+	}
+	.demo-creds {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+	}
+	.demo-cred {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		background: none;
+		border: none;
+		padding: 0;
+		font-family: 'JetBrains Mono', monospace;
+		font-variant-numeric: tabular-nums;
+		font-size: var(--text-xs);
+		color: var(--text);
+		cursor: pointer;
+		text-decoration: underline;
+		text-decoration-style: dotted;
+		text-underline-offset: 2px;
+		transition: color 0.12s;
+	}
+	.demo-cred:hover {
+		color: var(--accent);
+	}
+	.demo-copy-hint {
+		font-family: inherit;
+		font-size: 0.625rem;
+		color: var(--text-subtle);
+		text-decoration: none;
+	}
+	.demo-sep {
+		color: var(--text-subtle);
+		font-size: var(--text-xs);
+	}
+
 	.auth-shell {
 		min-height: 100dvh;
 		display: flex;
@@ -364,32 +484,44 @@
 		font-weight: 500;
 		color: var(--text);
 	}
-
-	.footer-subtle {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.375rem;
-		margin-top: 1.5rem;
-		font-size: var(--text-xs);
-		color: var(--text-subtle);
-	}
-	.footer-subtle a {
+	.footer-actions {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.25rem;
-		color: var(--text-subtle);
+		margin-top: 1.5rem;
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 9999px;
+		overflow: hidden;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	}
+
+	.footer-btn {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.5rem 0.875rem;
+		font-size: var(--text-xs, 0.75rem);
+		font-weight: 500;
+		color: var(--text-muted);
 		text-decoration: none;
-		transition: color 0.15s;
+		transition:
+			background 150ms ease,
+			color 150ms ease;
 	}
-	.footer-subtle a:hover {
-		color: var(--accent);
+
+	.footer-btn:hover {
+		background: var(--bg-muted);
+		color: var(--text);
 	}
-	.footer-subtle a:focus-visible {
+
+	.footer-btn:focus-visible {
 		outline: 2px solid var(--accent);
-		outline-offset: 2px;
+		outline-offset: -2px;
 	}
-	.footer-subtle .sep {
-		opacity: 0.5;
+
+	.footer-divider {
+		width: 1px;
+		height: 1rem;
+		background: var(--border);
 	}
 </style>
