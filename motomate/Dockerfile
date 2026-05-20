@@ -27,7 +27,7 @@ RUN mkdir -p /app/data
 RUN npm rebuild better-sqlite3
 
 # Build the application
-RUN npm run build
+RUN npm run build && cp -r src/lib/db/demo-assets build/server/chunks/demo-assets
 
 # Runtime stage
 FROM node:20-slim AS runtime
