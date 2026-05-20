@@ -971,10 +971,14 @@
 						<form
 							method="POST"
 							action="?/log"
-							use:enhance
+							use:enhance={() => {
+								return async ({ update }) => {
+									await update({ reset: false });
+									loggingTracker = null;
+								};
+							}}
 							class="log-form"
 							data-log-form={t.id}
-							onsubmit={() => (loggingTracker = null)}
 						>
 							<input type="hidden" name="tracker_id" value={t.id} />
 							<div class="log-fields">
@@ -1058,6 +1062,9 @@
 								></textarea>
 							</label>
 							<div class="log-actions">
+								{#if (data as any).demoMode}
+									<p class="demo-form-note">Demo mode: entries are not saved.</p>
+								{/if}
 								<button type="submit" class="btn-primary"
 									>{$_('vehicle.forms.submit.service')}</button
 								>
@@ -1431,7 +1438,15 @@
 	}
 	.log-actions {
 		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
 		gap: 0.5rem;
+	}
+	.demo-form-note {
+		width: 100%;
+		font-size: var(--text-xs);
+		color: var(--text-subtle);
+		margin: 0;
 	}
 
 	/* Shared form elements */

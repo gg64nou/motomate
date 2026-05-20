@@ -1,12 +1,8 @@
-/**
- * Locale-aware formatting utilities.
- * All functions accept a locale string (e.g. 'en', 'de', 'fr') from user settings.
- */
-
+/* Utility functions for formatting numbers, dates, currencies, etc. in a locale-aware way */
 const _numFmtCache = new Map<string, Intl.NumberFormat>();
 const _currFmtCache = new Map<string, Intl.NumberFormat>();
 
-/** Format an odometer or plain integer with thousand-separators. */
+/* Format odometer with thousand-seperators */
 export function formatNumber(value: number, locale = 'en'): string {
 	let fmt = _numFmtCache.get(locale);
 	if (!fmt) {
@@ -16,12 +12,12 @@ export function formatNumber(value: number, locale = 'en'): string {
 	return fmt.format(value);
 }
 
-/** Format a measurement reading with its stored unit token. */
+/* Format a measurement reading with unit token */
 export function formatMeasurement(value: number, unit: string, locale = 'en'): string {
 	return `${formatNumber(value, locale)} ${unit}`;
 }
 
-/** Format cost stored in cents as a locale-aware currency string. */
+/* Format cost stored in cents as a locale-aware currency string */
 export function formatCurrency(cents: number, currency = 'EUR', locale = 'en'): string {
 	const key = `${locale}:${currency}`;
 	let fmt = _currFmtCache.get(key);
@@ -37,16 +33,16 @@ export function formatCurrency(cents: number, currency = 'EUR', locale = 'en'): 
 	return fmt.format(cents / 100);
 }
 
-/** Format a YYYY-MM-DD string as a short date (e.g. "12 Jan" or "12 Jan '25"). */
+/* Format a date string as "5 Jan 2026", omitting the year if its the current yearr */
 export function formatDateShort(dateStr: string, locale = 'en'): string {
-	const d = new Date(dateStr + 'T00:00:00'); // force local midnight parse
+	const d = new Date(dateStr + 'T00:00:00');
 	const now = new Date();
 	const currentYear = now.getFullYear();
 	const targetYear = d.getFullYear();
 	const nextJan1 = new Date(currentYear + 1, 0, 1);
 	const monthsDiff = (d.getTime() - now.getTime()) / (30.44 * 24 * 60 * 60 * 1000);
 	const includeYear =
-		targetYear > currentYear || d.getTime() > nextJan1.getTime() || monthsDiff > 6;
+		targetYear !== currentYear || d.getTime() > nextJan1.getTime() || monthsDiff > 6;
 	const opts: Intl.DateTimeFormatOptions = {
 		day: 'numeric',
 		month: 'short',
@@ -55,17 +51,13 @@ export function formatDateShort(dateStr: string, locale = 'en'): string {
 	return d.toLocaleDateString(locale, opts);
 }
 
-/** Format a YYYY-MM-DD string as a long date (e.g. "12 January 2025"). */
+/* Format a date string as "5 January 2026" */
 export function formatDateLong(dateStr: string, locale = 'en'): string {
 	const d = new Date(dateStr + 'T00:00:00');
 	return d.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-/**
- * Format a datetime string (SQLite `datetime('now')` returns "YYYY-MM-DD HH:MM:SS")
- * as a short date + time, e.g. "5 Jan 2026, 14:30".
- * Pass a timezone IANA string (e.g. "Europe/Amsterdam") to display in that zone.
- */
+/* Format a datetime string as "5 Jan 2026, 14:30" */
 export function formatDateTime(dateStr: string, locale = 'en', timezone?: string): string {
 	// SQLite stores datetimes without 'T'; make ISO-compatible before parsing
 	const iso = dateStr.includes('T') ? dateStr : dateStr.replace(' ', 'T');
@@ -82,7 +74,7 @@ export function formatDateTime(dateStr: string, locale = 'en', timezone?: string
 	});
 }
 
-/** Format a YYYY-MM key as "Month Year" (e.g. "January 2025"). */
+/* Format a year-month string like "2024-01" as "January 2024" */
 export function formatYearMonth(ym: string, locale = 'en'): string {
 	const [y, m] = ym.split('-');
 	return new Date(+y, +m - 1).toLocaleDateString(locale, { month: 'long', year: 'numeric' });
