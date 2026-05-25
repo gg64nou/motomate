@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag (e.g., v0.0.1) - leave empty for auto-increment'
-        required: false
+        description: 'Version tag (e.g. v0.2.5)'
+        required: true
         type: string
 
 jobs:
@@ -23,48 +23,87 @@ jobs:
       - name: Determine version
         id: get_tag
         run: |
-          if [ -n "${{ github.event.inputs.version }}" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-            if [[ ! $VERSION =~ ^v ]]; then
-              VERSION="v${VERSION}"
-            fi
-            echo "Using manually specified version: $VERSION"
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
-          else
-            # Get all tags matching v* pattern, sorted by version
-            TAGS=$(git tag -l 'v*' --sort=-v:refname 2>/dev/null | head -20)
-            
-            # Find the latest semantic version tag
-            LATEST=""
-            for tag in $TAGS; do
-              if [[ $tag =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-                LATEST=$tag
-                break
-              fi
-            done
-            
-            if [ -z "$LATEST" ]; then
-              echo "No existing v* tags found, starting at v0.0.1"
-              echo "version=v0.0.1" >> $GITHUB_OUTPUT
-            else
-              echo "Found latest tag: $LATEST"
-              # Extract version components
-              VERSION=${LATEST#v}
-              MAJOR=$(echo $VERSION | cut -d. -f1)
-              MINOR=$(echo $VERSION | cut -d. -f2)
-              PATCH=$(echo $VERSION | cut -d. -f3)
-              
-              # Increment patch
-              NEW_PATCH=$((PATCH + 1))
-              NEW_VERSION="v${MAJOR}.${MINOR}.${NEW_PATCH}"
-              
-              echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-            fi
+          VERSION="${{ github.event.inputs.version }}"
+          [[ $VERSION =~ ^v ]] || VERSION="v${VERSION}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_bare=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog entry
+        run: |
+          VERSION_BARE="${{ steps.get_tag.outputs.version_bare }}"
+          awk "/^## ${VERSION_BARE}\$/{found=1; next} found && /^## /{exit} found{print}" CHANGELOG.md \
+            | sed '/^[[:space:]]*$/d' > /tmp/changelog_entry.md
+          if [ ! -s /tmp/changelog_entry.md ]; then
+            echo "_No changelog entry found for ${VERSION_BARE}._" > /tmp/changelog_entry.md
           fi
+
+      - name: Build release body
+        run: |
+          VERSION="${{ steps.get_tag.outputs.version }}"
+          REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          {
+            echo "## Changes"
+            echo ""
+            echo "See [CHANGELOG.md](https://github.com/hawkinslabdev/motomate/blob/main/CHANGELOG.md) for all details."
+            echo ""
+            echo "## Install"
+            echo ""
+            echo "Copy \`docker-compose.yml\` from the release assets, set \`AUTH_SECRET\` and \`PUBLIC_APP_URL\`, then:"
+            echo ""
+            echo '```bash'
+            echo "docker compose up -d"
+            echo '```'
+            echo ""
+            echo "Or pin to this exact version:"
+            echo ""
+            echo '```yaml'
+            echo "services:"
+            echo "  motomate:"
+            echo "    image: ghcr.io/${REPO}:${VERSION}"
+            echo '    ports:'
+            echo '      - "3000:3000"'
+            echo '    volumes:'
+            echo '      - ./data:/app/data'
+            echo '      - ./uploads:/app/uploads'
+            echo '    environment:'
+            echo '      - TZ=Europe/Amsterdam'
+            echo '      - PUBLIC_APP_URL=http://localhost:3000'
+            echo '      - PUBLIC_APP_ORIGINS=http://localhost'
+            echo '      - AUTH_COOKIE_SECURE=false'
+            echo '      - AUTH_SECRET=change-me-in-production-min-32-chars'
+            echo '      - STORAGE_ADAPTER=local'
+            echo '      - BODY_SIZE_LIMIT=20971520'
+            echo '    restart: unless-stopped'
+            echo '```'
+            echo ""
+            echo "## What's changed"
+            echo ""
+            cat /tmp/changelog_entry.md
+            echo ""
+            echo "---"
+            echo ""
+            echo "Full history: [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${VERSION}/CHANGELOG.md)"
+          } > /tmp/release_body.md
 
       - name: Create and push tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a ${{ steps.get_tag.outputs.version }} -m "Release ${{ steps.get_tag.outputs.version }}"
-          git push origin ${{ steps.get_tag.outputs.version }}
+          git tag -a "${{ steps.get_tag.outputs.version }}" -m "Release ${{ steps.get_tag.outputs.version }}"
+          git push origin "${{ steps.get_tag.outputs.version }}"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Verify file exists before passing to gh release to prevent silent crashes
+          if [ ! -f "docker-compose.yml" ]; then
+            echo "Error: docker-compose.yml not found in the current directory."
+            exit 1
+          fi
+          
+          gh release create "${{ steps.get_tag.outputs.version }}" \
+            --title "${{ steps.get_tag.outputs.version }}" \
+            --notes-file /tmp/release_body.md \
+            --target "${{ github.sha }}" \
+            docker-compose.yml
