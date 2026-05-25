@@ -33,18 +33,28 @@
 <style>
 	.bell {
 		position: relative;
-		background: none;
-		border: none;
+		width: 42px;
+		height: 42px;
+		background: transparent;
+		border: 3px solid transparent;
+		border-radius: 12px;
 		cursor: pointer;
 		color: var(--text-muted);
-		padding: 0.25rem 0.5rem;
-		border-radius: 10px;
 		display: flex;
 		align-items: center;
+		justify-content: center;
+		transition:
+			background 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+			color 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+			border-color 0.15s cubic-bezier(0.25, 1, 0.5, 1);
 	}
 	.bell:hover {
 		color: var(--text);
 		background: var(--bg-muted);
+	}
+	.bell:active {
+		background: color-mix(in srgb, var(--accent) 4%, transparent);
+		border-color: color-mix(in srgb, var(--accent) 15%, transparent);
 	}
 	.badge {
 		position: absolute;
