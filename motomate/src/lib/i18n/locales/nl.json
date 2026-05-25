@@ -27,7 +27,7 @@
 			"submit": "Inloggen",
 			"noAccount": "Nog geen account?",
 			"signUp": "Registreer je hier!",
-			"magicLinkSent": "Check je e-mail, een inloglink is onderweg.",
+			"magicLinkSent": "Controleer je e-mail, een inloglink is onderweg!",
 			"setupNotice": {
 				"title": "Eerste setup",
 				"body": "Welkom bij MotoMate. Omdat je hier nieuw bent, is een standaard admin-account aangemaakt. Log in om de installatie te voltooien en deze gegevens te wijzigen.",
