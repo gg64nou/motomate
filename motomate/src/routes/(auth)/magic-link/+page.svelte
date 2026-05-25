@@ -1,94 +1,145 @@
 <script lang="ts">
 	import { _ } from '$lib/i18n';
 
-	let { data } = $props<{ data: { verified: boolean; error?: string } }>();
+	let { data } = $props<{ data: { verified: boolean; errorKey?: string } }>();
 </script>
 
 <svelte:head><title>{$_('auth.magicLink.title')} &middot; MotoMate</title></svelte:head>
 
-<div class="magic-container">
-	{#if data.verified}
-		<div class="success-state">
-			<div class="success-icon">✓</div>
-			<p class="success-text">{$_('auth.magicLink.verifying')}</p>
-		</div>
-	{:else}
-		<div class="error-state">
-			<div class="error-icon">!</div>
-			<p class="error-text">{data.error ?? $_('auth.magicLink.invalid')}</p>
-			<a href="/login" class="retry-link">{$_('auth.magicLink.retry')}</a>
-		</div>
-	{/if}
-</div>
+{#if data.verified}
+	<div class="page-header">
+		<h1 class="page-title">{$_('auth.magicLink.verifying')}</h1>
+	</div>
+	<div class="loading-bar" role="status" aria-label={$_('auth.magicLink.verifying')}></div>
+{:else}
+	<div class="page-header">
+		<h1 class="page-title">{$_('auth.magicLink.title')}</h1>
+	</div>
+	<div class="error-notice">
+		<svg
+			class="error-icon"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="1.75"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<circle cx="12" cy="12" r="10" />
+			<line x1="12" y1="8" x2="12" y2="12" />
+			<line x1="12" y1="16" x2="12.01" y2="16" />
+		</svg>
+		<p class="error-text">{$_(data.errorKey ?? 'auth.magicLink.invalid')}</p>
+	</div>
+	<a href="/login?mode=magic" class="btn-primary">{$_('auth.magicLink.retry')}</a>
+{/if}
 
 <style>
-	.magic-container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 200px;
-		text-align: center;
+	.page-header {
+		margin-bottom: var(--space-4);
 	}
-
-	.success-state,
-	.error-state {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1rem;
-	}
-
-	.success-icon,
-	.error-icon {
-		width: 48px;
-		height: 48px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.5rem;
+	.page-title {
+		font-size: var(--text-xl);
 		font-weight: 600;
-	}
-
-	.success-icon {
-		background: color-mix(in srgb, var(--status-ok) 15%, transparent);
-		color: var(--status-ok);
-	}
-
-	.error-icon {
-		background: color-mix(in srgb, var(--status-overdue) 15%, transparent);
-		color: var(--status-overdue);
-	}
-
-	.success-text {
-		font-size: var(--text-base);
-		font-weight: 500;
-		color: var(--status-ok);
-		margin: 0;
-	}
-
-	.error-text {
-		font-size: var(--text-base);
 		color: var(--text);
 		margin: 0;
-		max-width: 280px;
+		letter-spacing: -0.01em;
 	}
 
-	.retry-link {
+	.loading-bar {
+		height: 2px;
+		background: var(--border);
+		border-radius: 999px;
+		overflow: hidden;
+		position: relative;
+	}
+	.loading-bar::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -40%;
+		width: 40%;
+		height: 100%;
+		background: var(--accent);
+		border-radius: inherit;
+		animation: bar-slide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+	}
+	@keyframes bar-slide {
+		0% {
+			left: -40%;
+		}
+		100% {
+			left: 100%;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.loading-bar::after {
+			animation: none;
+			left: 0;
+			width: 100%;
+			opacity: 0.4;
+		}
+	}
+
+	.error-notice {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		padding: 0.875rem 1.125rem;
+		background: color-mix(in srgb, var(--status-overdue) 6%, var(--bg));
+		border: 1px solid color-mix(in srgb, var(--status-overdue) 20%, var(--border));
+		border-radius: 10px;
+		margin-bottom: var(--space-4);
+	}
+	.error-icon {
+		width: 18px;
+		height: 18px;
+		color: var(--status-overdue);
+		flex-shrink: 0;
+		margin-top: 0.1rem;
+	}
+	.error-text {
 		font-size: var(--text-sm);
-		color: var(--accent);
+		color: var(--text);
+		line-height: var(--leading-base);
+		margin: 0;
+	}
+
+	.btn-primary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		padding: 0.625rem 1rem;
+		background: var(--accent);
+		color: #fff;
+		border: none;
+		border-radius: 10px;
+		font-weight: 500;
+		font-size: var(--text-sm);
 		text-decoration: none;
-		transition: color 150ms ease;
+		cursor: pointer;
+		transition:
+			background 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+			transform 0.12s cubic-bezier(0.25, 1, 0.5, 1);
 	}
-
-	.retry-link:hover {
-		color: var(--accent-hover);
-		text-decoration: underline;
+	.btn-primary:hover {
+		background: var(--accent-hover);
+		transform: translateY(-1px);
 	}
-
-	.retry-link:focus-visible {
+	.btn-primary:active {
+		transform: scale(0.97);
+		transition-duration: 0.06s;
+	}
+	.btn-primary:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 2px;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.btn-primary:hover,
+		.btn-primary:active {
+			transform: none;
+		}
 	}
 </style>

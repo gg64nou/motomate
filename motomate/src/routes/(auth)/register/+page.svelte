@@ -1,14 +1,24 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { getContext, onMount } from 'svelte';
 	import { _ } from '$lib/i18n';
+
+	const altchaCtx = getContext<{ locale: string }>('altcha-locale');
+
 	let { data, form } = $props<{
-		data: { registrationDisabled: boolean };
+		data: { registrationDisabled: boolean; altchaEnabled: boolean };
 		form: { error?: string; email?: string; fieldErrors?: Record<string, string> } | null;
 	}>();
 
 	let passwordValue = $state('');
 	let confirmValue = $state('');
 	let loading = $state(false);
+	let altchaReady = $state(false);
+	let altchaVerified = $state(false);
+	let mounted = $state(false);
+	onMount(() => {
+		mounted = true;
+	});
 	const mismatch = $derived(confirmValue.length > 0 && confirmValue !== passwordValue);
 </script>
 
@@ -37,6 +47,7 @@
 
 	<form
 		method="POST"
+		novalidate
 		use:enhance={({ formData }) => {
 			formData.set('theme', localStorage.getItem('theme') ?? 'system');
 			formData.set('locale', localStorage.getItem('locale') ?? 'en');
@@ -99,7 +110,25 @@
 				<span class="field-err">{$_('auth.register.passwordMismatch')}</span>
 			{/if}
 		</label>
-		<button type="submit" class="btn-primary" disabled={mismatch || loading}>
+		{#if data.altchaEnabled}
+			{#if mounted}
+				<div class="altcha-wrap">
+					{#if !altchaReady}
+						<div class="altcha-skeleton" aria-hidden="true"></div>
+					{/if}
+					<altcha-widget
+						challenge="/api/altcha"
+						language={altchaCtx?.locale}
+						style={altchaReady ? '' : 'position:absolute;opacity:0;pointer-events:none'}
+						onload={() => (altchaReady = true)}
+						onstatechange={(e) => (altchaVerified = e.detail.state === 'verified')}
+					></altcha-widget>
+				</div>
+			{:else}
+				<div class="altcha-skeleton" aria-hidden="true"></div>
+			{/if}
+		{/if}
+		<button type="submit" class="btn-primary" disabled={mismatch || loading || !altchaVerified}>
 			{#if loading}<span class="spinner" aria-hidden="true"></span>{/if}
 			{$_('auth.register.submit')}</button
 		>

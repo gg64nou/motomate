@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { getContext, onMount, untrack } from 'svelte';
 	import { _ } from '$lib/i18n';
 
+	const altchaCtx = getContext<{ locale: string }>('altcha-locale');
+
 	let { data, form } = $props<{
-		data: { registrationEnabled: boolean; demoMode?: boolean };
+		data: {
+			registrationEnabled: boolean;
+			demoMode?: boolean;
+			smtpEnabled: boolean;
+			altchaEnabled: boolean;
+			initialMode: 'password' | 'magic';
+		};
 		form: {
 			error?: string;
 			email?: string;
@@ -12,9 +21,15 @@
 		} | null;
 	}>();
 
-	let mode = $state<'password' | 'magic'>('password');
+	let mode = $state<'password' | 'magic'>(untrack(() => data.initialMode));
 	let remember = $state(true);
 	let loading = $state(false);
+	let altchaReady = $state(false);
+	let altchaVerified = $state(false);
+	let mounted = $state(false);
+	onMount(() => {
+		mounted = true;
+	});
 
 	// Persist remember preference
 	$effect(() => {
@@ -33,13 +48,31 @@
 </div>
 
 {#if form?.magic}
-	<div class="notice">{$_('auth.login.magicLinkSent')}</div>
+	<div class="notice">
+		<svg
+			class="notice-icon"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="1.75"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<rect width="20" height="16" x="2" y="4" rx="2" />
+			<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+		</svg>
+		<div class="notice-content">
+			<p class="notice-text">{$_('auth.login.magicLinkSent')}</p>
+			<a href="?" class="back-link">{$_('common.back')}</a>
+		</div>
+	</div>
 {:else}
 	{#if form?.error}
 		<div class="form-error">{form.error}</div>
 	{/if}
 
-	{#if !data.demoMode}
+	{#if !data.demoMode && data.smtpEnabled}
 		<div class="mode-tabs">
 			<button
 				type="button"
@@ -115,7 +148,7 @@
 					/>
 					<span>{$_('auth.login.rememberMe')}</span>
 				</label>
-				{#if !data.demoMode}
+				{#if !data.demoMode && data.smtpEnabled}
 					<button type="button" class="link-btn" onclick={() => (mode = 'magic')}
 						>{$_('auth.login.forgotPassword')}</button
 					>
@@ -130,6 +163,7 @@
 		<form
 			method="POST"
 			action="?/magic"
+			novalidate
 			use:enhance={() => {
 				loading = true;
 				return async ({ update }) => {
@@ -143,7 +177,25 @@
 				<span class="field-label">{$_('auth.login.email')}</span>
 				<input name="email" type="email" autocomplete="email" required class="input" />
 			</label>
-			<button type="submit" class="btn-primary" disabled={loading}>
+			{#if data.altchaEnabled}
+				{#if mounted}
+					<div class="altcha-wrap">
+						{#if !altchaReady}
+							<div class="altcha-skeleton" aria-hidden="true"></div>
+						{/if}
+						<altcha-widget
+							challenge="/api/altcha"
+							language={altchaCtx?.locale}
+							style={altchaReady ? '' : 'position:absolute;opacity:0;pointer-events:none'}
+							onload={() => (altchaReady = true)}
+							onstatechange={(e) => (altchaVerified = e.detail.state === 'verified')}
+						></altcha-widget>
+					</div>
+				{:else}
+					<div class="altcha-skeleton" aria-hidden="true"></div>
+				{/if}
+			{/if}
+			<button type="submit" class="btn-primary" disabled={loading || !altchaVerified}>
 				{#if loading}<span class="spinner" aria-hidden="true"></span>{/if}
 				{$_('auth.login.magicSubmit')}
 			</button>
@@ -244,12 +296,44 @@
 	}
 
 	.notice {
-		padding: 0.625rem 0.875rem;
-		background: color-mix(in srgb, var(--status-ok) 8%, transparent);
-		border: 1px solid color-mix(in srgb, var(--status-ok) 25%, transparent);
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		padding: 1rem 1.125rem;
+		background: var(--bg-muted);
+		border: 1px solid var(--border);
 		border-radius: 10px;
+	}
+	.notice-icon {
+		width: 18px;
+		height: 18px;
+		color: var(--text-subtle);
+		flex-shrink: 0;
+		margin-top: 0.1rem;
+	}
+	.notice-text {
 		font-size: var(--text-sm);
-		color: var(--status-ok);
+		color: var(--text-muted);
+		line-height: var(--leading-base);
+		margin: 0;
+	}
+
+	.notice-content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.back-link {
+		font-size: var(--text-sm);
+		color: var(--accent);
+		text-decoration: none;
+		font-weight: 500;
+		width: max-content;
+	}
+
+	.back-link:hover {
+		text-decoration: underline;
 	}
 
 	.mode-tabs {

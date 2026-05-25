@@ -2,7 +2,12 @@ import { fail, redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/auth/index.js';
 import { getUserByEmail, createUser, updateUserSettings } from '$lib/db/repositories/users.js';
 import { isRegistrationOpen } from '$lib/auth/registration.js';
-import { createMagicLinkToken, sendMagicLinkEmail } from '$lib/auth/magic-link.js';
+import {
+	createMagicLinkToken,
+	sendMagicLinkEmail,
+	isSmtpConfigured
+} from '$lib/auth/magic-link.js';
+import { verifyAltcha } from '$lib/auth/altcha.js';
 import { LoginSchema, MagicLinkRequestSchema } from '$lib/validators/schemas.js';
 import { rateLimit } from '$lib/auth/rate-limit.js';
 import type { Actions, PageServerLoad } from './$types';
@@ -33,6 +38,8 @@ const localeMessages: Record<string, AuthErrors> = { en, de, fr, es, it, nl, pt 
 
 const ARGON2_OPTS = { memoryCost: 19456, timeCost: 2, outputLen: 32, parallelism: 1 };
 
+let _smtpWarned = false;
+
 // Uses a pre-computed hash to ensure every login attempt takes same amount of time
 let _dummyHash: string | undefined;
 async function getDummyHash(): Promise<string> {
@@ -40,9 +47,23 @@ async function getDummyHash(): Promise<string> {
 	return _dummyHash;
 }
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	if (locals.user) redirect(302, '/dashboard');
-	return { registrationEnabled: await isRegistrationOpen() };
+	const smtpEnabled = isSmtpConfigured();
+	if (!smtpEnabled && !_smtpWarned) {
+		console.warn(
+			'[auth] Magic link disabled: SMTP_HOST is not set. Configure SMTP to enable passwordless login.'
+		);
+		_smtpWarned = true;
+	}
+	const initialMode =
+		smtpEnabled && url.searchParams.get('mode') === 'magic' ? 'magic' : 'password';
+	return {
+		registrationEnabled: await isRegistrationOpen(),
+		smtpEnabled,
+		altchaEnabled: true,
+		initialMode
+	};
 };
 
 export const actions: Actions = {
@@ -69,7 +90,7 @@ export const actions: Actions = {
 
 		const user = await getUserByEmail(parsed.data.email);
 
-		// Always run Argon2 verify ; even when the user doesn't exist so response time is constant and can't be used to enumerate valid email addresses.
+		// Always run Argon2 verify; even when the user doesn't exist so response time is constant and can't be used to enumerate valid email addresses.
 		const hashToCheck = user?.password_hash ?? (await getDummyHash());
 		const valid = await verify(hashToCheck, parsed.data.password, ARGON2_OPTS);
 
@@ -112,6 +133,10 @@ export const actions: Actions = {
 	},
 
 	magic: async ({ request, getClientAddress, locals }) => {
+		if (!isSmtpConfigured()) {
+			return fail(503, { error: 'Magic link login is not available: SMTP is not configured.' });
+		}
+
 		const ip = getClientAddress();
 		const userLocale = (locals.user as any)?.settings?.locale ?? 'en';
 		const messages = localeMessages[userLocale] ?? localeMessages['en'];
@@ -122,6 +147,10 @@ export const actions: Actions = {
 		}
 
 		const data = Object.fromEntries(await request.formData());
+
+		if (!(await verifyAltcha(data.altcha))) {
+			return fail(400, { error: 'Verification failed. Please try again.' });
+		}
 		const parsed = MagicLinkRequestSchema.safeParse(data);
 
 		if (!parsed.success) {

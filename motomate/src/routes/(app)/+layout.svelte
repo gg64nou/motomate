@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { untrack } from 'svelte';
+	import { tick, untrack } from 'svelte';
+	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { fade, fly } from 'svelte/transition';
 	import { _, setUserLocale } from '$lib/i18n';
@@ -11,6 +12,7 @@
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { quickAdd } from '$lib/stores/quickAdd.js';
 	import { dicebearUri } from '$lib/utils/dicebear.js';
+	import { resolveTheme, readStoredTheme } from '$lib/utils/theme.js';
 
 	import Sun from '$lib/components/icons/Sun.svelte';
 	import Moon from '$lib/components/icons/Moon.svelte';
@@ -80,6 +82,11 @@
 	let quickAddOpen = $state(false);
 	let quickAddStep = $state<'vehicle' | 'type'>('vehicle');
 	let selectedVehicle = $state<NavVehicle | null>(null);
+	let quickAddSheetEl: HTMLElement | undefined = $state();
+
+	$effect(() => {
+		if (quickAddOpen) tick().then(() => quickAddSheetEl?.focus());
+	});
 
 	// Sync local state with store
 	$effect(() => {
@@ -134,17 +141,28 @@
 		return v.meta?.avatar_emoji ?? (v.type === 'scooter' ? '🛵' : v.type === 'bike' ? '🚲' : '🏍');
 	}
 
-	let currentTheme = $state(untrack(() => data.user.settings.theme ?? 'system'));
+	let currentTheme = $state(
+		untrack(() => {
+			const db = (data.user.settings.theme ?? 'system') as 'light' | 'dark' | 'system';
+			// DB 'system' means the user never set it explicitly inside the app.
+			// Prefer localStorage (kept in sync by both auth and app layouts).
+			if (db !== 'system') return db;
+			return browser ? readStoredTheme() : 'system';
+		})
+	);
+
+	if (browser) {
+		document.documentElement.dataset.theme = resolveTheme(
+			untrack(() => currentTheme) as 'light' | 'dark' | 'system'
+		);
+	}
 
 	const CurrentThemeIcon = $derived(themes.find((t) => t.id === currentTheme)?.icon);
 
 	$effect(() => {
-		if (currentTheme === 'system') {
-			// Keep data-theme="system" so app.html script doesn't override on nav
-			document.documentElement.dataset.theme = 'system';
-		} else {
-			document.documentElement.dataset.theme = currentTheme;
-		}
+		document.documentElement.dataset.theme = resolveTheme(
+			currentTheme as 'light' | 'dark' | 'system'
+		);
 	});
 
 	async function setTheme(next: 'light' | 'dark' | 'system') {
@@ -238,6 +256,7 @@
 						href={link.href}
 						class="topnav-link"
 						class:active={page.url.pathname.startsWith(link.href)}
+						aria-current={page.url.pathname.startsWith(link.href) ? 'page' : undefined}
 					>
 						{$_(link.labelKey)}
 					</a>
@@ -304,7 +323,8 @@
 					{:else if topnavAvatarUri}
 						<img src={topnavAvatarUri} alt="" class="topnav-avatar-img" />
 					{:else}
-						<span class="topnav-avatar-initials">{data.user.email[0].toUpperCase()}</span>
+						<span class="topnav-avatar-initials">{(data.user.email?.[0] ?? '?').toUpperCase()}</span
+						>
 					{/if}
 				</a>
 
@@ -324,6 +344,7 @@
 			href="/dashboard"
 			class="bottom-tab"
 			class:active={page.url.pathname.startsWith('/dashboard')}
+			aria-current={page.url.pathname.startsWith('/dashboard') ? 'page' : undefined}
 		>
 			<svg
 				class="tab-icon"
@@ -341,7 +362,12 @@
 			<span class="tab-label">{$_('layout.nav.dashboard')}</span>
 		</a>
 
-		<a href="/vehicles" class="bottom-tab" class:active={page.url.pathname.startsWith('/vehicles')}>
+		<a
+			href="/vehicles"
+			class="bottom-tab"
+			class:active={page.url.pathname.startsWith('/vehicles')}
+			aria-current={page.url.pathname.startsWith('/vehicles') ? 'page' : undefined}
+		>
 			<svg
 				class="tab-icon"
 				viewBox="0 0 24 24"
@@ -382,7 +408,12 @@
 			</button>
 		</div>
 
-		<a href="/settings" class="bottom-tab" class:active={page.url.pathname.startsWith('/settings')}>
+		<a
+			href="/settings"
+			class="bottom-tab"
+			class:active={page.url.pathname.startsWith('/settings')}
+			aria-current={page.url.pathname.startsWith('/settings') ? 'page' : undefined}
+		>
 			<svg
 				class="tab-icon"
 				viewBox="0 0 24 24"
@@ -451,9 +482,11 @@
 		out:fade={{ duration: 120 }}
 	>
 		<div
+			bind:this={quickAddSheetEl}
 			class="quickadd-sheet"
 			role="dialog"
 			aria-modal="true"
+			aria-labelledby="quickadd-title"
 			onkeydown={(e) => e.key === 'Escape' && closeQuickAdd()}
 			tabindex="-1"
 			in:fly={{ y: 240, duration: 260, opacity: 1 }}
@@ -463,7 +496,7 @@
 
 			{#if quickAddStep === 'vehicle'}
 				<div class="sheet-header">
-					<p class="sheet-title">{$_('layout.addEntry.title')}</p>
+					<p id="quickadd-title" class="sheet-title">{$_('layout.addEntry.title')}</p>
 					<button class="sheet-close" onclick={closeQuickAdd} aria-label={$_('common.close')}>
 						<svg
 							viewBox="0 0 24 24"
@@ -519,7 +552,9 @@
 						>
 						{$_('common.back')}
 					</button>
-					<p class="sheet-title sheet-title--vehicle">{selectedVehicle?.name}</p>
+					<p id="quickadd-title" class="sheet-title sheet-title--vehicle">
+						{selectedVehicle?.name}
+					</p>
 					<button class="sheet-close" onclick={closeQuickAdd} aria-label="Close">
 						<svg
 							viewBox="0 0 24 24"
@@ -827,32 +862,8 @@
 	}
 
 	.theme-trigger:active {
-		background: rgba(37, 99, 235, 0.04);
-		border-color: rgba(37, 99, 235, 0.15);
-	}
-
-	.action-item :global(button:not(.theme-trigger):not(.theme-item)) {
-		width: 42px !important;
-		height: 42px !important;
-		border: 3px solid transparent !important;
-		border-radius: 12px !important;
-		background: transparent !important;
-		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
-		cursor: pointer !important;
-		transition:
-			background 0.15s cubic-bezier(0.25, 1, 0.5, 1),
-			border-color 0.15s cubic-bezier(0.25, 1, 0.5, 1) !important;
-	}
-
-	.action-item :global(button:not(.theme-trigger):not(.theme-item):hover) {
-		background: var(--bg-muted) !important;
-	}
-
-	.action-item :global(button:not(.theme-trigger):not(.theme-item):active) {
-		background: rgba(37, 99, 235, 0.04) !important;
-		border-color: rgba(37, 99, 235, 0.15) !important;
+		background: color-mix(in srgb, var(--accent) 4%, transparent);
+		border-color: color-mix(in srgb, var(--accent) 15%, transparent);
 	}
 
 	.theme-dropdown {
@@ -890,8 +901,8 @@
 
 	.theme-item:active,
 	.theme-item.selected {
-		background: rgba(37, 99, 235, 0.04);
-		border-color: rgba(37, 99, 235, 0.15);
+		background: color-mix(in srgb, var(--accent) 4%, transparent);
+		border-color: color-mix(in srgb, var(--accent) 15%, transparent);
 		color: var(--text);
 	}
 
@@ -927,8 +938,8 @@
 		background: var(--bg-muted);
 	}
 	.topnav-avatar:active {
-		background: rgba(37, 99, 235, 0.04);
-		border-color: rgba(37, 99, 235, 0.15);
+		background: color-mix(in srgb, var(--accent) 4%, transparent);
+		border-color: color-mix(in srgb, var(--accent) 15%, transparent);
 	}
 	.topnav-avatar-img {
 		width: 26px;
@@ -959,16 +970,16 @@
 	}
 
 	.topnav-signout:hover {
-		background: rgba(239, 68, 68, 0.05);
+		background: color-mix(in srgb, var(--status-overdue) 5%, transparent);
 		color: var(--status-overdue);
-		border-color: rgba(239, 68, 68, 0.1);
+		border-color: color-mix(in srgb, var(--status-overdue) 10%, transparent);
 		transform: translateY(-1px);
 	}
 
 	.topnav-signout:active {
-		background: rgba(239, 68, 68, 0.1) !important;
-		border-color: rgba(239, 68, 68, 0.2) !important;
-		color: var(--status-overdue) !important;
+		background: color-mix(in srgb, var(--status-overdue) 10%, transparent);
+		border-color: color-mix(in srgb, var(--status-overdue) 20%, transparent);
+		color: var(--status-overdue);
 		transform: scale(0.97);
 		transition-duration: 0.06s;
 	}
@@ -983,6 +994,8 @@
 
 	.app-main {
 		flex: 1;
+		display: flex;
+		flex-direction: column;
 	}
 
 	/* Bottom tabs */
@@ -1059,7 +1072,7 @@
 		align-items: center;
 		justify-content: center;
 		color: #fff;
-		box-shadow: 0 2px 16px rgba(37, 99, 235, 0.45);
+		box-shadow: 0 2px 16px color-mix(in srgb, var(--accent) 45%, transparent);
 		transition:
 			background 0.15s,
 			transform 0.1s,
@@ -1080,12 +1093,12 @@
 	}
 	.fab-btn:active {
 		transform: translateX(-50%) scale(0.93);
-		box-shadow: 0 1px 6px rgba(37, 99, 235, 0.3);
+		box-shadow: 0 1px 6px color-mix(in srgb, var(--accent) 30%, transparent);
 	}
 	@media (hover: hover) {
 		.fab-btn:hover {
 			background: var(--accent-hover);
-			box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
+			box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 45%, transparent);
 		}
 	}
 
@@ -1288,6 +1301,15 @@
 		}
 		.app-main {
 			padding-bottom: 5rem;
+		}
+	}
+
+	@media (max-width: 360px) {
+		.tab-label {
+			display: none;
+		}
+		.bottom-tab {
+			justify-content: center;
 		}
 	}
 </style>

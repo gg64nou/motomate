@@ -127,6 +127,56 @@
 	--status-overdue: #f87171;
 }
 
+/* altcha widget */
+altcha-widget {
+	--altcha-max-width: 100%;
+	--altcha-border-radius: 10px;
+	--altcha-border-width: 1px;
+	--altcha-color-base: var(--bg-subtle);
+	--altcha-color-border: var(--border-strong);
+	--altcha-color-text: var(--text-muted);
+	--altcha-color-accent: var(--accent);
+	--altcha-color-panel-bg: var(--bg);
+	--altcha-color-footer-bg: var(--bg-muted);
+	--altcha-color-footer-border: var(--border);
+	display: block;
+	width: 100%;
+}
+
+.altcha-wrap {
+	position: relative;
+}
+
+@keyframes altcha-shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+.altcha-skeleton {
+	height: 66px;
+	border: 1px solid var(--border-strong);
+	border-radius: 10px;
+	background: linear-gradient(
+		90deg,
+		var(--bg-subtle) 25%,
+		var(--bg-muted) 50%,
+		var(--bg-subtle) 75%
+	);
+	background-size: 200% 100%;
+	animation: altcha-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.altcha-skeleton {
+		animation: none;
+		background: var(--bg-subtle);
+	}
+}
+
 /* Base reset */
 *,
 *::before,

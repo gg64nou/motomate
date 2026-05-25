@@ -2,6 +2,10 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import { locale } from '$lib/i18n';
+	import { setContext } from 'svelte';
+	import 'altcha/i18n';
+	import type {} from 'altcha/types/svelte';
+	import { resolveTheme, readStoredTheme } from '$lib/utils/theme.js';
 	import Sun from '$lib/components/icons/Sun.svelte';
 	import Moon from '$lib/components/icons/Moon.svelte';
 	import Monitor from '$lib/components/icons/Monitor.svelte';
@@ -50,14 +54,6 @@
 		{ code: 'pt', label: 'Português' }
 	];
 
-	function readStoredTheme(): 'light' | 'dark' | 'system' {
-		const stored = localStorage.getItem('theme');
-		if (stored === 'light' || stored === 'dark' || stored === 'system') return stored;
-		const t = document.documentElement.dataset.theme;
-		if (t === 'light' || t === 'dark') return t;
-		return 'system';
-	}
-
 	function readStoredLocale(): string {
 		const stored = localStorage.getItem('locale');
 		if (stored) return stored;
@@ -74,13 +70,6 @@
 	const initialTheme: 'light' | 'dark' | 'system' = browser ? readStoredTheme() : 'system';
 	const initialLocale: string = browser ? readStoredLocale() : 'en';
 
-	function resolveTheme(t: 'light' | 'dark' | 'system'): 'light' | 'dark' {
-		if (t === 'system') {
-			return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-		}
-		return t;
-	}
-
 	const initialResolvedTheme = browser ? resolveTheme(initialTheme) : 'light';
 
 	if (browser) {
@@ -92,6 +81,12 @@
 	let theme = $state<'light' | 'dark' | 'system'>(initialTheme);
 	let langMenuOpen = $state(false);
 	let currentLocale = $state(initialLocale);
+
+	setContext('altcha-locale', {
+		get locale() {
+			return currentLocale;
+		}
+	});
 
 	const CurrentThemeIcon = $derived(themes.find((t) => t.id === theme)?.icon);
 

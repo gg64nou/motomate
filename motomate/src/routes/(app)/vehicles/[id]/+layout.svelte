@@ -104,7 +104,7 @@
 	);
 
 	$effect(() => {
-		activeTabId;
+		void activeTabId;
 		tick().then(() => {
 			tabsEl?.querySelector('.vtab--active')?.scrollIntoView({
 				block: 'nearest',
@@ -252,7 +252,9 @@
 						<img src={avatarSrc} alt="" class="popover-preview-img" />
 					</div>
 				{:else}
-					<div id="avatar-dialog-title" class="popover-header">{$_('vehicle.layout.avatar.choose')}</div>
+					<div id="avatar-dialog-title" class="popover-header">
+						{$_('vehicle.layout.avatar.choose')}
+					</div>
 				{/if}
 
 				<div class="emoji-grid">

@@ -5,13 +5,14 @@ import { getUserByEmail, createUser } from '$lib/db/repositories/users.js';
 import { isRegistrationOpen } from '$lib/auth/registration.js';
 import { CreateUserSchema } from '$lib/validators/schemas.js';
 import { rateLimit } from '$lib/auth/rate-limit.js';
+import { verifyAltcha } from '$lib/auth/altcha.js';
 import type { UserSettings } from '$lib/db/schema.js';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/dashboard');
 	const open = await isRegistrationOpen();
-	return { registrationDisabled: !open };
+	return { registrationDisabled: !open, altchaEnabled: true };
 };
 
 export const actions: Actions = {
@@ -26,6 +27,14 @@ export const actions: Actions = {
 		}
 
 		const data = Object.fromEntries(await request.formData());
+
+		if (!(await verifyAltcha(data.altcha))) {
+			return fail(400, {
+				error: 'Verification failed. Please try again.',
+				email: String(data.email ?? '')
+			});
+		}
+
 		const parsed = CreateUserSchema.safeParse({ email: data.email, password: data.password });
 
 		if (!parsed.success) {

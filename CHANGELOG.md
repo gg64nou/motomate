@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.5
+
+- The registration pages are now secured with [Altcha](https://altcha.org/) (a privacy-first, local reCAPTCHA-alternative)
+- Fix: the tab-menu for the vehicles became unresponsive in specific scenario's
+- Fix: during onboarding the shown tab name was incomplete
+- Fix: add safeguard for magic link when smtp is not configured
+- Fix: improve handling of stored theme settings
+
 ## 0.2.4
 
 - You can now disable public sign-up by setting `AUTH_ALLOW_REGISTRATION=false`
