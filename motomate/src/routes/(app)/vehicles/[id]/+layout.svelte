@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page, navigating } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import { tick } from 'svelte';
 	import { formatNumber } from '$lib/utils/format.js';
 	import { _, waitLocale } from '$lib/i18n';
 	import type { LayoutData } from './$types';
@@ -17,6 +18,8 @@
 	let uploadForm: HTMLFormElement | undefined = $state();
 	let showAvatarPopover = $state(false);
 	let avatarCacheBuster = $state(0);
+	let tabsEl: HTMLElement | undefined = $state();
+	let popoverEl: HTMLElement | undefined = $state();
 
 	// Derived logic
 	const vehicle = $derived(data.vehicle);
@@ -41,16 +44,16 @@
 		const startTime = performance.now();
 
 		let rafId: number;
-		function tick(now: number) {
+		function frame(now: number) {
 			const elapsed = now - startTime;
 			const progress = Math.min(elapsed / duration, 1);
 			// ease-out-quart: decelerate strongly at the end, like a real odometer settling
 			const eased = 1 - Math.pow(1 - progress, 4);
 			displayOdo = Math.round(startValue + (target - startValue) * eased);
-			if (progress < 1) rafId = requestAnimationFrame(tick);
+			if (progress < 1) rafId = requestAnimationFrame(frame);
 		}
 
-		rafId = requestAnimationFrame(tick);
+		rafId = requestAnimationFrame(frame);
 		return () => cancelAnimationFrame(rafId);
 	});
 
@@ -99,6 +102,23 @@
 		tabs.findLast((t) => $page.url.pathname.startsWith(t.href) || $page.url.pathname === t.href)
 			?.id ?? 'timeline'
 	);
+
+	$effect(() => {
+		activeTabId;
+		tick().then(() => {
+			tabsEl?.querySelector('.vtab--active')?.scrollIntoView({
+				block: 'nearest',
+				inline: 'nearest',
+				behavior: 'smooth'
+			});
+		});
+	});
+
+	$effect(() => {
+		if (showAvatarPopover) {
+			tick().then(() => popoverEl?.focus());
+		}
+	});
 
 	const avatarEmojis = [
 		'🏍',
@@ -188,9 +208,14 @@
 			</div>
 		</div>
 
-		<nav class="vehicle-tabs" aria-label="Vehicle sections">
+		<nav class="vehicle-tabs" bind:this={tabsEl} aria-label="Vehicle sections">
 			{#each tabs as tab}
-				<a href={tab.href} class="vtab" class:vtab--active={activeTabId === tab.id}>
+				<a
+					href={tab.href}
+					class="vtab"
+					class:vtab--active={activeTabId === tab.id}
+					aria-current={activeTabId === tab.id ? 'page' : undefined}
+				>
 					{$_(tab.labelKey)}
 					{#if tab.id === 'maintenance' && data.attentionCount > 0}
 						<span class="vtab-badge">
@@ -202,7 +227,7 @@
 		</nav>
 	</div>
 
-	<div class="vehicle-content">
+	<div class="vehicle-content" class:loading={$navigating}>
 		{@render children()}
 	</div>
 
@@ -213,11 +238,13 @@
 			role="presentation"
 		>
 			<div
+				bind:this={popoverEl}
 				class="avatar-popover"
 				onclick={(e) => e.stopPropagation()}
 				onkeydown={(e) => e.stopPropagation()}
 				role="dialog"
 				aria-modal="true"
+				aria-labelledby="avatar-dialog-title"
 				tabindex="-1"
 			>
 				{#if hasAvatarImage && avatarSrc}
@@ -225,7 +252,7 @@
 						<img src={avatarSrc} alt="" class="popover-preview-img" />
 					</div>
 				{:else}
-					<div class="popover-header">{$_('vehicle.layout.avatar.choose')}</div>
+					<div id="avatar-dialog-title" class="popover-header">{$_('vehicle.layout.avatar.choose')}</div>
 				{/if}
 
 				<div class="emoji-grid">
@@ -411,6 +438,7 @@
 		align-items: center;
 		gap: 0.3rem;
 		padding: 0.625rem 1rem;
+		min-height: 44px;
 		font-size: var(--text-sm);
 		font-weight: 500;
 		color: var(--text-muted);
@@ -453,6 +481,11 @@
 		max-width: 860px;
 		margin: 0 auto;
 		width: 100%;
+		transition: opacity 0.15s;
+	}
+	.vehicle-content.loading {
+		opacity: 0.6;
+		pointer-events: none;
 	}
 
 	@media (max-width: 640px) {
