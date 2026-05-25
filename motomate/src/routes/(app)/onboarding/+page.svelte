@@ -109,7 +109,7 @@
 	const TOTAL_STEPS = 6;
 </script>
 
-<svelte:head><title>{$_('common.loading')} &middot; MotoMate</title></svelte:head>
+<svelte:head><title>{$_('onboarding.welcome.title')} &middot; MotoMate</title></svelte:head>
 
 <div class="onboarding">
 	{#if step >= 1 && step <= 7}
