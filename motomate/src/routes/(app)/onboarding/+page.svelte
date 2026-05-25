@@ -413,7 +413,7 @@
 		justify-content: flex-start;
 		background: var(--bg-subtle);
 		padding: var(--space-6) var(--space-4);
-		min-height: 100%;
+		flex: 1;
 	}
 	.step-dots {
 		display: flex;
