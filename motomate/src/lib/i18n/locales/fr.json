@@ -988,7 +988,9 @@
 				"expired": "Expirée",
 				"revoked": "Révoquée",
 				"deleteKey": "Supprimer",
-				"deleteKeyConfirm": "Supprimer cette clé révoquée ?"
+				"deleteKeyConfirm": "Confirmer la suppression",
+				"restoreKey": "Restaurer",
+				"errorNameTaken": "Ce nom est déjà utilisé."
 			},
 			"docs": {
 				"title": "Documentation API",

@@ -989,7 +989,9 @@
 				"expired": "Scaduta",
 				"revoked": "Revocata",
 				"deleteKey": "Elimina",
-				"deleteKeyConfirm": "Eliminare questa chiave revocata?"
+				"deleteKeyConfirm": "Conferma eliminazione",
+				"restoreKey": "Ripristina",
+				"errorNameTaken": "Questo nome è già in uso."
 			},
 			"docs": {
 				"title": "Documentazione API",

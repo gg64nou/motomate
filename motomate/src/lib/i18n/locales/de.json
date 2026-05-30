@@ -988,7 +988,9 @@
 				"expired": "Abgelaufen",
 				"revoked": "Widerrufen",
 				"deleteKey": "Löschen",
-				"deleteKeyConfirm": "Diesen widerrufenen Schlüssel löschen?"
+				"deleteKeyConfirm": "Löschen bestätigen",
+				"restoreKey": "Wiederherstellen",
+				"errorNameTaken": "Dieser Name wird bereits verwendet."
 			},
 			"docs": {
 				"title": "API-Dokumentation",

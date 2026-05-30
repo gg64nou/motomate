@@ -989,7 +989,9 @@
 				"expired": "Expired",
 				"revoked": "Revoked",
 				"deleteKey": "Delete",
-				"deleteKeyConfirm": "Delete this revoked key?"
+				"deleteKeyConfirm": "Confirm delete",
+				"restoreKey": "Restore",
+				"errorNameTaken": "That name is already in use."
 			},
 			"docs": {
 				"title": "API Documentation",

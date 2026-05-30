@@ -988,7 +988,9 @@
 				"expired": "Verlopen",
 				"revoked": "Ingetrokken",
 				"deleteKey": "Verwijderen",
-				"deleteKeyConfirm": "Deze ingetrokken sleutel verwijderen?"
+				"deleteKeyConfirm": "Verwijdering bevestigen",
+				"restoreKey": "Herstellen",
+				"errorNameTaken": "Die naam is al in gebruik."
 			},
 			"docs": {
 				"title": "API-documentatie",
