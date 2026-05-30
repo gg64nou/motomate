@@ -750,7 +750,8 @@
 			"avatarRemove": "Rimuovi",
 			"avatarUpdated": "Foto del profilo aggiornata",
 			"avatarDicebear": "Scegli un avatar",
-			"avatarShuffle": "Mescola"
+			"avatarShuffle": "Mescola",
+			"subtitle": "Lingua, valuta e unità chilometrica."
 		},
 		"account": {
 			"title": "Account",
@@ -803,7 +804,8 @@
 					"confirm": "Elimina account",
 					"cancel": "Mantieni account"
 				}
-			}
+			},
+			"subtitle": "Email, password ed esportazione dati."
 		},
 		"workflows": {
 			"title": "Regole di notifica",
@@ -849,7 +851,8 @@
 			"deleted": "Regola eliminata",
 			"confirmDeleteDesc": "Eliminare la regola \"{name}\"? Questa azione non può essere annullata.",
 			"runCheck": "Controlla ora",
-			"runCheckDone": "Controllo completato"
+			"runCheckDone": "Controllo completato",
+			"subtitle": "Regole automatizzate per manutenzione e promemoria."
 		},
 		"notifications": {
 			"title": "Notifiche",
@@ -923,13 +926,15 @@
 			"filterUnread": "Non lette",
 			"prevPage": "Precedente",
 			"nextPage": "Successivo",
-			"pageOf": "Pagina {page} di {total}"
+			"pageOf": "Pagina {page} di {total}",
+			"subtitle": "Canali di notifica e avvisi recenti."
 		},
 		"nav": {
 			"preferences": "Preferenze",
 			"account": "Account",
 			"notifications": "Notifiche",
 			"workflows": "Flussi di lavoro",
+			"developer": "Sviluppatore",
 			"sourceCode": "Codice sorgente",
 			"reportIssue": "Segnala un problema",
 			"tapAgain": "Tocca di nuovo per aprire",
@@ -940,6 +945,58 @@
 			"subtitle": "Scopri cosa è cambiato nelle ultime versioni.",
 			"refresh": "Aggiorna",
 			"noContent": "Nessuna modifica trovata. Riprova più tardi."
+		},
+		"developer": {
+			"title": "Sviluppatore",
+			"subtitle": "Chiavi API per script e integrazioni",
+			"apiKeys": {
+				"title": "Chiavi API",
+				"description": "Crea chiavi per accedere all API MotoMate da script, automazioni o integrazioni.",
+				"empty": "Ancora nessuna chiave API.",
+				"create": "Crea chiave",
+				"creating": "Creazione...",
+				"nameLabel": "Nome",
+				"namePlaceholder": "es. Home Assistant",
+				"scopeLabel": "Accesso",
+				"scopeRead": "Solo lettura",
+				"scopeReadWrite": "Lettura + Scrittura",
+				"expiryLabel": "Scadenza",
+				"expiry30": "30 giorni",
+				"expiry90": "90 giorni (consigliato)",
+				"expiry365": "1 anno",
+				"expiryNone": "Nessuna scadenza",
+				"prefix": "Chiave",
+				"expires": "Scade",
+				"neverExpires": "Mai",
+				"lastUsed": "Ultimo utilizzo",
+				"neverUsed": "mai",
+				"revoke": "Revocare",
+				"revokeConfirm": "La revoca interromperà qualsiasi script che utilizza questa chiave.",
+				"revokeConfirmBtn": "Conferma revoca",
+				"rotate": "Ruotare",
+				"rotateConfirm": "La rotazione emette una nuova chiave e invalida quella attuale.",
+				"rotateConfirmBtn": "Conferma rotazione",
+				"cancel": "Annulla",
+				"tokenRevealTitle": "Copia questa chiave ora",
+				"tokenRevealDesc": "Questa chiave non verrà più mostrata.",
+				"tokenCopied": "Copiato",
+				"tokenCopyBtn": "Copia",
+				"tokenDoneBtn": "Ho copiato",
+				"maxKeysError": "Massimo 20 chiavi API. Revocane una prima di crearne una nuova.",
+				"scopeBadgeRead": "lettura",
+				"scopeBadgeReadWrite": "lettura + scrittura",
+				"expiringSoon": "Scadenza imminente",
+				"expired": "Scaduta",
+				"revoked": "Revocata",
+				"deleteKey": "Elimina",
+				"deleteKeyConfirm": "Eliminare questa chiave revocata?"
+			},
+			"docs": {
+				"title": "Documentazione API",
+				"description": "Esplora e testa tutti gli endpoint disponibili.",
+				"link": "Vedi la documentazione",
+				"specLink": "Spec OpenAPI grezza"
+			}
 		}
 	},
 	"units": {

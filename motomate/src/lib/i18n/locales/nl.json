@@ -749,7 +749,8 @@
 			"avatarRemove": "Verwijderen",
 			"avatarUpdated": "Profielfoto bijgewerkt",
 			"avatarDicebear": "Kies een avatar",
-			"avatarShuffle": "Shufflen"
+			"avatarShuffle": "Shufflen",
+			"subtitle": "Taal, valuta en kilometereenheid."
 		},
 		"account": {
 			"title": "Account",
@@ -802,7 +803,8 @@
 					"confirm": "Account verwijderen",
 					"cancel": "Account behouden"
 				}
-			}
+			},
+			"subtitle": "E-mail, wachtwoord en gegevensexport."
 		},
 		"workflows": {
 			"title": "Notificatieregels",
@@ -848,7 +850,8 @@
 			"deleted": "Regel verwijderd",
 			"confirmDeleteDesc": "De regel \"{name}\" verwijderen? Dit kan niet ongedaan worden gemaakt.",
 			"runCheck": "Nu controleren",
-			"runCheckDone": "Controle voltooid"
+			"runCheckDone": "Controle voltooid",
+			"subtitle": "Geautomatiseerde regels voor onderhoud en herinneringen."
 		},
 		"notifications": {
 			"title": "Meldingen",
@@ -922,13 +925,15 @@
 			"filterUnread": "Ongelezen",
 			"prevPage": "Vorige",
 			"nextPage": "Volgende",
-			"pageOf": "Pagina {page} van {total}"
+			"pageOf": "Pagina {page} van {total}",
+			"subtitle": "Meldingskanalen en recente meldingen."
 		},
 		"nav": {
 			"preferences": "Voorkeuren",
 			"account": "Account",
 			"notifications": "Notificaties",
 			"workflows": "Regels",
+			"developer": "Ontwikkelaar",
 			"sourceCode": "Broncode",
 			"reportIssue": "Probleem melden",
 			"tapAgain": "Tik nogmaals om te openen",
@@ -939,6 +944,58 @@
 			"subtitle": "Bekijk wat er veranderd is in de nieuwste versies.",
 			"refresh": "Vernieuwen",
 			"noContent": "Geen gewijzigen gevonden. Probeer het later opnieuw."
+		},
+		"developer": {
+			"title": "Ontwikkelaar",
+			"subtitle": "API-sleutels voor scripts en integraties",
+			"apiKeys": {
+				"title": "API-sleutels",
+				"description": "Maak sleutels aan voor toegang tot de MotoMate API vanuit scripts, automatiseringen of integraties.",
+				"empty": "Nog geen API-sleutels.",
+				"create": "Sleutel maken",
+				"creating": "Maken...",
+				"nameLabel": "Naam",
+				"namePlaceholder": "bijv. Home Assistant",
+				"scopeLabel": "Toegang",
+				"scopeRead": "Alleen lezen",
+				"scopeReadWrite": "Lezen + Schrijven",
+				"expiryLabel": "Verloopdatum",
+				"expiry30": "30 dagen",
+				"expiry90": "90 dagen (aanbevolen)",
+				"expiry365": "1 jaar",
+				"expiryNone": "Nooit verlopen",
+				"prefix": "Sleutel",
+				"expires": "Verloopt",
+				"neverExpires": "Nooit",
+				"lastUsed": "Laatste gebruik",
+				"neverUsed": "nooit",
+				"revoke": "Intrekken",
+				"revokeConfirm": "Intrekken verbreekt alle scripts die deze sleutel gebruiken.",
+				"revokeConfirmBtn": "Intrekken bevestigen",
+				"rotate": "Roteren",
+				"rotateConfirm": "Roteren geeft een nieuwe sleutel en maakt de huidige ongeldig.",
+				"rotateConfirmBtn": "Rotatie bevestigen",
+				"cancel": "Annuleren",
+				"tokenRevealTitle": "Kopieer deze sleutel nu",
+				"tokenRevealDesc": "Deze sleutel wordt niet meer getoond.",
+				"tokenCopied": "Gekopieerd",
+				"tokenCopyBtn": "Kopiëren",
+				"tokenDoneBtn": "Ik heb het gekopieerd",
+				"maxKeysError": "Maximum van 20 API-sleutels bereikt. Trek er een in voordat je een nieuwe maakt.",
+				"scopeBadgeRead": "lezen",
+				"scopeBadgeReadWrite": "lezen + schrijven",
+				"expiringSoon": "Verloopt binnenkort",
+				"expired": "Verlopen",
+				"revoked": "Ingetrokken",
+				"deleteKey": "Verwijderen",
+				"deleteKeyConfirm": "Deze ingetrokken sleutel verwijderen?"
+			},
+			"docs": {
+				"title": "API-documentatie",
+				"description": "Verken en test alle beschikbare endpoints.",
+				"link": "Documentatie bekijken",
+				"specLink": "Ruwe OpenAPI-spec"
+			}
 		}
 	},
 	"units": {

@@ -749,7 +749,8 @@
 			"avatarRemove": "Entfernen",
 			"avatarUpdated": "Profilbild aktualisiert",
 			"avatarDicebear": "Avatar wählen",
-			"avatarShuffle": "Neu mischen"
+			"avatarShuffle": "Neu mischen",
+			"subtitle": "Sprache, Währung und Kilometereinheit."
 		},
 		"account": {
 			"title": "Konto",
@@ -802,7 +803,8 @@
 					"confirm": "Konto löschen",
 					"cancel": "Konto behalten"
 				}
-			}
+			},
+			"subtitle": "E-Mail, Passwort und Datenexport."
 		},
 		"workflows": {
 			"title": "Benachrichtigungsregeln",
@@ -848,7 +850,8 @@
 			"deleted": "Regel gelöscht",
 			"confirmDeleteDesc": "Regel \"{name}\" löschen? Dies kann nicht rückgängig gemacht werden.",
 			"runCheck": "Jetzt prüfen",
-			"runCheckDone": "Prüfung abgeschlossen"
+			"runCheckDone": "Prüfung abgeschlossen",
+			"subtitle": "Automatisierte Regeln für Wartung und Erinnerungen."
 		},
 		"notifications": {
 			"title": "Benachrichtigungen",
@@ -922,13 +925,15 @@
 			"filterUnread": "Ungelesen",
 			"prevPage": "Zurück",
 			"nextPage": "Weiter",
-			"pageOf": "Seite {page} von {total}"
+			"pageOf": "Seite {page} von {total}",
+			"subtitle": "Benachrichtigungskanäle und aktuellen Benachrichtigungen."
 		},
 		"nav": {
 			"preferences": "Einstellungen",
 			"account": "Konto",
 			"notifications": "Benachrichtigungen",
 			"workflows": "Workflows",
+			"developer": "Entwickler",
 			"sourceCode": "Quellcode",
 			"reportIssue": "Problem melden",
 			"tapAgain": "Nochmal tippen zum Offnen",
@@ -939,6 +944,58 @@
 			"subtitle": "Sieh nach, was sich in den neuesten Versionen geändert hat.",
 			"refresh": "Aktualisieren",
 			"noContent": "Keine Änderungen gefunden. Versuche es später erneut."
+		},
+		"developer": {
+			"title": "Entwickler",
+			"subtitle": "API-Schlüssel für Skripte und Integrationen",
+			"apiKeys": {
+				"title": "API-Schlüssel",
+				"description": "Schlüssel erstellen für den Zugriff auf die MotoMate API aus Skripten, Automationen oder Integrationen.",
+				"empty": "Noch keine API-Schlüssel.",
+				"create": "Schlüssel erstellen",
+				"creating": "Wird erstellt...",
+				"nameLabel": "Name",
+				"namePlaceholder": "z.B. Home Assistant",
+				"scopeLabel": "Zugriff",
+				"scopeRead": "Nur lesen",
+				"scopeReadWrite": "Lesen + Schreiben",
+				"expiryLabel": "Gültig bis",
+				"expiry30": "30 Tage",
+				"expiry90": "90 Tage (empfohlen)",
+				"expiry365": "1 Jahr",
+				"expiryNone": "Kein Ablauf",
+				"prefix": "Schlüssel",
+				"expires": "Ablauf",
+				"neverExpires": "Nie",
+				"lastUsed": "Zuletzt verwendet",
+				"neverUsed": "nie",
+				"revoke": "Widerrufen",
+				"revokeConfirm": "Das Widerrufen unterbricht alle Skripte, die diesen Schlüssel verwenden.",
+				"revokeConfirmBtn": "Widerruf bestätigen",
+				"rotate": "Rotieren",
+				"rotateConfirm": "Beim Rotieren wird ein neuer Schlüssel ausgegeben und der aktuelle ungültig.",
+				"rotateConfirmBtn": "Rotation bestätigen",
+				"cancel": "Abbrechen",
+				"tokenRevealTitle": "Schlüssel jetzt kopieren",
+				"tokenRevealDesc": "Dieser Schlüssel wird nicht erneut angezeigt.",
+				"tokenCopied": "Kopiert",
+				"tokenCopyBtn": "Kopieren",
+				"tokenDoneBtn": "Ich habe ihn kopiert",
+				"maxKeysError": "Maximal 20 API-Schlüssel. Widerrufe einen, bevor du einen neuen erstellst.",
+				"scopeBadgeRead": "lesen",
+				"scopeBadgeReadWrite": "lesen + schreiben",
+				"expiringSoon": "Läuft bald ab",
+				"expired": "Abgelaufen",
+				"revoked": "Widerrufen",
+				"deleteKey": "Löschen",
+				"deleteKeyConfirm": "Diesen widerrufenen Schlüssel löschen?"
+			},
+			"docs": {
+				"title": "API-Dokumentation",
+				"description": "Alle verfügbaren Endpunkte erkunden und testen.",
+				"link": "Dokumentation aufrufen",
+				"specLink": "OpenAPI-Spec"
+			}
 		}
 	},
 	"units": {
