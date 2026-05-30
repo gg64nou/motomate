@@ -23,19 +23,20 @@
 
 	let mode = $state<'password' | 'magic'>(untrack(() => data.initialMode));
 	let remember = $state(true);
+	let emailValue = $state('');
 	let loading = $state(false);
 	let altchaReady = $state(false);
 	let altchaVerified = $state(false);
 	let mounted = $state(false);
 	onMount(() => {
 		mounted = true;
-	});
 
-	// Persist remember preference
-	$effect(() => {
-		if (typeof window !== 'undefined') {
-			const stored = localStorage.getItem('remember');
-			if (stored !== null) remember = stored === 'true';
+		const storedRemember = localStorage.getItem('remember');
+		if (storedRemember !== null) remember = storedRemember === 'true';
+
+		if (remember && !emailValue) {
+			const storedEmail = localStorage.getItem('remembered_email');
+			if (storedEmail) emailValue = storedEmail;
 		}
 	});
 </script>
@@ -96,9 +97,14 @@
 			use:enhance={({ formData }) => {
 				formData.set('theme', localStorage.getItem('theme') ?? 'system');
 				formData.set('locale', localStorage.getItem('locale') ?? 'en');
+				if (remember) {
+					localStorage.setItem('remembered_email', emailValue);
+				} else {
+					localStorage.removeItem('remembered_email');
+				}
 				loading = true;
 				return async ({ update }) => {
-					await update();
+					await update({ reset: false });
 					loading = false;
 				};
 			}}
@@ -110,7 +116,7 @@
 					name="email"
 					type="email"
 					autocomplete="email"
-					value={form?.email ?? ''}
+					bind:value={emailValue}
 					required
 					class="input"
 					class:input--err={form?.fieldErrors?.email}
@@ -140,9 +146,8 @@
 						name="remember"
 						value="on"
 						class="toggle-input"
-						checked={remember}
-						onchange={(e) => {
-							remember = e.currentTarget.checked;
+						bind:checked={remember}
+						onchange={() => {
 							localStorage.setItem('remember', String(remember));
 						}}
 					/>
@@ -178,7 +183,14 @@
 		>
 			<label class="field">
 				<span class="field-label">{$_('auth.login.email')}</span>
-				<input name="email" type="email" autocomplete="email" required class="input" />
+				<input
+					name="email"
+					type="email"
+					autocomplete="email"
+					bind:value={emailValue}
+					required
+					class="input"
+				/>
 			</label>
 			{#if data.altchaEnabled}
 				{#if mounted}
