@@ -43,6 +43,13 @@
 			"when": 1778586901800,
 			"tag": "0005_furry_lester",
 			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "6",
+			"when": 1780150692619,
+			"tag": "0006_adorable_satana",
+			"breakpoints": true
 		}
 	]
 }
