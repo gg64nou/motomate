@@ -134,18 +134,21 @@
 				{/if}
 			</label>
 			<div class="form-row">
-				<label class="checkbox-label select-none">
+				<label class="toggle-label select-none">
 					<input
 						type="checkbox"
 						name="remember"
 						value="on"
-						class="checkbox"
+						class="toggle-input"
 						checked={remember}
 						onchange={(e) => {
 							remember = e.currentTarget.checked;
 							localStorage.setItem('remember', String(remember));
 						}}
 					/>
+					<span class="toggle-track" aria-hidden="true">
+						<span class="toggle-thumb"></span>
+					</span>
 					<span>{$_('auth.login.rememberMe')}</span>
 				</label>
 				{#if !data.demoMode && data.smtpEnabled}
@@ -417,7 +420,7 @@
 		justify-content: space-between;
 		margin: -0.25rem 0 0.5rem;
 	}
-	.checkbox-label {
+	.toggle-label {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
@@ -425,10 +428,42 @@
 		color: var(--text-muted);
 		cursor: pointer;
 	}
-	.checkbox {
-		width: 1rem;
-		height: 1rem;
-		accent-color: var(--accent);
+	.toggle-input {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+	.toggle-track {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		width: 2rem;
+		height: 1.125rem;
+		background: var(--border-strong);
+		border-radius: 9999px;
+		transition: background 0.18s ease;
+		flex-shrink: 0;
+	}
+	.toggle-input:checked ~ .toggle-track {
+		background: var(--accent);
+	}
+	.toggle-input:focus-visible ~ .toggle-track {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+	.toggle-thumb {
+		position: absolute;
+		left: 2px;
+		width: 0.875rem;
+		height: 0.875rem;
+		background: white;
+		border-radius: 50%;
+		transition: transform 0.18s ease;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	}
+	.toggle-input:checked ~ .toggle-track .toggle-thumb {
+		transform: translateX(0.875rem);
 	}
 	.link-btn {
 		background: none;

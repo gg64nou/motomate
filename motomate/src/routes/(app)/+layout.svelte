@@ -30,9 +30,9 @@
 		data: { user: any; vehicles: NavVehicle[]; demoMode?: boolean };
 	}>();
 
-	// Initialize i18n with user's locale preference
+	// Initialize i18n with user's locale preference (skip in demo mode — locale is always forced to 'en' server-side).
 	$effect(() => {
-		if (data.user?.settings?.locale) {
+		if (data.user?.settings?.locale && !data.demoMode) {
 			setUserLocale(data.user.settings.locale);
 		}
 	});
@@ -238,11 +238,11 @@
 <svelte:window onkeydown={handleKeydown} onclick={handleClickOutside} />
 
 <div class="app-shell">
-	{#if data.demoMode}
-		<div class="demo-banner">
+	<div class="demo-banner" class:active={data.demoMode}>
+		{#if data.demoMode}
 			Demo mode: changes are disabled &middot; intended for demonstration purposes only.
-		</div>
-	{/if}
+		{/if}
+	</div>
 	<header class="topnav">
 		<div class="topnav-inner">
 			<a href="/dashboard" class="topnav-logo">
@@ -712,6 +712,10 @@
 />
 
 <style>
+	.demo-banner:not(.active) {
+		display: none;
+	}
+
 	.demo-banner {
 		background: color-mix(in srgb, var(--status-due) 6%, var(--bg));
 		border-bottom: 1px solid color-mix(in srgb, var(--status-due) 20%, var(--border));

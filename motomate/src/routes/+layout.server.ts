@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/public';
 import type { LayoutServerLoad } from './$types';
 
 const SUPPORTED_LOCALES = ['en', 'de', 'fr', 'it', 'es', 'nl', 'pt'];
@@ -12,6 +13,12 @@ function localeFromAcceptLanguage(header: string | null): string {
 }
 
 export const load: LayoutServerLoad = async ({ locals, request, cookies }) => {
+	// In demo mode, authenticated users always get English regardless of what may be stored in DB.
+	// The shared demo account must not carry over one visitor's browser locale to the next.
+	if (env.PUBLIC_DEMO_ENABLED === 'true' && locals.user) {
+		return { user: locals.user, locale: 'en' };
+	}
+
 	const locale =
 		(locals.user as any)?.settings?.locale ??
 		cookies.get('locale') ??

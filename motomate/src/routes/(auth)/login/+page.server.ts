@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/auth/index.js';
 import { getUserByEmail, createUser, updateUserSettings } from '$lib/db/repositories/users.js';
+import { env as pubEnv } from '$env/dynamic/public';
 import { isRegistrationOpen } from '$lib/auth/registration.js';
 import {
 	createMagicLinkToken,
@@ -98,27 +99,34 @@ export const actions: Actions = {
 			return fail(400, { error: errors.invalidCredentials, email: parsed.data.email });
 		}
 
-		// Apply pre-login locale/theme to DB, but only when the DB still has the default value; never overwrite a setting the user already customized.
-		const rawTheme = String(data.theme ?? '');
-		const rawLocale = String(data.locale ?? '');
-		const settingsPatch: Record<string, string> = {};
-		if (
-			(rawTheme === 'light' || rawTheme === 'dark' || rawTheme === 'system') &&
-			rawTheme !== 'system' &&
-			user.settings?.theme === 'system'
-		) {
-			settingsPatch.theme = rawTheme;
-		}
-		if (
-			rawLocale &&
-			rawLocale !== 'en' &&
-			/^[a-z]{2}(-[A-Z]{2})?$/.test(rawLocale) &&
-			user.settings?.locale === 'en'
-		) {
-			settingsPatch.locale = rawLocale;
-		}
-		if (Object.keys(settingsPatch).length > 0) {
-			await updateUserSettings(user.id, settingsPatch);
+		if (pubEnv.PUBLIC_DEMO_ENABLED === 'true') {
+			// Demo mode: always reset locale to English so shared account is never mutated by visitor browser locale.
+			if (user.settings?.locale !== 'en') {
+				await updateUserSettings(user.id, { locale: 'en' });
+			}
+		} else {
+			// Apply pre-login locale/theme to DB, but only when the DB still has the default value; never overwrite a setting the user already customized.
+			const rawTheme = String(data.theme ?? '');
+			const rawLocale = String(data.locale ?? '');
+			const settingsPatch: Record<string, string> = {};
+			if (
+				(rawTheme === 'light' || rawTheme === 'dark' || rawTheme === 'system') &&
+				rawTheme !== 'system' &&
+				user.settings?.theme === 'system'
+			) {
+				settingsPatch.theme = rawTheme;
+			}
+			if (
+				rawLocale &&
+				rawLocale !== 'en' &&
+				/^[a-z]{2}(-[A-Z]{2})?$/.test(rawLocale) &&
+				user.settings?.locale === 'en'
+			) {
+				settingsPatch.locale = rawLocale;
+			}
+			if (Object.keys(settingsPatch).length > 0) {
+				await updateUserSettings(user.id, settingsPatch);
+			}
 		}
 
 		const session = await lucia.createSession(user.id, {});

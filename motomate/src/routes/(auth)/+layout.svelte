@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import { locale } from '$lib/i18n';
-	import { setContext } from 'svelte';
+	import { setContext, untrack } from 'svelte';
 	import 'altcha/i18n';
 	import type {} from 'altcha/types/svelte';
 	import { resolveTheme, readStoredTheme } from '$lib/utils/theme.js';
@@ -68,7 +68,11 @@
 	// Initialise synchronously so the component renders correctly on the first pass.
 	// Starting with dummy defaults and correcting in $effect causes a double-render flash.
 	const initialTheme: 'light' | 'dark' | 'system' = browser ? readStoredTheme() : 'system';
-	const initialLocale: string = browser ? readStoredLocale() : 'en';
+	const initialLocale: string = browser
+		? untrack(() => data.demoMode)
+			? 'en'
+			: readStoredLocale()
+		: 'en';
 
 	const initialResolvedTheme = browser ? resolveTheme(initialTheme) : 'light';
 
@@ -126,23 +130,23 @@
 		if (langMenuOpen && !(e.target as Element).closest('.lang-toggle-wrap')) langMenuOpen = false;
 	}}
 />
-<div class="auth-shell">
+<div class="demo-banner" class:active={data.demoMode}>
 	{#if data.demoMode}
-		<div class="demo-banner">
-			<span class="demo-label">Demo instance</span>
-			<div class="demo-creds">
-				<button class="demo-cred" onclick={() => copyToClipboard('demo@motomate.local', 'email')}>
-					demo@motomate.local
-					<span class="demo-copy-hint">{copied === 'email' ? 'copied' : 'copy'}</span>
-				</button>
-				<span class="demo-sep">/</span>
-				<button class="demo-cred" onclick={() => copyToClipboard('password123', 'password')}>
-					password123
-					<span class="demo-copy-hint">{copied === 'password' ? 'copied' : 'copy'}</span>
-				</button>
-			</div>
+		<span class="demo-label">Demo instance</span>
+		<div class="demo-creds">
+			<button class="demo-cred" onclick={() => copyToClipboard('demo@motomate.local', 'email')}>
+				demo@motomate.local
+				<span class="demo-copy-hint">{copied === 'email' ? 'copied' : 'copy'}</span>
+			</button>
+			<span class="demo-sep">/</span>
+			<button class="demo-cred" onclick={() => copyToClipboard('password123', 'password')}>
+				password123
+				<span class="demo-copy-hint">{copied === 'password' ? 'copied' : 'copy'}</span>
+			</button>
 		</div>
 	{/if}
+</div>
+<div class="auth-shell">
 	<div class="auth-card">
 		<div class="auth-header">
 			<div class="auth-logo select-none">
@@ -156,6 +160,7 @@
 						onclick={() => (langMenuOpen = !langMenuOpen)}
 						aria-label="Change language"
 						aria-expanded={langMenuOpen}
+						data-tooltip="Language"
 					>
 						<svg
 							viewBox="0 0 24 24"
@@ -188,7 +193,12 @@
 						</div>
 					{/if}
 				</div>
-				<button class="theme-toggle" onclick={cycleTheme} aria-label="Toggle theme">
+				<button
+					class="theme-toggle"
+					onclick={cycleTheme}
+					aria-label="Toggle theme"
+					data-tooltip="Theme"
+				>
 					{#if CurrentThemeIcon}
 						<CurrentThemeIcon />
 					{/if}
@@ -246,23 +256,23 @@
 </div>
 
 <style>
+	.demo-banner:not(.active) {
+		display: none;
+	}
+
 	.demo-banner {
-		width: 100%;
-		max-width: 400px;
 		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-		padding: 0.625rem 1rem;
-		margin-bottom: 0.75rem;
-		background: var(--bg-subtle);
-		border: 1px solid var(--border);
-		border-top: 3px solid var(--status-due);
-		border-radius: 10px;
+		align-items: center;
+		justify-content: center;
+		gap: 0.625rem;
+		padding: 0.5rem var(--space-6);
+		background: color-mix(in srgb, var(--status-due) 6%, var(--bg));
+		border-bottom: 1px solid color-mix(in srgb, var(--status-due) 20%, var(--border));
 		font-size: var(--text-sm);
 		color: var(--text-muted);
+		user-select: none;
 	}
 	.demo-label {
-		font-size: var(--text-s);
 		font-weight: 500;
 		color: var(--text-muted);
 	}
@@ -278,8 +288,6 @@
 		background: none;
 		border: none;
 		padding: 0;
-		font-family: 'JetBrains Mono', monospace;
-		font-variant-numeric: tabular-nums;
 		font-size: var(--text-xs);
 		color: var(--text);
 		cursor: pointer;
@@ -292,7 +300,6 @@
 		color: var(--accent);
 	}
 	.demo-copy-hint {
-		font-family: inherit;
 		font-size: 0.625rem;
 		color: var(--text-subtle);
 		text-decoration: none;
@@ -392,6 +399,30 @@
 	.theme-toggle:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 2px;
+	}
+	.theme-toggle[data-tooltip] {
+		position: relative;
+	}
+	.theme-toggle[data-tooltip]::after {
+		content: attr(data-tooltip);
+		position: absolute;
+		bottom: calc(100% + 6px);
+		left: 50%;
+		transform: translateX(-50%);
+		background: var(--text);
+		color: var(--bg);
+		padding: 0.2rem 0.5rem;
+		border-radius: 4px;
+		font-size: var(--text-xs);
+		font-weight: 400;
+		white-space: nowrap;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.15s ease;
+		z-index: 100;
+	}
+	.theme-toggle[data-tooltip]:hover::after {
+		opacity: 1;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.theme-toggle {
