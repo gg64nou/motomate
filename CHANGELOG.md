@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+- Added 'Developer' tab in the profile page, allowing you to setup access keys for the REST API
+- Fix: normalized errors on the login/register forms, these are now translated (#40)
+
 ## 0.2.5
 
 - The registration pages are now secured with [Altcha](https://altcha.org/) (a privacy-first, local reCAPTCHA-alternative)
