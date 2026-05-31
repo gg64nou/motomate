@@ -947,10 +947,10 @@
 		},
 		"developer": {
 			"title": "Entwickler",
-			"subtitle": "API-Schlüssel für Skripte und Integrationen",
+			"subtitle": "API-Schlüssel erstellen und die Dokumentation erkunden.",
 			"apiKeys": {
 				"title": "API-Schlüssel",
-				"description": "Schlüssel erstellen für den Zugriff auf die MotoMate API aus Skripten, Automationen oder Integrationen.",
+				"description": "Schlüssel erstellen und verwalten, um die MotoMate API zu nutzen.",
 				"empty": "Noch keine API-Schlüssel.",
 				"create": "Schlüssel erstellen",
 				"creating": "Wird erstellt...",

@@ -948,10 +948,10 @@
 		},
 		"developer": {
 			"title": "Developer",
-			"subtitle": "API keys for scripts and integrations",
+			"subtitle": "Create API keys and browse the documentation.",
 			"apiKeys": {
 				"title": "API Keys",
-				"description": "Create keys to access the MotoMate API from scripts, automations, or integrations.",
+				"description": "Create and manage keys to use the MotoMate API.",
 				"empty": "No API keys yet.",
 				"create": "Create key",
 				"creating": "Creating...",

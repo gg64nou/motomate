@@ -158,6 +158,7 @@ actions:
 
 <div class="section-header">
 	<h2 class="section-title">{$_('settings.notifications.channels.title')}</h2>
+	<p class="section-sub">{$_('settings.notifications.subtitle')}</p>
 </div>
 
 <form
@@ -503,8 +504,14 @@ actions:
 		font-size: var(--text-2xl);
 		font-weight: 600;
 		color: var(--text);
-		margin: 0;
+		margin: 0 0 var(--space-2);
 		letter-spacing: -0.02em;
+	}
+	.section-sub {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		margin: 0 0 var(--space-4);
+		line-height: var(--leading-base);
 	}
 
 	/* Channel cards */

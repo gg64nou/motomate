@@ -947,10 +947,10 @@
 		},
 		"developer": {
 			"title": "Ontwikkelaar",
-			"subtitle": "API-sleutels voor scripts en integraties",
+			"subtitle": "Maak API-sleutels aan en verken de documentatie.",
 			"apiKeys": {
 				"title": "API-sleutels",
-				"description": "Maak sleutels aan voor toegang tot de MotoMate API vanuit scripts, automatiseringen of integraties.",
+				"description": "Maak sleutels aan en beheer ze om de MotoMate API te gebruiken.",
 				"empty": "Nog geen API-sleutels.",
 				"create": "Sleutel maken",
 				"creating": "Maken...",

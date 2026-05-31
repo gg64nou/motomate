@@ -947,10 +947,10 @@
 		},
 		"developer": {
 			"title": "Desenvolvedor",
-			"subtitle": "Chaves API para scripts e integrações",
+			"subtitle": "Crie chaves de API e explore a documentação.",
 			"apiKeys": {
 				"title": "Chaves API",
-				"description": "Crie chaves para acessar a API do MotoMate a partir de scripts, automações ou integrações.",
+				"description": "Crie e gerencie chaves para usar a API do MotoMate.",
 				"empty": "Nenhuma chave API ainda.",
 				"create": "Criar chave",
 				"creating": "Criando...",

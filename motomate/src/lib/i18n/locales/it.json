@@ -948,10 +948,10 @@
 		},
 		"developer": {
 			"title": "Sviluppatore",
-			"subtitle": "Chiavi API per script e integrazioni",
+			"subtitle": "Crea chiavi API e sfoglia la documentazione.",
 			"apiKeys": {
 				"title": "Chiavi API",
-				"description": "Crea chiavi per accedere all API MotoMate da script, automazioni o integrazioni.",
+				"description": "Crea e gestisci chiavi per usare l'API MotoMate.",
 				"empty": "Ancora nessuna chiave API.",
 				"create": "Crea chiave",
 				"creating": "Creazione...",
