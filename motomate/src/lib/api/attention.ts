@@ -1,5 +1,10 @@
 export const UPCOMING_DAYS = 14;
-export const UPCOMING_KM = 500;
+const UPCOMING_DISTANCE = 500;
+const UPCOMING_HOURS = 10;
+
+function upcomingThreshold(odometerUnit: string): number {
+	return odometerUnit === 'h' ? UPCOMING_HOURS : UPCOMING_DISTANCE;
+}
 
 export function daysDiff(dateStr: string): number {
 	const target = new Date(dateStr + 'T00:00:00');
@@ -19,11 +24,13 @@ type TrackerLike = {
 export function categorizeTrackers<T extends TrackerLike>(
 	trackers: T[],
 	trueOdo: number,
+	odometerUnit: string,
 	buildBase: (t: T) => Record<string, unknown>
 ): { overdue: unknown[]; due: unknown[]; upcoming: unknown[] } {
 	const overdue: unknown[] = [];
 	const due: unknown[] = [];
 	const upcoming: unknown[] = [];
+	const upcomingMeasurement = upcomingThreshold(odometerUnit);
 
 	for (const t of trackers) {
 		if (t.reminder_only) continue;
@@ -33,7 +40,7 @@ export function categorizeTrackers<T extends TrackerLike>(
 		if (t.status === 'overdue') {
 			const item: Record<string, unknown> = { ...base };
 			if (t.next_due_odometer != null) {
-				item.overdue_by_km = Math.max(0, trueOdo - t.next_due_odometer);
+				item.overdue_by = Math.max(0, trueOdo - t.next_due_odometer);
 			}
 			if (t.next_due_at) {
 				const diff = daysDiff(t.next_due_at);
@@ -43,9 +50,9 @@ export function categorizeTrackers<T extends TrackerLike>(
 		} else if (t.status === 'due') {
 			const item: Record<string, unknown> = { ...base };
 			if (t.next_due_odometer != null) {
-				const km = t.next_due_odometer - trueOdo;
-				if (km >= 0) item.due_in_km = km;
-				else item.overdue_by_km = Math.abs(km);
+				const delta = t.next_due_odometer - trueOdo;
+				if (delta >= 0) item.due_in = delta;
+				else item.overdue_by = Math.abs(delta);
 			}
 			if (t.next_due_at) {
 				const diff = daysDiff(t.next_due_at);
@@ -55,13 +62,13 @@ export function categorizeTrackers<T extends TrackerLike>(
 			due.push(item);
 		} else {
 			const approachingDate = t.next_due_at !== null && daysDiff(t.next_due_at) <= UPCOMING_DAYS;
-			const approachingKm =
-				t.next_due_odometer != null && t.next_due_odometer - trueOdo <= UPCOMING_KM;
+			const approachingMeasurement =
+				t.next_due_odometer != null && t.next_due_odometer - trueOdo <= upcomingMeasurement;
 
-			if (approachingDate || approachingKm) {
+			if (approachingDate || approachingMeasurement) {
 				const item: Record<string, unknown> = { ...base };
 				if (t.next_due_odometer != null) {
-					item.due_in_km = Math.max(0, t.next_due_odometer - trueOdo);
+					item.due_in = Math.max(0, t.next_due_odometer - trueOdo);
 				}
 				if (t.next_due_at) {
 					item.due_in_days = Math.max(0, daysDiff(t.next_due_at));

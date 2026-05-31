@@ -17,15 +17,20 @@ export const GET: RequestHandler = async ({ locals }) => {
 			const trueOdo = await syncOdometer(vehicle.id, locals.user!.id);
 			const trackers = await getTrackersByVehicle(vehicle.id, locals.user!.id);
 
-			const { overdue, due, upcoming } = categorizeTrackers(trackers, trueOdo, (t) => ({
-				id: t.id,
-				name: t.template.name,
-				status: t.status,
-				next_due_at: t.next_due_at ?? null,
-				next_due_odometer: t.next_due_odometer ?? null,
-				last_done_at: t.last_done_at ?? null,
-				last_done_odometer: t.last_done_odometer ?? null
-			}));
+			const { overdue, due, upcoming } = categorizeTrackers(
+				trackers,
+				trueOdo,
+				vehicle.odometer_unit,
+				(t) => ({
+					id: t.id,
+					name: t.template.name,
+					status: t.status,
+					next_due_at: t.next_due_at ?? null,
+					next_due_odometer: t.next_due_odometer ?? null,
+					last_done_at: t.last_done_at ?? null,
+					last_done_odometer: t.last_done_odometer ?? null
+				})
+			);
 
 			return {
 				vehicle_id: vehicle.id,

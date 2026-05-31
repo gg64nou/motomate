@@ -662,7 +662,7 @@ const spec = {
 				tags: ['Attention'],
 				summary: 'Attention for this vehicle',
 				description:
-					'Scoped to one vehicle. Returns what is overdue, due now, and coming up within 14 days or 500 km. Each item carries fields like `overdue_by_km` and `due_in_days` so you know exactly how far past due your chain lube is. For all vehicles at once, use `GET /vehicles/attention`.',
+					"Scoped to one vehicle. Returns what is overdue, due now, and coming up within 14 days or 500 km (10 h for hour-based vehicles). Each item carries fields like `overdue_by` and `due_in_days` so you know exactly how far past due your chain lube is. Values are in the vehicle's `odometer_unit`. For all vehicles at once, use `GET /vehicles/attention`.",
 				operationId: 'getVehicleAttention',
 				parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
 				responses: {
@@ -690,9 +690,10 @@ const spec = {
 															next_due_odometer: { type: 'integer', nullable: true },
 															last_done_at: { type: 'string', format: 'date', nullable: true },
 															last_done_odometer: { type: 'integer', nullable: true },
-															overdue_by_km: {
+															overdue_by: {
 																type: 'integer',
-																description: 'km past due odometer'
+																description:
+																	'units past due — km, mi, or h depending on odometer_unit'
 															},
 															overdue_by_days: {
 																type: 'integer',
@@ -711,7 +712,11 @@ const spec = {
 															status: { type: 'string', enum: ['due'] },
 															next_due_at: { type: 'string', format: 'date', nullable: true },
 															next_due_odometer: { type: 'integer', nullable: true },
-															due_in_km: { type: 'integer' },
+															due_in: {
+																type: 'integer',
+																description:
+																	'units until due — km, mi, or h depending on odometer_unit'
+															},
 															due_in_days: { type: 'integer' }
 														}
 													}
@@ -726,7 +731,11 @@ const spec = {
 															status: { type: 'string', enum: ['ok'] },
 															next_due_at: { type: 'string', format: 'date', nullable: true },
 															next_due_odometer: { type: 'integer', nullable: true },
-															due_in_km: { type: 'integer' },
+															due_in: {
+																type: 'integer',
+																description:
+																	'units until due — km, mi, or h depending on odometer_unit'
+															},
 															due_in_days: { type: 'integer' }
 														}
 													}

@@ -6,5 +6,8 @@ export const GET: RequestHandler = async ({ locals }) => {
 	const authErr = requireAuth(locals);
 	if (authErr) return authErr;
 
-	return ok(locals.user!);
+	const { password_hash: _pw, ...safeUser } = locals.user! as typeof locals.user & {
+		password_hash?: unknown;
+	};
+	return ok(safeUser);
 };
