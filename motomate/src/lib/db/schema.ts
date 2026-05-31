@@ -506,7 +506,9 @@ export const api_keys = sqliteTable(
 	},
 	(t) => ({
 		userIdx: index('idx_api_keys_user').on(t.user_id),
-		userNameUniq: uniqueIndex('idx_api_keys_user_name').on(t.user_id, t.name)
+		userNameUniq: uniqueIndex('idx_api_keys_user_name')
+			.on(t.user_id, t.name)
+			.where(sql`${t.revoked_at} IS NULL`)
 	})
 );
 

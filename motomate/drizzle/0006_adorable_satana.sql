@@ -15,4 +15,4 @@ CREATE TABLE `api_keys` (
 --> statement-breakpoint
 CREATE UNIQUE INDEX `api_keys_key_hash_unique` ON `api_keys` (`key_hash`);--> statement-breakpoint
 CREATE INDEX `idx_api_keys_user` ON `api_keys` (`user_id`);--> statement-breakpoint
-CREATE UNIQUE INDEX `idx_api_keys_user_name` ON `api_keys` (`user_id`,`name`);
+CREATE UNIQUE INDEX `idx_api_keys_user_name` ON `api_keys` (`user_id`,`name`) WHERE "api_keys"."revoked_at" IS NULL;
