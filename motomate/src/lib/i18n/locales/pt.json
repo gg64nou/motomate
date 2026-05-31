@@ -43,7 +43,9 @@
 				"invalidFormat": "Formato de e-mail ou palavra-passe inválido",
 				"invalidCredentials": "E-mail ou palavra-passe inválidos",
 				"invalidEmail": "Por favor, introduz um endereço de e-mail válido",
-				"registrationClosed": "O registo está fechado. Contacte o seu administrador para obter acesso."
+				"registrationClosed": "O registo está fechado. Contacte o seu administrador para obter acesso.",
+				"verificationFailed": "Verificação falhou. Por favor, tente novamente.",
+				"smtpNotConfigured": "O login por link mágico não está disponível: SMTP não está configurado."
 			}
 		},
 		"register": {
@@ -59,7 +61,16 @@
 			"login": "Iniciar sessão",
 			"closedTitle": "Registo fechado",
 			"closedBody": "Novos registos não são aceites neste momento. Contacte o seu administrador para obter acesso.",
-			"closedAction": "Ir para o login"
+			"closedAction": "Ir para o login",
+			"errors": {
+				"registrationClosed": "O registo está encerrado.",
+				"rateLimited": "Demasiadas tentativas. Por favor, tenta novamente mais tarde.",
+				"verificationFailed": "Verificação falhou. Por favor, tente novamente.",
+				"invalidEmail": "Por favor, introduz um endereço de e-mail válido",
+				"passwordTooShort": "Use pelo menos 8 caracteres",
+				"passwordRequired": "A palavra-passe é obrigatória",
+				"emailInUse": "Verifique os seus dados e tente novamente, ou inicie sessão se já tiver uma conta."
+			}
 		},
 		"magicLink": {
 			"verifying": "A iniciar sessão…",
