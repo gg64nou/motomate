@@ -3,6 +3,7 @@ import type { Handle } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { env as pubEnv } from '$env/dynamic/public';
 import { initScheduler } from '$lib/server/scheduler.js';
+import { findUserByApiKey, updateKeyLastUsed } from '$lib/db/repositories/api-keys.js';
 
 initScheduler();
 
@@ -118,6 +119,41 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 
+	// to prevent debugging later on again, the API key authntication must run before CSRF check so external clients bypass it
+	const authHeader = event.request.headers.get('authorization');
+	if (authHeader?.startsWith('Bearer ')) {
+		const token = authHeader.slice(7).trim();
+		if (token.startsWith('mm_')) {
+			const result = await findUserByApiKey(token);
+			if (result) {
+				event.locals.user = result.user;
+				event.locals.isApiKeyAuth = true;
+				event.locals.apiKeyId = result.keyId;
+				event.locals.apiKeyScope = result.scope;
+				await updateKeyLastUsed(result.keyId).catch(() => {});
+			}
+			// skiip Lucia session validation entirely when Bearer header is present
+			event.locals.session = null;
+
+			const response = await resolve(event, {
+				transformPageChunk({ html }) {
+					const theme = (event.locals.user as any)?.settings?.theme;
+					if (theme === 'light' || theme === 'dark') {
+						return html.replace('<html ', `<html data-theme="${theme}" `);
+					}
+					return html;
+				}
+			});
+
+			// Permissive CORS for /api/v1/ — external tools need no-credential access
+			if (event.url.pathname.startsWith('/api/v1/')) {
+				response.headers.set('Access-Control-Allow-Origin', '*');
+				response.headers.delete('Access-Control-Allow-Credentials');
+			}
+			return response;
+		}
+	}
+
 	if (
 		pubEnv.PUBLIC_DEMO_ENABLED === 'true' &&
 		event.request.method !== 'GET' &&
@@ -125,6 +161,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		!event.url.pathname.startsWith('/login') &&
 		!event.url.pathname.startsWith('/register') &&
 		!event.url.pathname.startsWith('/magic-link') &&
+		!event.url.pathname.startsWith('/api/v1/') &&
 		event.url.pathname !== '/auth/logout'
 	) {
 		if (event.request.headers.get('x-sveltekit-action') === 'true') {
