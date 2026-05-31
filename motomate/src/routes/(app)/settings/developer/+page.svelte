@@ -82,7 +82,7 @@
 		return `${expiryLabel(key)} · ${$_('settings.developer.apiKeys.lastUsed')} ${lastUsedLabel(key)}`;
 	}
 
-	const activeKeys = $derived(data.keys.filter((k) => !k.revoked_at));
+	const activeKeys = $derived(data.keys.filter((k: Omit<ApiKey, 'key_hash'>) => !k.revoked_at));
 </script>
 
 <svelte:head><title>{$_('settings.developer.title')} · Settings</title></svelte:head>
