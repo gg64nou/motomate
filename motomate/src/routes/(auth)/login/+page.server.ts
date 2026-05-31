@@ -30,6 +30,8 @@ type AuthErrors = {
 				invalidCredentials: string;
 				invalidEmail: string;
 				registrationClosed: string;
+				verificationFailed: string;
+				smtpNotConfigured: string;
 			};
 		};
 	};
@@ -141,23 +143,24 @@ export const actions: Actions = {
 	},
 
 	magic: async ({ request, getClientAddress, locals }) => {
+		const data = Object.fromEntries(await request.formData());
+		const userLocale =
+			((locals.user as any)?.settings?.locale ?? String(data.locale ?? '')) || 'en';
+		const messages = localeMessages[userLocale] ?? localeMessages['en'];
+		const errors = messages.auth.login.errors;
+
 		if (!isSmtpConfigured()) {
-			return fail(503, { error: 'Magic link login is not available: SMTP is not configured.' });
+			return fail(503, { error: errors.smtpNotConfigured });
 		}
 
 		const ip = getClientAddress();
-		const userLocale = (locals.user as any)?.settings?.locale ?? 'en';
-		const messages = localeMessages[userLocale] ?? localeMessages['en'];
-		const errors = messages.auth.login.errors;
 
 		if (!rateLimit(`magic:${ip}`, 5, 60 * 60_000)) {
 			return fail(429, { error: errors.rateLimited });
 		}
 
-		const data = Object.fromEntries(await request.formData());
-
 		if (!(await verifyAltcha(data.altcha))) {
-			return fail(400, { error: 'Verification failed. Please try again.' });
+			return fail(400, { error: errors.verificationFailed });
 		}
 		const parsed = MagicLinkRequestSchema.safeParse(data);
 
