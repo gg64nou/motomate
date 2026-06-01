@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { sql, relations } from 'drizzle-orm';
 import {
 	DEFAULT_ODOMETER_UNIT,
@@ -483,13 +483,43 @@ export const push_subscriptions = sqliteTable('push_subscriptions', {
 		.default(sql`(datetime('now'))`)
 });
 
+export type ApiKeyScope = 'read' | 'read_write';
+
+export const api_keys = sqliteTable(
+	'api_keys',
+	{
+		id: text('id').primaryKey(),
+		user_id: text('user_id')
+			.notNull()
+			.references(() => users.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		key_hash: text('key_hash').notNull().unique(),
+		key_prefix: text('key_prefix').notNull(),
+		scope: text('scope').$type<ApiKeyScope>().notNull().default('read_write'),
+		expires_at: text('expires_at'),
+		expires_duration_days: integer('expires_duration_days'),
+		last_used_at: text('last_used_at'),
+		revoked_at: text('revoked_at'),
+		created_at: text('created_at')
+			.notNull()
+			.default(sql`(datetime('now'))`)
+	},
+	(t) => ({
+		userIdx: index('idx_api_keys_user').on(t.user_id),
+		userNameUniq: uniqueIndex('idx_api_keys_user_name')
+			.on(t.user_id, t.name)
+			.where(sql`${t.revoked_at} IS NULL`)
+	})
+);
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
 	vehicles: many(vehicles),
 	task_templates: many(task_templates),
 	workflow_rules: many(workflow_rules),
 	notifications: many(notifications),
-	push_subscriptions: many(push_subscriptions)
+	push_subscriptions: many(push_subscriptions),
+	api_keys: many(api_keys)
 }));
 
 export const vehiclesRelations = relations(vehicles, ({ one, many }) => ({
@@ -555,6 +585,10 @@ export const financeTransactionsRelations = relations(finance_transactions, ({ o
 	user: one(users, { fields: [finance_transactions.user_id], references: [users.id] })
 }));
 
+export const apiKeysRelations = relations(api_keys, ({ one }) => ({
+	user: one(users, { fields: [api_keys.user_id], references: [users.id] })
+}));
+
 // Type exports
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
@@ -582,3 +616,5 @@ export type FinanceTransaction = typeof finance_transactions.$inferSelect;
 export type InsertFinanceTransaction = typeof finance_transactions.$inferInsert;
 export type Travel = typeof travels.$inferSelect;
 export type InsertTravel = typeof travels.$inferInsert;
+export type ApiKey = typeof api_keys.$inferSelect;
+export type InsertApiKey = typeof api_keys.$inferInsert;

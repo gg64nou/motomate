@@ -14,7 +14,8 @@
 		{ href: '/settings/profile', labelKey: 'settings.nav.preferences' },
 		{ href: '/settings/account', labelKey: 'settings.nav.account' },
 		{ href: '/settings/notifications', labelKey: 'settings.nav.notifications' },
-		{ href: '/settings/workflows', labelKey: 'settings.nav.workflows' }
+		{ href: '/settings/workflows', labelKey: 'settings.nav.workflows' },
+		{ href: '/settings/developer', labelKey: 'settings.nav.developer' }
 	];
 
 	let primedLink = $state<string | null>(null);

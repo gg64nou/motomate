@@ -265,3 +265,37 @@ export const CreateTravelSchema = z.object({
 });
 
 export const UpdateTravelSchema = CreateTravelSchema.partial().omit({ vehicle_id: true });
+
+export const CreateApiKeySchema = z.object({
+	name: z.string().min(1).max(80).trim(),
+	scope: z.enum(['read', 'read_write']).default('read_write'),
+	expires_duration_days: z.preprocess(
+		(v) => (v === '' || v === null || v === undefined ? undefined : Number(v)),
+		z.number().int().positive().optional()
+	)
+});
+
+export const ApiServiceLogSchema = z.object({
+	performed_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD'),
+	odometer_at_service: z.number().int().min(0),
+	tracker_ids: z.array(z.string()).optional().default([]),
+	cost_cents: z.number().int().min(0).optional(),
+	notes: z.string().max(2000).optional(),
+	remark: z.string().max(200).optional()
+});
+
+export const ApiOdometerSchema = z.object({
+	odometer: z.number().int().min(0),
+	recorded_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD'),
+	remark: z.string().max(500).optional()
+});
+
+export const ApiFinanceTransactionSchema = z.object({
+	category: z
+		.enum(['maintenance', 'parts', 'accessories', 'administrative', 'fuel', 'other'])
+		.default('other'),
+	amount_cents: z.number().int(),
+	performed_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD'),
+	notes: z.string().max(500).optional(),
+	odometer_at_transaction: z.number().int().min(0).optional()
+});

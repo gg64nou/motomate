@@ -752,6 +752,7 @@
 			"account": "Account",
 			"notifications": "Notifications",
 			"workflows": "Workflows",
+			"developer": "Developer",
 			"changelog": "Changelog",
 			"sourceCode": "Source code",
 			"reportIssue": "Report an Issue",
@@ -771,7 +772,8 @@
 			"avatarRemove": "Remove",
 			"avatarUpdated": "Profile picture updated",
 			"avatarDicebear": "Choose an avatar",
-			"avatarShuffle": "Shuffle"
+			"avatarShuffle": "Shuffle",
+			"subtitle": "Language, currency, and odometer unit."
 		},
 		"account": {
 			"title": "Account",
@@ -824,7 +826,8 @@
 					"confirm": "Delete account",
 					"cancel": "Keep account"
 				}
-			}
+			},
+			"subtitle": "Email, password, and data export."
 		},
 		"workflows": {
 			"title": "Notification rules",
@@ -870,7 +873,8 @@
 			"deleted": "Rule deleted",
 			"confirmDeleteDesc": "Delete the rule \"{name}\"? This cannot be undone.",
 			"runCheck": "Run check now",
-			"runCheckDone": "Check complete"
+			"runCheckDone": "Check complete",
+			"subtitle": "Automated rules for maintenance and reminders."
 		},
 		"notifications": {
 			"title": "Notifications",
@@ -944,13 +948,68 @@
 			"filterUnread": "Unread",
 			"prevPage": "Previous",
 			"nextPage": "Next",
-			"pageOf": "Page {page} of {total}"
+			"pageOf": "Page {page} of {total}",
+			"subtitle": "Notification channels and recent alerts."
 		},
 		"changelog": {
 			"title": "What's new?",
 			"subtitle": "See what changed in the latest versions.",
 			"refresh": "Refresh",
 			"noContent": "No changes found. Try again later."
+		},
+		"developer": {
+			"title": "Developer",
+			"subtitle": "Create API keys and browse the documentation.",
+			"apiKeys": {
+				"title": "API Keys",
+				"description": "Create and manage keys to use the MotoMate API.",
+				"empty": "No API keys yet.",
+				"create": "Create key",
+				"creating": "Creating...",
+				"nameLabel": "Name",
+				"namePlaceholder": "e.g. Home Assistant",
+				"scopeLabel": "Access",
+				"scopeRead": "Read only",
+				"scopeReadWrite": "Read + Write",
+				"expiryLabel": "Expires",
+				"expiry30": "30 days",
+				"expiry90": "90 days (recommended)",
+				"expiry365": "1 year",
+				"expiryNone": "No expiry",
+				"prefix": "Key",
+				"expires": "Expires",
+				"neverExpires": "Never",
+				"lastUsed": "Last used",
+				"neverUsed": "never",
+				"revoke": "Revoke",
+				"revokeConfirm": "Revoking will break any script or automation using this key.",
+				"revokeConfirmBtn": "Confirm revoke",
+				"rotate": "Rotate",
+				"rotateConfirm": "Rotating issues a new key and invalidates the current one.",
+				"rotateConfirmBtn": "Confirm rotate",
+				"cancel": "Cancel",
+				"tokenRevealTitle": "Copy this key now",
+				"tokenRevealDesc": "This key will not be shown again.",
+				"tokenCopied": "Copied",
+				"tokenCopyBtn": "Copy",
+				"tokenDoneBtn": "I copied it",
+				"maxKeysError": "Maximum of 20 API keys reached. Revoke one before creating a new key.",
+				"scopeBadgeRead": "read",
+				"scopeBadgeReadWrite": "read + write",
+				"expiringSoon": "Expiring soon",
+				"expired": "Expired",
+				"revoked": "Revoked",
+				"deleteKey": "Delete",
+				"deleteKeyConfirm": "Confirm delete",
+				"restoreKey": "Restore",
+				"errorNameTaken": "That name is already in use."
+			},
+			"docs": {
+				"title": "API Documentation",
+				"description": "Explore and test all available endpoints.",
+				"link": "View documentation",
+				"specLink": "Raw OpenAPI spec"
+			}
 		}
 	},
 	"layout": {

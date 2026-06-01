@@ -47,6 +47,7 @@
 <svelte:head><title>{$_('settings.account.title')} · Settings</title></svelte:head>
 
 <h2 class="section-title">{$_('settings.account.title')}</h2>
+<p class="section-sub">{$_('settings.account.subtitle')}</p>
 
 <!-- Email -->
 <section class="setting-section">
@@ -256,8 +257,14 @@
 		font-size: var(--text-2xl);
 		font-weight: 600;
 		color: var(--text);
-		margin: 0 0 var(--space-6);
+		margin: 0 0 var(--space-2);
 		letter-spacing: -0.02em;
+	}
+	.section-sub {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		margin: 0 0 var(--space-6);
+		line-height: var(--leading-base);
 	}
 	.sub-title {
 		font-size: var(--text-lg);

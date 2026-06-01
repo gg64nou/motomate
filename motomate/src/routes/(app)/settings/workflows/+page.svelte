@@ -129,7 +129,10 @@
 </svelte:head>
 
 <div class="wf-header">
-	<h2 class="section-title">{$_('settings.workflows.title')}</h2>
+	<div class="wf-header-text">
+		<h2 class="section-title">{$_('settings.workflows.title')}</h2>
+		<p class="section-sub">{$_('settings.workflows.subtitle')}</p>
+	</div>
 	<div class="wf-header-actions">
 		<button class="btn-secondary" onclick={runCheck} disabled={runningCheck}>
 			{runningCheck ? '...' : $_('settings.workflows.runCheck')}
@@ -432,18 +435,28 @@
 <style>
 	.wf-header {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: space-between;
 		margin-bottom: var(--space-5);
 		flex-wrap: wrap;
 		gap: var(--space-3);
 	}
+	.wf-header-text {
+		flex: 1;
+		min-width: 0;
+	}
 	.section-title {
 		font-size: var(--text-2xl);
 		font-weight: 600;
 		color: var(--text);
-		margin: 0;
+		margin: 0 0 var(--space-2);
 		letter-spacing: -0.02em;
+	}
+	.section-sub {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		margin: 0 0 var(--space-4);
+		line-height: var(--leading-base);
 	}
 	.wf-header-actions {
 		display: flex;

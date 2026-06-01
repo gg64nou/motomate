@@ -4,8 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
+		"copy:scalar": "node -e \"const{cpSync}=require('fs');cpSync('node_modules/@scalar/api-reference/dist/browser/standalone.js','static/scalar.js')\"",
+		"dev": "npm run copy:scalar && vite dev",
+		"build": "npm run copy:scalar && vite build",
 		"preview": "node server.js",
 		"start": "node server.js",
 		"db:migrate": "drizzle-kit migrate",
@@ -20,6 +21,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"@scalar/api-reference": "^1.57.5",
 		"@sveltejs/adapter-node": "^5.5.4",
 		"@sveltejs/kit": "^2.60.1",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",

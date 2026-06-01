@@ -5,6 +5,9 @@ declare global {
 		interface Locals {
 			user: User | null;
 			session: Session | null;
+			isApiKeyAuth?: boolean;
+			apiKeyId?: string;
+			apiKeyScope?: import('$lib/db/schema').ApiKeyScope;
 		}
 		interface Error {
 			message: string;

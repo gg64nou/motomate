@@ -9,3 +9,4 @@ uploads/
 *.db-shm
 *.db-wal
 .qwen/
+static/scalar.js
