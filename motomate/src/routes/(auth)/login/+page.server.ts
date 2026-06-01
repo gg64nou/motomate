@@ -72,15 +72,15 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 export const actions: Actions = {
 	login: async ({ request, cookies, getClientAddress, locals }) => {
 		const ip = getClientAddress();
-		const userLocale = (locals.user as any)?.settings?.locale ?? 'en';
+		const data = Object.fromEntries(await request.formData());
+		const rawLocale = String(data.locale ?? cookies.get('locale') ?? 'en');
+		const userLocale = rawLocale in localeMessages ? rawLocale : 'en';
 		const messages = localeMessages[userLocale] ?? localeMessages['en'];
 		const errors = messages.auth.login.errors;
 
 		if (!rateLimit(`login:${ip}`, 10, 15 * 60_000)) {
 			return fail(429, { error: errors.rateLimited, email: '' });
 		}
-
-		const data = Object.fromEntries(await request.formData());
 		const remember = data.remember === 'on';
 		const parsed = LoginSchema.safeParse(data);
 
