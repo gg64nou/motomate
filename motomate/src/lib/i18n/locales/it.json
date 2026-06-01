@@ -43,7 +43,9 @@
 				"invalidFormat": "Formato email o password non valido",
 				"invalidCredentials": "Email o password non validi",
 				"invalidEmail": "Inserisci un indirizzo email valido",
-				"registrationClosed": "La registrazione è chiusa. Contatta il tuo amministratore per l'accesso."
+				"registrationClosed": "La registrazione è chiusa. Contatta il tuo amministratore per l'accesso.",
+				"verificationFailed": "Verifica fallita. Riprova.",
+				"smtpNotConfigured": "Il login con magic link non è disponibile: SMTP non è configurato."
 			}
 		},
 		"register": {
@@ -59,7 +61,16 @@
 			"login": "Accedi",
 			"closedTitle": "Registrazione chiusa",
 			"closedBody": "I nuovi account non sono accettati al momento. Contatta il tuo amministratore per l'accesso.",
-			"closedAction": "Vai al login"
+			"closedAction": "Vai al login",
+			"errors": {
+				"registrationClosed": "La registrazione è chiusa.",
+				"rateLimited": "Troppi tentativi. Riprova più tardi.",
+				"verificationFailed": "Verifica fallita. Riprova.",
+				"invalidEmail": "Inserisci un indirizzo email valido",
+				"passwordTooShort": "Usa almeno 8 caratteri",
+				"passwordRequired": "La password è obbligatoria",
+				"emailInUse": "Controlla i tuoi dati e riprova, o accedi se hai già un account."
+			}
 		},
 		"magicLink": {
 			"verifying": "Accesso in corso…",

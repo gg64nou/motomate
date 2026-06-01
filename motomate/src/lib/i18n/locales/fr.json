@@ -43,7 +43,9 @@
 				"invalidFormat": "Format d'e-mail ou de mot de passe invalide",
 				"invalidCredentials": "E-mail ou mot de passe invalide",
 				"invalidEmail": "Veuillez entrer une adresse e-mail valide",
-				"registrationClosed": "L'inscription est fermée. Contactez votre administrateur pour obtenir l'accès."
+				"registrationClosed": "L'inscription est fermée. Contactez votre administrateur pour obtenir l'accès.",
+				"verificationFailed": "Vérification échouée. Veuillez réessayer.",
+				"smtpNotConfigured": "La connexion par lien magique n'est pas disponible : SMTP n'est pas configuré."
 			}
 		},
 		"register": {
@@ -59,7 +61,16 @@
 			"login": "Se connecter",
 			"closedTitle": "Inscription fermée",
 			"closedBody": "Les nouveaux comptes ne sont pas acceptés pour l'instant. Contactez votre administrateur pour obtenir l'accès.",
-			"closedAction": "Aller à la connexion"
+			"closedAction": "Aller à la connexion",
+			"errors": {
+				"registrationClosed": "L'inscription est fermée.",
+				"rateLimited": "Trop de tentatives. Veuillez réessayer plus tard.",
+				"verificationFailed": "Vérification échouée. Veuillez réessayer.",
+				"invalidEmail": "Veuillez entrer une adresse e-mail valide",
+				"passwordTooShort": "Utilisez au moins 8 caractères",
+				"passwordRequired": "Le mot de passe est requis",
+				"emailInUse": "Vérifiez vos informations et réessayez, ou connectez-vous si vous avez déjà un compte."
+			}
 		},
 		"magicLink": {
 			"verifying": "Connexion en cours…",

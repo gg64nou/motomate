@@ -8,6 +8,32 @@ import { rateLimit } from '$lib/auth/rate-limit.js';
 import { verifyAltcha } from '$lib/auth/altcha.js';
 import type { UserSettings } from '$lib/db/schema.js';
 import type { Actions, PageServerLoad } from './$types';
+import en from '$lib/i18n/locales/en.json';
+import de from '$lib/i18n/locales/de.json';
+import fr from '$lib/i18n/locales/fr.json';
+import es from '$lib/i18n/locales/es.json';
+import it from '$lib/i18n/locales/it.json';
+import nl from '$lib/i18n/locales/nl.json';
+import pt from '$lib/i18n/locales/pt.json';
+
+type RegisterMessages = {
+	auth: {
+		register: {
+			passwordMismatch: string;
+			errors: {
+				registrationClosed: string;
+				rateLimited: string;
+				verificationFailed: string;
+				invalidEmail: string;
+				passwordTooShort: string;
+				passwordRequired: string;
+				emailInUse: string;
+			};
+		};
+	};
+};
+
+const localeMessages: Record<string, RegisterMessages> = { en, de, fr, es, it, nl, pt };
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/dashboard');
@@ -17,20 +43,24 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	default: async ({ request, cookies, getClientAddress }) => {
+		const data = Object.fromEntries(await request.formData());
+		const rawLocale = String(data.locale ?? '');
+		const userLocale = /^[a-z]{2}(-[A-Z]{2})?$/.test(rawLocale) ? rawLocale : 'en';
+		const messages = localeMessages[userLocale] ?? localeMessages['en'];
+		const errors = messages.auth.register.errors;
+
 		if (!(await isRegistrationOpen())) {
-			return fail(403, { error: 'Registration is closed.', email: '' });
+			return fail(403, { error: errors.registrationClosed, email: '' });
 		}
 
 		const ip = getClientAddress();
 		if (!rateLimit(`register:${ip}`, 5, 60 * 60_000)) {
-			return fail(429, { error: 'Too many attempts. Please try again later.', email: '' });
+			return fail(429, { error: errors.rateLimited, email: '' });
 		}
-
-		const data = Object.fromEntries(await request.formData());
 
 		if (!(await verifyAltcha(data.altcha))) {
 			return fail(400, {
-				error: 'Verification failed. Please try again.',
+				error: errors.verificationFailed,
 				email: String(data.email ?? '')
 			});
 		}
@@ -38,12 +68,13 @@ export const actions: Actions = {
 		const parsed = CreateUserSchema.safeParse({ email: data.email, password: data.password });
 
 		if (!parsed.success) {
-			const msg = parsed.error.issues[0]?.message ?? 'Invalid input';
+			const field = parsed.error.issues[0]?.path?.[0] as string | undefined;
+			const msg = field === 'password' ? errors.passwordTooShort : errors.invalidEmail;
 			return fail(400, { error: msg, email: String(data.email ?? '') });
 		}
 
 		if (!parsed.data.password) {
-			return fail(400, { error: 'Password is required', email: parsed.data.email });
+			return fail(400, { error: errors.passwordRequired, email: parsed.data.email });
 		}
 
 		const confirmPassword = String(data.confirm_password ?? '');
@@ -51,7 +82,7 @@ export const actions: Actions = {
 			return fail(400, {
 				error: '',
 				email: parsed.data.email,
-				fieldErrors: { confirm_password: 'Passwords do not match' }
+				fieldErrors: { confirm_password: messages.auth.register.passwordMismatch }
 			});
 		}
 
@@ -67,13 +98,12 @@ export const actions: Actions = {
 		const existing = await getUserByEmail(parsed.data.email);
 		if (existing) {
 			return fail(400, {
-				error: 'Check your details and try again, or log in if you already have an account.',
+				error: errors.emailInUse,
 				email: parsed.data.email
 			});
 		}
 
 		const rawTheme = String(data.theme ?? '');
-		const rawLocale = String(data.locale ?? '');
 		const initialSettings: Partial<UserSettings> = {};
 		if (rawTheme === 'light' || rawTheme === 'dark' || rawTheme === 'system') {
 			initialSettings.theme = rawTheme;

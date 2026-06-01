@@ -43,7 +43,9 @@
 				"invalidFormat": "Invalid email or password format",
 				"invalidCredentials": "Invalid email or password",
 				"invalidEmail": "Please enter a valid email address",
-				"registrationClosed": "Unfortunately, you can't sign up right now. Contact your administrator for access."
+				"registrationClosed": "Unfortunately, you can't sign up right now. Contact your administrator for access.",
+				"verificationFailed": "Verification failed. Please try again.",
+				"smtpNotConfigured": "Magic link login is not available: SMTP is not configured."
 			}
 		},
 		"register": {
@@ -59,7 +61,16 @@
 			"login": "Log in",
 			"closedTitle": "Registration closed",
 			"closedBody": "New accounts are not accepted at this time. Contact your administrator for access.",
-			"closedAction": "Go to log in"
+			"closedAction": "Go to log in",
+			"errors": {
+				"registrationClosed": "Registration is closed.",
+				"rateLimited": "Too many attempts. Please try again later.",
+				"verificationFailed": "Verification failed. Please try again.",
+				"invalidEmail": "Please enter a valid email address",
+				"passwordTooShort": "Use at least 8 characters",
+				"passwordRequired": "Password is required",
+				"emailInUse": "Check your details and try again, or log in if you already have an account."
+			}
 		},
 		"magicLink": {
 			"title": "Magic link",

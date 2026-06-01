@@ -43,7 +43,9 @@
 				"invalidFormat": "Ungültiges E-Mail- oder Passwortformat",
 				"invalidCredentials": "Ungültige E-Mail oder Passwort",
 				"invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
-				"registrationClosed": "Die Registrierung ist geschlossen. Wenden Sie sich an Ihren Administrator."
+				"registrationClosed": "Die Registrierung ist geschlossen. Wenden Sie sich an Ihren Administrator.",
+				"verificationFailed": "Verifizierung fehlgeschlagen. Bitte versuche es erneut.",
+				"smtpNotConfigured": "Magic-Link-Anmeldung ist nicht verfügbar: SMTP ist nicht konfiguriert."
 			}
 		},
 		"register": {
@@ -59,7 +61,16 @@
 			"login": "Anmelden",
 			"closedTitle": "Registrierung geschlossen",
 			"closedBody": "Neue Konten werden derzeit nicht angenommen. Wenden Sie sich an Ihren Administrator.",
-			"closedAction": "Zur Anmeldung"
+			"closedAction": "Zur Anmeldung",
+			"errors": {
+				"registrationClosed": "Die Registrierung ist geschlossen.",
+				"rateLimited": "Zu viele Versuche. Bitte versuche es später erneut.",
+				"verificationFailed": "Verifizierung fehlgeschlagen. Bitte versuche es erneut.",
+				"invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
+				"passwordTooShort": "Mindestens 8 Zeichen verwenden",
+				"passwordRequired": "Passwort erforderlich",
+				"emailInUse": "Überprüfe deine Daten und versuche es erneut, oder melde dich an, wenn du bereits ein Konto hast."
+			}
 		},
 		"magicLink": {
 			"verifying": "Wir melden Sie an…",
