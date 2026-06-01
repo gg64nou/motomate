@@ -8,13 +8,7 @@ import { rateLimit } from '$lib/auth/rate-limit.js';
 import { verifyAltcha } from '$lib/auth/altcha.js';
 import type { UserSettings } from '$lib/db/schema.js';
 import type { Actions, PageServerLoad } from './$types';
-import en from '$lib/i18n/locales/en.json';
-import de from '$lib/i18n/locales/de.json';
-import fr from '$lib/i18n/locales/fr.json';
-import es from '$lib/i18n/locales/es.json';
-import it from '$lib/i18n/locales/it.json';
-import nl from '$lib/i18n/locales/nl.json';
-import pt from '$lib/i18n/locales/pt.json';
+import { locales as localeMap } from '$lib/i18n/locales.js';
 
 type RegisterMessages = {
 	auth: {
@@ -33,7 +27,7 @@ type RegisterMessages = {
 	};
 };
 
-const localeMessages: Record<string, RegisterMessages> = { en, de, fr, es, it, nl, pt };
+const localeMessages: Record<string, RegisterMessages> = localeMap;
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/dashboard');

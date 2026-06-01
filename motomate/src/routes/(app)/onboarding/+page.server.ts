@@ -8,13 +8,7 @@ import {
 import { createServiceLog } from '$lib/db/repositories/service-logs.js';
 import { markOnboardingDone } from '$lib/db/repositories/users.js';
 import { seedPresetRulesForUser } from '$lib/db/repositories/workflow.js';
-import en from '$lib/i18n/locales/en.json';
-import de from '$lib/i18n/locales/de.json';
-import fr from '$lib/i18n/locales/fr.json';
-import es from '$lib/i18n/locales/es.json';
-import it from '$lib/i18n/locales/it.json';
-import nl from '$lib/i18n/locales/nl.json';
-import pt from '$lib/i18n/locales/pt.json';
+import { locales as localeMap } from '$lib/i18n/locales.js';
 import {
 	DEFAULT_ODOMETER_UNIT,
 	getMeasurementBasis,
@@ -31,7 +25,7 @@ type LocaleMessages = {
 	};
 };
 
-const localeMessages: Record<string, LocaleMessages> = { en, de, fr, es, it, nl, pt };
+const localeMessages: Record<string, LocaleMessages> = localeMap;
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user?.onboarding_done) redirect(302, '/dashboard');

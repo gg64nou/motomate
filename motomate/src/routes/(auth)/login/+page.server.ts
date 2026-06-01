@@ -13,13 +13,7 @@ import { LoginSchema, MagicLinkRequestSchema } from '$lib/validators/schemas.js'
 import { rateLimit } from '$lib/auth/rate-limit.js';
 import type { Actions, PageServerLoad } from './$types';
 import { hash, verify } from '@node-rs/argon2';
-import en from '$lib/i18n/locales/en.json';
-import de from '$lib/i18n/locales/de.json';
-import fr from '$lib/i18n/locales/fr.json';
-import es from '$lib/i18n/locales/es.json';
-import it from '$lib/i18n/locales/it.json';
-import nl from '$lib/i18n/locales/nl.json';
-import pt from '$lib/i18n/locales/pt.json';
+import { locales as localeMap } from '$lib/i18n/locales.js';
 
 type AuthErrors = {
 	auth: {
@@ -37,7 +31,7 @@ type AuthErrors = {
 	};
 };
 
-const localeMessages: Record<string, AuthErrors> = { en, de, fr, es, it, nl, pt };
+const localeMessages: Record<string, AuthErrors> = localeMap;
 
 const ARGON2_OPTS = { memoryCost: 19456, timeCost: 2, outputLen: 32, parallelism: 1 };
 
