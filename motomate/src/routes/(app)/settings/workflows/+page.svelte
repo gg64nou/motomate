@@ -190,8 +190,13 @@
 						role="button"
 						tabindex="0"
 						aria-expanded={expandedLastId === rule.id}
-						onclick={() => { expandedLastId = expandedLastId === rule.id ? null : rule.id; }}
-						onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') expandedLastId = expandedLastId === rule.id ? null : rule.id; }}
+						onclick={() => {
+							expandedLastId = expandedLastId === rule.id ? null : rule.id;
+						}}
+						onkeydown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ')
+								expandedLastId = expandedLastId === rule.id ? null : rule.id;
+						}}
 					>
 						<span class="rule-last-fired">
 							{#if rule.last_triggered_at}
