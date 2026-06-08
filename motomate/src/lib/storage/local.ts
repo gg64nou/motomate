@@ -51,7 +51,7 @@ export class LocalStorageAdapter implements StorageAdapter {
 	async presignedUrl(key: string, expiresInSeconds: number): Promise<string> {
 		// Sign with HMAC so the serve endpoint can verify authenticity
 		const expires = Math.floor(Date.now() / 1000) + expiresInSeconds;
-		const secret = env.AUTH_SECRET!
+		const secret = env.AUTH_SECRET!;
 		const sig = crypto.createHmac('sha256', secret).update(`${key}:${expires}`).digest('hex');
 		// Use a relative URL so the request always goes to the same origin the app
 		// is served from, regardless of how PUBLIC_APP_URL is configured.
