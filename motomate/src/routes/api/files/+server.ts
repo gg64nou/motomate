@@ -66,7 +66,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		const now = Math.floor(Date.now() / 1000);
 		if (parseInt(expires, 10) < now) error(410, 'Link expired');
 
-		const secret = env.AUTH_SECRET ?? 'dev-secret';
+		const secret = env.AUTH_SECRET!;
 		const expected = crypto.createHmac('sha256', secret).update(`${key}:${expires}`).digest('hex');
 
 		// Validate hex length before timingSafeEqual to avoid TypeError on malformed input
@@ -93,8 +93,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 				if (!pathUserId || pathUserId !== user.id) error(403, 'Access denied');
 			} else {
 				// Vehicle avatar: avatars/{userId}/{vehicleId}.{ext}
-				const vehicle = await getVehicleByCoverImageKey(key);
-				if (!vehicle || vehicle.user_id !== user.id) error(403, 'Access denied');
+				const vehicle = await getVehicleByCoverImageKey(key, user.id);
+				if (!vehicle) error(403, 'Access denied');
 			}
 		}
 	}

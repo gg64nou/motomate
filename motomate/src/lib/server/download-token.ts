@@ -10,7 +10,7 @@ interface TokenPayload {
 }
 
 function secret(): string {
-	return env.AUTH_SECRET ?? 'dev-secret';
+	return env.AUTH_SECRET!;
 }
 
 export function createDownloadToken(userId: string, format: 'json' | 'zip'): string {

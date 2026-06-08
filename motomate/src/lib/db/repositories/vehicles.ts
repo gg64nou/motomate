@@ -295,11 +295,12 @@ export async function deleteVehicle(id: string, userId: string): Promise<void> {
 }
 
 export async function getVehicleByCoverImageKey(
-	coverImageKey: string
+	coverImageKey: string,
+	userId: string
 ): Promise<Vehicle | undefined> {
 	return hydrateVehicle(
 		await db.query.vehicles.findFirst({
-			where: eq(vehicles.cover_image_key, coverImageKey)
+			where: and(eq(vehicles.cover_image_key, coverImageKey), eq(vehicles.user_id, userId))
 		})
 	);
 }
