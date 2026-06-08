@@ -1793,6 +1793,16 @@
 			width: 44px;
 			height: 44px;
 		}
+		.page-actions {
+			flex-wrap: wrap;
+		}
+		.view-toggle {
+			width: 100%;
+		}
+		.view-toggle-btn {
+			flex: 1;
+			text-align: center;
+		}
 	}
 
 	.empty {

@@ -106,6 +106,8 @@
 		}
 	}
 
+	let expandedLastId = $state<string | null>(null);
+
 	// Delete confirmation
 	let deletingRule = $state<PageData['rules'][number] | null>(null);
 	let deleteLoading = $state(false);
@@ -182,7 +184,15 @@
 						<span class="sep">·</span>
 						<span>{$_('settings.workflows.allChannels')}</span>
 					</div>
-					<div class="rule-last">
+					<div
+						class="rule-last"
+						class:rule-last--expanded={expandedLastId === rule.id}
+						role="button"
+						tabindex="0"
+						aria-expanded={expandedLastId === rule.id}
+						onclick={() => { expandedLastId = expandedLastId === rule.id ? null : rule.id; }}
+						onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') expandedLastId = expandedLastId === rule.id ? null : rule.id; }}
+					>
 						<span class="rule-last-fired">
 							{#if rule.last_triggered_at}
 								{$_('settings.workflows.lastFired', {
@@ -580,6 +590,8 @@
 		color: var(--text-subtle);
 		margin-top: 0.25rem;
 		overflow: hidden;
+		cursor: pointer;
+		user-select: none;
 	}
 	.rule-last-fired {
 		white-space: nowrap;
@@ -597,6 +609,29 @@
 	}
 	.rule-next-fire--ready {
 		color: var(--accent);
+	}
+	.rule-last--expanded {
+		overflow: visible;
+		flex-wrap: wrap;
+		row-gap: 0.125rem;
+	}
+	.rule-last--expanded .rule-last-fired,
+	.rule-last--expanded .rule-next-fire {
+		white-space: normal;
+		overflow: visible;
+		text-overflow: clip;
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.rule-last:hover {
+			overflow: visible;
+			flex-wrap: wrap;
+			row-gap: 0.125rem;
+		}
+		.rule-last:hover .rule-next-fire {
+			white-space: normal;
+			overflow: visible;
+			text-overflow: clip;
+		}
 	}
 
 	/* Inline edit form */
@@ -710,9 +745,31 @@
 	}
 
 	@media (max-width: 600px) {
+		.wf-header {
+			flex-direction: column;
+		}
+		.wf-header-actions {
+			width: 100%;
+			flex-direction: column;
+		}
+		.wf-header-actions form {
+			width: 100%;
+		}
+		.wf-header-actions .btn-primary,
+		.wf-header-actions .btn-secondary {
+			width: 100%;
+		}
 		.rule-row {
 			flex-wrap: wrap;
 			gap: var(--space-3);
+		}
+		.rule-last {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.125rem;
+		}
+		.rule-last .sep {
+			display: none;
 		}
 		.rule-actions {
 			order: 3;

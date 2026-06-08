@@ -435,6 +435,11 @@
 		.mobile-brand {
 			display: none;
 		}
+		.entry-meta {
+			flex-wrap: wrap;
+			overflow: visible;
+			white-space: normal;
+		}
 	}
 
 	/* Mobile brand - hidden on desktop */

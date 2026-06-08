@@ -1266,6 +1266,10 @@
 	}
 
 	@media (max-width: 640px) {
+		.doc-meta {
+			flex-wrap: wrap;
+			overflow: visible;
+		}
 		.filters {
 			flex-direction: column;
 			align-items: stretch;
