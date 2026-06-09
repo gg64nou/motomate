@@ -29,7 +29,16 @@
 		...data.dueTrackers.map((t: TrackerItem) => ({ ...t, status: 'due' as const }))
 	]);
 	const visibleAttention = $derived(attentionItems.slice(0, 3));
-	const hiddenAttentionCount = $derived(attentionItems.length - visibleAttention.length);
+	const hiddenByVehicle = $derived.by(() => {
+		const hidden = attentionItems.slice(3);
+		const map = new Map<string, { vehicleId: string; vehicleName: string; count: number }>();
+		for (const item of hidden) {
+			const id = item.vehicle.id;
+			if (!map.has(id)) map.set(id, { vehicleId: id, vehicleName: item.vehicle.name, count: 0 });
+			map.get(id)!.count++;
+		}
+		return [...map.values()];
+	});
 
 	function attentionDetail(tracker: (typeof data.overdueTrackers)[0]) {
 		const v = tracker.vehicle;
@@ -99,11 +108,11 @@
 						href="/vehicles/{tracker.vehicle.id}/maintenance"
 					/>
 				{/each}
-				{#if hiddenAttentionCount > 0}
-					<a href="/vehicles" class="attention-overflow">
-						{$_('dashboard.attention.andMore', { values: { count: hiddenAttentionCount } })}
+				{#each hiddenByVehicle as group (group.vehicleId)}
+					<a href="/vehicles/{group.vehicleId}/maintenance" class="attention-overflow">
+						{$_('dashboard.attention.moreOnVehicle', { values: { count: group.count, vehicleName: group.vehicleName } })}
 					</a>
-				{/if}
+				{/each}
 			</div>
 		</section>
 	{/if}

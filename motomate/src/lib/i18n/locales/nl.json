@@ -201,7 +201,7 @@
 		"viewAll": "Alles bekijken →",
 		"serviceEntry": "Service-invoer",
 		"attention": {
-			"andMore": "{count, plural, =1 {+ 1 item meer} other {+ # items meer}}"
+			"moreOnVehicle": "{count, plural, =1 {1 meer bij {vehicleName}} other {# meer bij {vehicleName}}}"
 		},
 		"empty": {
 			"title": "Je garage is leeg",

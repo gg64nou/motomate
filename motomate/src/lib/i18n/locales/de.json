@@ -201,7 +201,7 @@
 		"viewAll": "Alle anzeigen →",
 		"serviceEntry": "Serviceeintrag",
 		"attention": {
-			"andMore": "{count, plural, =1 {+ 1 weiteres Element} other {+ # weitere Elemente}}"
+			"moreOnVehicle": "{count, plural, =1 {1 weiteres bei {vehicleName}} other {# weitere bei {vehicleName}}}"
 		},
 		"empty": {
 			"title": "Ihre Garage ist leer",
