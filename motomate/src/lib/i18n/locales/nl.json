@@ -954,7 +954,11 @@
 			"title": "Wat is er nieuw?",
 			"subtitle": "Bekijk wat er veranderd is in de nieuwste versies.",
 			"refresh": "Vernieuwen",
-			"noContent": "Geen gewijzigen gevonden. Probeer het later opnieuw."
+			"noContent": "Geen gewijzigen gevonden. Probeer het later opnieuw.",
+			"latest": "Nieuwste",
+			"installed": "Geïnstalleerd",
+			"viewFull": "Volledige changelog bekijken",
+			"openIssue": "Probleem melden"
 		},
 		"developer": {
 			"title": "Ontwikkelaar",

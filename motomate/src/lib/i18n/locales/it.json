@@ -955,7 +955,11 @@
 			"title": "Cosa c'è di nuovo?",
 			"subtitle": "Scopri cosa è cambiato nelle ultime versioni.",
 			"refresh": "Aggiorna",
-			"noContent": "Nessuna modifica trovata. Riprova più tardi."
+			"noContent": "Nessuna modifica trovata. Riprova più tardi.",
+			"latest": "Ultima",
+			"installed": "Installata",
+			"viewFull": "Vedi il changelog completo",
+			"openIssue": "Apri una segnalazione"
 		},
 		"developer": {
 			"title": "Sviluppatore",

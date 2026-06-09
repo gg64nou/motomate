@@ -954,7 +954,11 @@
 			"title": "Was ist neu?",
 			"subtitle": "Sieh nach, was sich in den neuesten Versionen geändert hat.",
 			"refresh": "Aktualisieren",
-			"noContent": "Keine Änderungen gefunden. Versuche es später erneut."
+			"noContent": "Keine Änderungen gefunden. Versuche es später erneut.",
+			"latest": "Aktuellste",
+			"installed": "Installiert",
+			"viewFull": "Vollständiges Changelog ansehen",
+			"openIssue": "Problem melden"
 		},
 		"developer": {
 			"title": "Entwickler",

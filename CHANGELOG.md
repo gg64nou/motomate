@@ -4,6 +4,12 @@
 
 - Added 'Developer' tab in the profile page, allowing you to setup access keys for the REST API
 - Fix: normalized errors on the login/register forms, these are now translated (#40)
+- The dashboard now shows which vehicle has overdue or upcoming maintenance when more than three items are waiting, and links you directly to that vehicle's maintenance page
+- Fix: due and overdue maintenance cards now stack correctly on small screens, keeping the action button reachable
+- Fix: activity details on the dashboard no longer clip on narrow screens
+- Fix: workflow last-run dates can now be tapped to expand on small screens
+- Fix: vehicle cover images are now only accessible to the vehicle's owner
+- Fix: the server now requires AUTH_SECRET to be set at startup and warns if open registration is left enabled on an active instance
 
 ## 0.2.5
 

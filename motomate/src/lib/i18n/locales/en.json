@@ -955,7 +955,11 @@
 			"title": "What's new?",
 			"subtitle": "See what changed in the latest versions.",
 			"refresh": "Refresh",
-			"noContent": "No changes found. Try again later."
+			"noContent": "No changes found. Try again later.",
+			"latest": "Latest",
+			"installed": "Installed",
+			"viewFull": "View full changelog",
+			"openIssue": "Open an issue"
 		},
 		"developer": {
 			"title": "Developer",
