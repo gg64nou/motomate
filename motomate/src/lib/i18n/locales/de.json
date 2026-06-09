@@ -464,9 +464,16 @@
 						"trackers": "Durchgeführt",
 						"period": "Zeitraum",
 						"attached": "Beigefuegt",
-						"seeFollowingPage": "Siehe naechste Seite",
-						"seeFollowingPages": "Siehe naechste {count} Seiten",
-						"fileNotEmbeddable": "Datei nicht in PDF einbettbar"
+						"financeSummary": "Ausgabenuebersicht",
+						"financeTotal": "Gesamt",
+						"financeNoData": "Keine Ausgaben in diesem Zeitraum.",
+						"catMaintenance": "Wartung",
+						"catParts": "Ersatzteile",
+						"catAccessories": "Zubehoer",
+						"catAdministrative": "Verwaltung",
+						"catFuel": "Kraftstoff",
+						"catOther": "Sonstiges",
+						"documentInApp": "Dieses Dokument ist in Ihrer MotoMate-Dokumentenbibliothek verfuegbar."
 					}
 				}
 			},

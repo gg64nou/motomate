@@ -464,9 +464,16 @@
 						"trackers": "Realizado",
 						"period": "Periodo",
 						"attached": "Anexado",
-						"seeFollowingPage": "Ver pagina seguinte",
-						"seeFollowingPages": "Ver as {count} paginas seguintes",
-						"fileNotEmbeddable": "Ficheiro nao incorporavel no PDF"
+						"financeSummary": "Resumo de despesas",
+						"financeTotal": "Total",
+						"financeNoData": "Nenhum registo de despesas neste periodo.",
+						"catMaintenance": "Manutencao",
+						"catParts": "Pecas",
+						"catAccessories": "Acessorios",
+						"catAdministrative": "Administrativo",
+						"catFuel": "Combustivel",
+						"catOther": "Outros",
+						"documentInApp": "Este documento esta disponivel na sua biblioteca de documentos MotoMate."
 					}
 				}
 			},

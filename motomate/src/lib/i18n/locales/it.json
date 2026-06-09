@@ -465,9 +465,16 @@
 						"trackers": "Eseguito",
 						"period": "Periodo",
 						"attached": "Allegato",
-						"seeFollowingPage": "Vedi pagina successiva",
-						"seeFollowingPages": "Vedi le {count} pagine seguenti",
-						"fileNotEmbeddable": "File non incorporabile nel PDF"
+						"financeSummary": "Riepilogo spese",
+						"financeTotal": "Totale",
+						"financeNoData": "Nessuna spesa registrata in questo periodo.",
+						"catMaintenance": "Manutenzione",
+						"catParts": "Ricambi",
+						"catAccessories": "Accessori",
+						"catAdministrative": "Amministrativo",
+						"catFuel": "Carburante",
+						"catOther": "Altro",
+						"documentInApp": "Questo documento e disponibile nella tua libreria documenti MotoMate."
 					}
 				}
 			},

@@ -37,9 +37,9 @@
 				const trimmed = line.trim();
 				if (!trimmed.startsWith('- ')) continue;
 				const text = trimmed.slice(2).trim();
-				const colonIdx = text.indexOf(': ');
-				if (colonIdx !== -1) {
-					entries.push({ category: text.slice(0, colonIdx), text: text.slice(colonIdx + 2) });
+				const seperatorId = text.indexOf(': ');
+				if (seperatorId !== -1) {
+					entries.push({ category: text.slice(0, seperatorId), text: text.slice(seperatorId + 2) });
 				} else {
 					entries.push({ category: null, text });
 				}
@@ -115,11 +115,8 @@
 											class="issue-link">(#{seg.number})</a
 										>
 									{:else if seg.type === 'link'}
-										<a
-											href={seg.href}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="inline-link">{seg.text}</a
+										<a href={seg.href} target="_blank" rel="noopener noreferrer" class="inline-link"
+											>{seg.text}</a
 										>
 									{:else}
 										{seg.value}

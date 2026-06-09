@@ -3,13 +3,16 @@
 ## 0.3.0
 
 - Added 'Developer' tab in the profile page, allowing you to setup access keys for the REST API
+- Added 'Finance' data to the pdf export functionality, meaning you can export financial data in the printable maintenance report
 - Fix: normalized errors on the login/register forms, these are now translated (#40)
-- The dashboard now shows which vehicle has overdue or upcoming maintenance when more than three items are waiting, and links you directly to that vehicle's maintenance page
+- Fix: dashboard now shows which vehicle has overdue/upcoming maintenance when more than three items are waiting and forwards on click to right vehicle
 - Fix: due and overdue maintenance cards now stack correctly on small screens, keeping the action button reachable
 - Fix: activity details on the dashboard no longer clip on narrow screens
 - Fix: workflow last-run dates can now be tapped to expand on small screens
 - Fix: vehicle cover images are now only accessible to the vehicle's owner
 - Fix: the server now requires AUTH_SECRET to be set at startup and warns if open registration is left enabled on an active instance
+- Fix: the pdf export for vehicles now has less dependencies, uses proper (number) formatting and consistent styling
+- Security: `AUTH_SECRET` is now required as environment variable
 
 ## 0.2.5
 

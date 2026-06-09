@@ -453,9 +453,16 @@
 						"trackers": "Serviced",
 						"period": "Period",
 						"attached": "Attached",
-						"seeFollowingPage": "See following page",
-						"seeFollowingPages": "See following {count} pages",
-						"fileNotEmbeddable": "File not embeddable in PDF"
+						"financeSummary": "Expense Summary",
+						"financeTotal": "Total",
+						"financeNoData": "No expense records in this period.",
+						"catMaintenance": "Maintenance",
+						"catParts": "Parts",
+						"catAccessories": "Accessories",
+						"catAdministrative": "Administrative",
+						"catFuel": "Fuel",
+						"catOther": "Other",
+						"documentInApp": "This document is available in your MotoMate document library."
 					}
 				}
 			},

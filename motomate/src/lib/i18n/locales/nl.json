@@ -464,9 +464,16 @@
 						"trackers": "Uitgevoerd",
 						"period": "Periode",
 						"attached": "Bijgevoegd",
-						"seeFollowingPage": "Zie volgende pagina",
-						"seeFollowingPages": "Zie volgende {count} paginas",
-						"fileNotEmbeddable": "Bestand niet insluitbaar in PDF"
+						"financeSummary": "Uitgavenoverzicht",
+						"financeTotal": "Totaal",
+						"financeNoData": "Geen uitgaven gevonden in deze periode.",
+						"catMaintenance": "Onderhoud",
+						"catParts": "Onderdelen",
+						"catAccessories": "Accessoires",
+						"catAdministrative": "Administratief",
+						"catFuel": "Brandstof",
+						"catOther": "Overig",
+						"documentInApp": "Dit document is beschikbaar in uw MotoMate-documentenbibliotheek."
 					}
 				}
 			},
