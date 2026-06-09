@@ -110,7 +110,9 @@
 				{/each}
 				{#each hiddenByVehicle as group (group.vehicleId)}
 					<a href="/vehicles/{group.vehicleId}/maintenance" class="attention-overflow">
-						{$_('dashboard.attention.moreOnVehicle', { values: { count: group.count, vehicleName: group.vehicleName } })}
+						{$_('dashboard.attention.moreOnVehicle', {
+							values: { count: group.count, vehicleName: group.vehicleName }
+						})}
 					</a>
 				{/each}
 			</div>
