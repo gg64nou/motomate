@@ -441,7 +441,8 @@
 						"desc": "Select what to include in the report. Your preferences are saved for next time.",
 						"download": "Download PDF",
 						"downloading": "Downloading...",
-						"cancel": "Cancel"
+						"cancel": "Cancel",
+						"includeFinance": "Include expense summary"
 					},
 					"pdf": {
 						"generatedOn": "Generated on",

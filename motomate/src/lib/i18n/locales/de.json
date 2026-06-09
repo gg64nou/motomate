@@ -452,7 +452,8 @@
 						"desc": "Wähle aus, was du in den Bericht aufnehmen möchtest. Wir speichern deine Einstellungen für das nächste Mal.",
 						"download": "PDF herunterladen",
 						"downloading": "Wird geladen...",
-						"cancel": "Abbrechen"
+						"cancel": "Abbrechen",
+						"includeFinance": "Kostenübersicht einbeziehen"
 					},
 					"pdf": {
 						"generatedOn": "Erstellt am",

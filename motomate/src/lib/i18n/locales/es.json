@@ -452,7 +452,8 @@
 						"desc": "Selecciona lo que quieres incluir en el informe. Guardamos tus preferencias para la próxima vez.",
 						"download": "Descargar PDF",
 						"downloading": "Descargando...",
-						"cancel": "Cancelar"
+						"cancel": "Cancelar",
+						"includeFinance": "Incluir resumen de gastos"
 					},
 					"pdf": {
 						"generatedOn": "Generado el",

@@ -452,7 +452,8 @@
 						"desc": "Selecteer wat je wil opnemen in het rapport. We slaan jouw voorkeuren op voor de volgende keer.",
 						"download": "PDF downloaden",
 						"downloading": "Bezig...",
-						"cancel": "Annuleren"
+						"cancel": "Annuleren",
+						"includeFinance": "Financieel overzicht meenemen"
 					},
 					"pdf": {
 						"generatedOn": "Gegenereerd op",

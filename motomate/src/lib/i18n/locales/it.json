@@ -453,7 +453,8 @@
 						"desc": "Seleziona cosa vuoi includere nel rapporto. Le tue preferenze vengono salvate per la prossima volta.",
 						"download": "Scarica PDF",
 						"downloading": "Download...",
-						"cancel": "Annulla"
+						"cancel": "Annulla",
+						"includeFinance": "Includi riepilogo spese"
 					},
 					"pdf": {
 						"generatedOn": "Generato il",

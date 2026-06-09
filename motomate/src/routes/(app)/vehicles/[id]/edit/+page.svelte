@@ -29,6 +29,7 @@
 	let excludedTrackerIds = $state(
 		untrack(() => new Set<string>(data.reportExcludedTrackerIds ?? []))
 	);
+	let includeFinance = $state(true);
 	let reportDownloading = $state(false);
 
 	async function handleReportDownload() {
@@ -41,7 +42,8 @@
 				page_prefs: { maintenance_report_pdf: { [data.vehicle.id]: excluded } }
 			})
 		});
-		window.location.href = `/api/vehicles/${data.vehicle.id}/report`;
+		const url = `/api/vehicles/${data.vehicle.id}/report${includeFinance ? '' : '?noFinance'}`;
+		window.location.href = url;
 		reportDownloading = false;
 		showReportModal = false;
 	}
@@ -470,6 +472,11 @@
 			</li>
 		{/each}
 	</ul>
+	<div class="report-section-divider"></div>
+	<label class="tracker-check-label">
+		<input type="checkbox" bind:checked={includeFinance} />
+		{$_('vehicle.edit.settings.report.modal.includeFinance')}
+	</label>
 	{#snippet footer()}
 		<button type="button" class="btn-ghost" onclick={() => (showReportModal = false)}>
 			{$_('vehicle.edit.settings.report.modal.cancel')}
@@ -782,5 +789,10 @@
 		accent-color: var(--accent);
 		cursor: pointer;
 		flex-shrink: 0;
+	}
+
+	.report-section-divider {
+		border-top: 1px solid var(--border);
+		margin: var(--space-3) 0;
 	}
 </style>

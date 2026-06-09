@@ -452,7 +452,8 @@
 						"desc": "Sélectionne ce que tu veux inclure dans le rapport. Tes préférences sont sauvegardées pour la prochaine fois.",
 						"download": "Télécharger le PDF",
 						"downloading": "Chargement...",
-						"cancel": "Annuler"
+						"cancel": "Annuler",
+						"includeFinance": "Inclure le résumé des dépenses"
 					},
 					"pdf": {
 						"generatedOn": "Généré le",
