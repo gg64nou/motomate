@@ -10,7 +10,7 @@
 	import Toast from '$lib/components/ui/Toast.svelte';
 	import ShortcutsModal from '$lib/components/ui/ShortcutsModal.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { quickAdd } from '$lib/stores/quickAdd.js';
+	import { quickAdd } from '$lib/stores/quickAdd.svelte.js';
 	import { dicebearUri } from '$lib/utils/dicebear.js';
 	import { resolveTheme, readStoredTheme } from '$lib/utils/theme.js';
 
@@ -88,20 +88,15 @@
 		if (quickAddOpen) tick().then(() => quickAddSheetEl?.focus());
 	});
 
-	// Sync local state with store
 	$effect(() => {
-		const unsub = quickAdd.subscribe((s) => {
-			if (s.open && s.vehicleId) {
-				// Store was triggered from a child page
-				const vehicle = data.vehicles.find((v: NavVehicle) => v.id === s.vehicleId);
-				if (vehicle) {
-					selectedVehicle = vehicle;
-					quickAddStep = 'type';
-					quickAddOpen = true;
-				}
+		if (quickAdd.isOpen && quickAdd.vehicleId) {
+			const vehicle = data.vehicles.find((v: NavVehicle) => v.id === quickAdd.vehicleId);
+			if (vehicle) {
+				selectedVehicle = vehicle;
+				quickAddStep = 'type';
+				quickAddOpen = true;
 			}
-		});
-		return unsub;
+		}
 	});
 
 	function openQuickAdd() {
@@ -124,6 +119,7 @@
 		quickAddOpen = false;
 		quickAddStep = 'vehicle';
 		selectedVehicle = null;
+		quickAdd.close();
 	}
 
 	function quickAddNavigate(type: 'service' | 'odometer' | 'note' | 'finance') {

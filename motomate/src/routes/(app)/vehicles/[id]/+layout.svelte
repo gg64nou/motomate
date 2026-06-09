@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page, navigating } from '$app/stores';
+	import { page, navigating } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { tick } from 'svelte';
@@ -99,7 +99,7 @@
 	]);
 
 	const activeTabId = $derived(
-		tabs.findLast((t) => $page.url.pathname.startsWith(t.href) || $page.url.pathname === t.href)
+		tabs.findLast((t) => page.url.pathname.startsWith(t.href) || page.url.pathname === t.href)
 			?.id ?? 'timeline'
 	);
 
@@ -227,7 +227,7 @@
 		</nav>
 	</div>
 
-	<div class="vehicle-content" class:loading={$navigating}>
+	<div class="vehicle-content" class:loading={navigating.to !== null}>
 		{@render children()}
 	</div>
 

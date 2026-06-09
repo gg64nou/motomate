@@ -10,7 +10,7 @@
 	const onboardingDone = $derived((data as any).user?.settings?.onboarding_done ?? false);
 	const favoriteVehicleId = $derived((data as any).user?.settings?.favorite_vehicle ?? null);
 
-	const sortedVehicles = $derived(() => {
+	const sortedVehicles = $derived.by(() => {
 		const list = [...data.vehicles];
 		if (favoriteVehicleId) {
 			list.sort((a, b) => {
@@ -64,7 +64,7 @@
 	</div>
 {:else}
 	<div class="vehicle-list">
-		{#each sortedVehicles() as vehicle}
+		{#each sortedVehicles as vehicle (vehicle.id)}
 			<div class="vehicle-row">
 				<VehicleCard
 					{vehicle}

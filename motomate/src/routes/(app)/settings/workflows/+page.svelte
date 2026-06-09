@@ -6,7 +6,7 @@
 	import { _, waitLocale } from '$lib/i18n';
 	import { formatDateTime, formatDateLong } from '$lib/utils/format';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { toasts } from '$lib/stores/toasts.js';
+	import { toasts } from '$lib/stores/toasts.svelte.js';
 
 	let { data } = $props<{ data: PageData }>();
 

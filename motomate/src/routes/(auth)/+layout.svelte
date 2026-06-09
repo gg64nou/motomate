@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import { locale } from '$lib/i18n';
 	import { setContext, untrack } from 'svelte';
@@ -95,7 +95,7 @@
 	const CurrentThemeIcon = $derived(themes.find((t) => t.id === theme)?.icon);
 
 	$effect(() => {
-		const urlTheme = $page.url.searchParams.get('theme');
+		const urlTheme = page.url.searchParams.get('theme');
 		if (urlTheme && ['light', 'dark', 'system'].includes(urlTheme)) {
 			theme = urlTheme as 'light' | 'dark' | 'system';
 		} else {

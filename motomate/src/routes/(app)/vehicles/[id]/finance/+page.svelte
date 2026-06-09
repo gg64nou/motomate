@@ -2,14 +2,14 @@
 	import type { PageData } from './$types';
 	import { untrack, tick } from 'svelte';
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { replaceState, beforeNavigate } from '$app/navigation';
 	import { formatCurrency, formatDateShort, formatMeasurement } from '$lib/utils/format.js';
 	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
-	import { toasts } from '$lib/stores/toasts.js';
+	import { toasts } from '$lib/stores/toasts.svelte.js';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { _, waitLocale } from '$lib/i18n';
-	import { quickAdd } from '$lib/stores/quickAdd.js';
+	import { quickAdd } from '$lib/stores/quickAdd.svelte.js';
 
 	let {
 		data,
@@ -23,18 +23,18 @@
 
 	// Handle ?quick=finance from mobile FAB quick-add flow
 	$effect(() => {
-		if ($page.url.searchParams.get('quick') === 'finance') {
+		if (page.url.searchParams.get('quick') === 'finance') {
 			showForm = true;
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.delete('quick');
-			replaceState(url, $page.state);
+			replaceState(url, page.state);
 		}
 	});
 
 	// Handle ?edit=txid; auto-open edit form and highlight the entry
 	let highlightId = $state<string | null>(null);
 	$effect(() => {
-		const editId = $page.url.searchParams.get('edit');
+		const editId = page.url.searchParams.get('edit');
 		if (!editId) return;
 		const tx = data.recentTransactions.find((t) => t.id === editId && t.type === 'finance');
 		if (tx) {
@@ -48,9 +48,9 @@
 					?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			});
 		}
-		const url = new URL($page.url);
+		const url = new URL(page.url);
 		url.searchParams.delete('edit');
-		replaceState(url, $page.state);
+		replaceState(url, page.state);
 	});
 
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
@@ -310,7 +310,6 @@
 				node.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 			});
 		}
-		return {};
 	}
 </script>
 
@@ -356,7 +355,7 @@
 						attachType = 'other';
 					};
 				}}
-				use:scrollOnMount
+				{@attach scrollOnMount}
 				class="add-form"
 			>
 				<div class="form-header">
@@ -575,7 +574,7 @@
 						attachType = 'other';
 					};
 				}}
-				use:scrollOnMount
+				{@attach scrollOnMount}
 				class="add-form"
 			>
 				<div class="form-header">
@@ -999,7 +998,7 @@
 					</div>
 
 					{#if editingEntry?.id === tx.id && tx.type === 'finance'}
-						<div class="entry-edit-form" use:scrollOnMount>
+						<div class="entry-edit-form" {@attach scrollOnMount}>
 							<form
 								method="POST"
 								action="?/editTransaction"

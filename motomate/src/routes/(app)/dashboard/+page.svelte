@@ -90,7 +90,7 @@
 		<section class="dash-section">
 			<h2 class="section-eyebrow">{$_('dashboard.sections.needsAttention')}</h2>
 			<div class="attention-list">
-				{#each visibleAttention as tracker}
+				{#each visibleAttention as tracker (tracker.id)}
 					<AttentionCard
 						status={tracker.status}
 						vehicleName={tracker.vehicle.name}
@@ -116,7 +116,7 @@
 				<a href="/vehicles" class="section-link">{$_('dashboard.viewAll')}</a>
 			</div>
 			<div class="entry-list">
-				{#each data.vehicles as vehicle}
+				{#each data.vehicles as vehicle (vehicle.id)}
 					{@const defaultEmoji =
 						vehicle.type === 'scooter' ? '🛵' : vehicle.type === 'bike' ? '🚲' : '🏍'}
 					{@const avatarEmoji = vehicle.meta?.avatar_emoji ?? defaultEmoji}
@@ -163,7 +163,7 @@
 		<section class="dash-section">
 			<h2 class="section-eyebrow">{$_('dashboard.sections.recentActivity')}</h2>
 			<div class="entry-list">
-				{#each data.recentLogs as log}
+				{#each data.recentLogs as log (log.id)}
 					<a href="/vehicles/{log.vehicle_id}/maintenance" class="entry">
 						<div class="entry-body">
 							<div class="entry-title">

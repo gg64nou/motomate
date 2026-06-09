@@ -4,7 +4,7 @@
 	import type { PageData } from './$types';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import Modal from '$lib/components/ui/Modal.svelte';
-	import { toasts } from '$lib/stores/toasts.js';
+	import { toasts } from '$lib/stores/toasts.svelte.js';
 	import { _, waitLocale } from '$lib/i18n';
 	import { getMeasurementUnitTranslationKey } from '$lib/utils/measurement.js';
 

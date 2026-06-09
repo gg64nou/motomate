@@ -3,11 +3,11 @@
 	import { enhance } from '$app/forms';
 	import { goto, beforeNavigate, afterNavigate } from '$app/navigation';
 	import { tick } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { PageData } from './$types';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
-	import { toasts } from '$lib/stores/toasts.js';
+	import { toasts } from '$lib/stores/toasts.svelte.js';
 	import { _, waitLocale } from '$lib/i18n';
 
 	let {
@@ -32,12 +32,12 @@
 
 	let deletingDoc = $state<{ id: string; name: string; storage_key: string } | null>(null);
 
-	let searchQuery = $state($page.url.searchParams.get('search') ?? '');
-	let categoryFilter = $state<string>($page.url.searchParams.get('type') ?? 'all');
+	let searchQuery = $state(page.url.searchParams.get('search') ?? '');
+	let categoryFilter = $state<string>(page.url.searchParams.get('type') ?? 'all');
 	let sortBy = $state<'newest' | 'oldest' | 'name'>(
 		untrack(
 			() =>
-				($page.url.searchParams.get('sort') as 'newest' | 'oldest' | 'name') ??
+				(page.url.searchParams.get('sort') as 'newest' | 'oldest' | 'name') ??
 				data.page_prefs?.sortBy ??
 				'newest'
 		)
@@ -99,7 +99,7 @@
 			_restoreFocusEl = focused;
 			_restoreCursorPos = focused.selectionStart ?? null;
 		}
-		const u = new URL($page.url);
+		const u = new URL(page.url);
 		u.searchParams.set('page', '1');
 		if (searchQuery.trim()) u.searchParams.set('search', searchQuery.trim());
 		else u.searchParams.delete('search');
@@ -200,12 +200,12 @@
 	}
 
 	function navTo(p: number) {
-		const u = new URL($page.url);
+		const u = new URL(page.url);
 		u.searchParams.set('page', String(p));
 		goto(u.toString(), { replaceState: false });
 	}
 
-	const highlightId = $derived($page.url.searchParams.get('highlight') ?? null);
+	const highlightId = $derived(page.url.searchParams.get('highlight') ?? null);
 
 	// Display name: user-facing title if set, otherwise original filename
 	function displayName(doc: PageData['docs'][number]): string {

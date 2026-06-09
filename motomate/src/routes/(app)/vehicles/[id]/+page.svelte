@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { replaceState, beforeNavigate } from '$app/navigation';
 	import { untrack } from 'svelte';
 	import type { PageData } from './$types';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import { _, waitLocale } from '$lib/i18n';
-	import { quickAdd } from '$lib/stores/quickAdd.js';
+	import { quickAdd } from '$lib/stores/quickAdd.svelte.js';
 	import {
 		formatDateShort,
 		formatYearMonth,
@@ -101,12 +101,12 @@
 
 	// Handle ?quick= param from the mobile FAB quick-add flow
 	$effect(() => {
-		const quick = $page.url.searchParams.get('quick');
+		const quick = page.url.searchParams.get('quick');
 		if (quick === 'service' || quick === 'odometer' || quick === 'note') {
 			activeForm = quick;
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.delete('quick');
-			replaceState(url, $page.state);
+			replaceState(url, page.state);
 		}
 	});
 
@@ -250,7 +250,7 @@
 		| { kind: 'travel'; date: string; travel: (typeof data.travelEntries)[0] }
 		| { kind: 'finance'; date: string; tx: (typeof data.financeEntries)[0] };
 
-	const allEntries = $derived((): Entry[] => {
+	const allEntries = $derived.by((): Entry[] => {
 		const entries: Entry[] = [];
 		if (filters.service) {
 			entries.push(
@@ -331,11 +331,9 @@
 		});
 	});
 
-	const grouped = $derived((): [string, Entry[]][] => {
+	const grouped = $derived.by((): [string, Entry[]][] => {
 		const map = new Map<string, Entry[]>();
-		// allEntries is already sorted by date desc, created_at desc
-		// Just group by month, preserving that order
-		for (const e of allEntries()) {
+		for (const e of allEntries) {
 			const key = e.date.slice(0, 7);
 			if (!map.has(key)) map.set(key, []);
 			map.get(key)!.push(e);
@@ -1122,7 +1120,7 @@
 		{/if}
 
 		<div class="timeline">
-			{#each grouped() as [ym, entries]}
+			{#each grouped as [ym, entries]}
 				{@const displayEntries = getDisplayEntries(entries, ym)}
 				{@const hiddenCount = getHiddenOdoCount(entries, ym)}
 				<div class="month-group">
