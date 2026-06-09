@@ -92,7 +92,9 @@
 			"title": "Welkom bij MotoMate",
 			"description": "Laten we je eerste voertuig toevoegen en een onderhoudsschema instellen. Duurt ongeveer een minuut.",
 			"submit": "Aan de slag →",
-			"skipWarning": "Vergeet niet om je e-mail en wachtwoord bij te werken in Instellingen → Account voordat je live gaat."
+			"skipWarning": "Vergeet niet om je e-mail en wachtwoord bij te werken in Instellingen → Account voordat je live gaat.",
+			"nameLabel": "Jouw naam",
+			"namePlaceholder": "bijv. Danny"
 		},
 		"type": {
 			"title": "Welk type voertuig?",
@@ -185,7 +187,10 @@
 		"greeting": {
 			"morning": "Goedemorgen",
 			"afternoon": "Goedemiddag",
-			"evening": "Goedenavond"
+			"evening": "Goedenavond",
+			"morningNamed": "Goedemorgen, {name}",
+			"afternoonNamed": "Goedemiddag, {name}",
+			"eveningNamed": "Goedenavond, {name}"
 		},
 		"status": {
 			"overdue": "{count, plural, =1 {1 item achterstallig.} other {# items achterstallig.}}",
@@ -768,7 +773,9 @@
 			"avatarUpdated": "Profielfoto bijgewerkt",
 			"avatarDicebear": "Kies een avatar",
 			"avatarShuffle": "Shufflen",
-			"subtitle": "Taal, valuta en kilometereenheid."
+			"subtitle": "Taal, valuta en kilometereenheid.",
+			"displayName": "Weergavenaam",
+			"displayNamePlaceholder": "Jouw naam"
 		},
 		"account": {
 			"title": "Account",

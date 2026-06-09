@@ -17,6 +17,9 @@
 	type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 	let step = $state<Step>(1);
 
+	// User identity
+	let displayName = $state('');
+
 	// Vehicle form state
 	let vehicleType = $state<'motorcycle' | 'scooter' | 'bike' | 'other'>('motorcycle');
 	let name = $state('');
@@ -135,6 +138,19 @@
 				<div class="step-icon step-icon--welcome" aria-hidden="true">🏍</div>
 				<h1 class="step-title">{$_('onboarding.welcome.title')}</h1>
 				<p class="step-desc">{$_('onboarding.welcome.description')}</p>
+				<label class="field field--wide">
+					<span class="field-label">
+						{$_('onboarding.welcome.nameLabel')}
+						<span class="optional">{$_('common.optional')}</span>
+					</span>
+					<input
+						bind:value={displayName}
+						type="text"
+						maxlength="80"
+						placeholder={$_('onboarding.welcome.namePlaceholder')}
+						class="input"
+					/>
+				</label>
 				<button class="btn-primary" onclick={() => (step = 2)}
 					>{$_('onboarding.welcome.submit')}</button
 				>
@@ -363,6 +379,7 @@
 				</div>
 
 				<form method="POST" action="?/complete" style="display:contents">
+					<input type="hidden" name="display_name" value={displayName} />
 					<input type="hidden" name="vehicle_type" value={vehicleType} />
 					<input type="hidden" name="name" value={name} />
 					<input type="hidden" name="make" value={make} />
@@ -455,10 +472,21 @@
 		flex-direction: column;
 		gap: 0.375rem;
 	}
+	.field--wide {
+		width: 100%;
+		max-width: 320px;
+	}
 	.field-label {
 		font-size: 0.875rem;
 		font-weight: 500;
 		color: var(--text-muted);
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+	}
+	.optional {
+		font-weight: 400;
+		color: var(--text-subtle);
 	}
 	.req {
 		color: var(--status-overdue);

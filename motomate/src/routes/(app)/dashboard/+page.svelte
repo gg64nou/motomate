@@ -15,12 +15,19 @@
 	const _currency = $derived(data.user.settings.currency ?? 'EUR');
 
 	const hour = new Date().getHours();
+	const displayName = $derived(data.user.settings.display_name ?? null);
 	const greeting = $derived(
-		hour < 12
-			? $_('dashboard.greeting.morning')
-			: hour < 18
-				? $_('dashboard.greeting.afternoon')
-				: $_('dashboard.greeting.evening')
+		displayName
+			? hour < 12
+				? $_('dashboard.greeting.morningNamed', { values: { name: displayName } })
+				: hour < 18
+					? $_('dashboard.greeting.afternoonNamed', { values: { name: displayName } })
+					: $_('dashboard.greeting.eveningNamed', { values: { name: displayName } })
+			: hour < 12
+				? $_('dashboard.greeting.morning')
+				: hour < 18
+					? $_('dashboard.greeting.afternoon')
+					: $_('dashboard.greeting.evening')
 	);
 
 	type TrackerItem = (typeof data.overdueTrackers)[number];

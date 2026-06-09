@@ -32,11 +32,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	savePrefs: async ({ request, locals }) => {
 		const data = Object.fromEntries(await request.formData());
+		const rawName = String(data.display_name ?? '').trim();
 		await updateUserSettings(locals.user!.id, {
 			theme: data.theme as 'system' | 'light' | 'dark',
 			currency: String(data.currency ?? 'EUR'),
 			odometer_unit: data.odometer_unit as OdometerUnit,
-			locale: String(data.locale ?? 'en')
+			locale: String(data.locale ?? 'en'),
+			display_name: rawName || null
 		});
 		return { savedPrefs: true };
 	},

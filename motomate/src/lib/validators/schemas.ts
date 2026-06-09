@@ -104,6 +104,7 @@ export const UserSettingsSchema = z.object({
 	currency: z.string().length(3).default('EUR'),
 	odometer_unit: DistanceUnitSchema.default(DEFAULT_ODOMETER_UNIT),
 	locale: z.string().default('en'),
+	display_name: z.string().min(1).max(80).trim().nullable().optional(),
 	notification_channels: NotificationChannelsSchema,
 	favorite_vehicle: z.string().nonempty().max(64).nullable().optional(),
 	avatar_key: z.string().max(500).nullable().optional(),

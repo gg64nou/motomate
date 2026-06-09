@@ -6,7 +6,7 @@ import {
 	updateTrackerAfterService
 } from '$lib/db/repositories/maintenance.js';
 import { createServiceLog } from '$lib/db/repositories/service-logs.js';
-import { markOnboardingDone } from '$lib/db/repositories/users.js';
+import { markOnboardingDone, updateUserSettings } from '$lib/db/repositories/users.js';
 import { seedPresetRulesForUser } from '$lib/db/repositories/workflow.js';
 import { locales as localeMap } from '$lib/i18n/locales.js';
 import {
@@ -119,6 +119,10 @@ export const actions: Actions = {
 			await insertOdometerLog(vehicle.id, userId, vehicleInput.current_odometer);
 		}
 
+		const rawDisplayName = String(data.display_name ?? '').trim();
+		if (rawDisplayName && rawDisplayName.length <= 80) {
+			await updateUserSettings(userId, { display_name: rawDisplayName });
+		}
 		await markOnboardingDone(userId);
 		await seedPresetRulesForUser(userId);
 		redirect(302, `/vehicles/${vehicle.id}`);

@@ -92,7 +92,9 @@
 			"title": "Willkommen bei MotoMate",
 			"description": "Fügen Sie Ihr erstes Fahrzeug hinzu und richten Sie einen Wartungsplan ein. Dauert etwa eine Minute.",
 			"submit": "Loslegen →",
-			"skipWarning": "Denken Sie daran, Ihre E-Mail und Ihr Passwort in Einstellungen → Konto zu aktualisieren, bevor Sie live gehen."
+			"skipWarning": "Denken Sie daran, Ihre E-Mail und Ihr Passwort in Einstellungen → Konto zu aktualisieren, bevor Sie live gehen.",
+			"nameLabel": "Dein Name",
+			"namePlaceholder": "z.B. Max"
 		},
 		"type": {
 			"title": "Welche Fahrzeugart?",
@@ -185,7 +187,10 @@
 		"greeting": {
 			"morning": "Guten Morgen",
 			"afternoon": "Guten Tag",
-			"evening": "Guten Abend"
+			"evening": "Guten Abend",
+			"morningNamed": "Guten Morgen, {name}",
+			"afternoonNamed": "Guten Tag, {name}",
+			"eveningNamed": "Guten Abend, {name}"
 		},
 		"status": {
 			"overdue": "{count, plural, =1 {1 Element überfällig.} other {# Elemente überfällig.}}",
@@ -768,7 +773,9 @@
 			"avatarUpdated": "Profilbild aktualisiert",
 			"avatarDicebear": "Avatar wählen",
 			"avatarShuffle": "Neu mischen",
-			"subtitle": "Sprache, Währung und Kilometereinheit."
+			"subtitle": "Sprache, Währung und Kilometereinheit.",
+			"displayName": "Anzeigename",
+			"displayNamePlaceholder": "Dein Name"
 		},
 		"account": {
 			"title": "Konto",

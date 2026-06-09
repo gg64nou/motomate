@@ -37,6 +37,7 @@ export type UserSettings = {
 	currency: string; // 'EUR', 'GBP', etc.
 	odometer_unit: OdometerUnit;
 	locale: string;
+	display_name?: string | null;
 	notification_channels?: NotificationChannels;
 	favorite_vehicle?: string | null;
 	avatar_key?: string | null;

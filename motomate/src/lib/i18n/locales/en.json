@@ -93,7 +93,9 @@
 			"title": "Welcome to MotoMate",
 			"description": "Let's add your first vehicle and set up a maintenance schedule. Takes about a minute.",
 			"submit": "Get started →",
-			"skipWarning": "Remember to update your email and password in Settings → Account before going live."
+			"skipWarning": "Remember to update your email and password in Settings → Account before going live.",
+			"nameLabel": "Your name",
+			"namePlaceholder": "e.g. Danny"
 		},
 		"type": {
 			"title": "What kind of vehicle?",
@@ -186,7 +188,10 @@
 		"greeting": {
 			"morning": "Good morning",
 			"afternoon": "Good afternoon",
-			"evening": "Good evening"
+			"evening": "Good evening",
+			"morningNamed": "Good morning, {name}",
+			"afternoonNamed": "Good afternoon, {name}",
+			"eveningNamed": "Good evening, {name}"
 		},
 		"status": {
 			"overdue": "{count, plural, =1 {1 item overdue.} other {# items overdue.}}",
@@ -780,7 +785,9 @@
 			"avatarUpdated": "Profile picture updated",
 			"avatarDicebear": "Choose an avatar",
 			"avatarShuffle": "Shuffle",
-			"subtitle": "Language, currency, and odometer unit."
+			"subtitle": "Language, currency, and odometer unit.",
+			"displayName": "Display name",
+			"displayNamePlaceholder": "Your name"
 		},
 		"account": {
 			"title": "Account",

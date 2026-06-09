@@ -4,6 +4,7 @@
 
 - Added 'Developer' tab in the profile page, allowing you to setup access keys for the REST API
 - Added 'Finance' data to the pdf export functionality, meaning you can export financial data in the printable maintenance report
+- You can now set your name in your profile, which should make the experience a tad more personal
 - Fix: normalized errors on the login/register forms, these are now translated (#40)
 - Fix: dashboard now shows which vehicle has overdue/upcoming maintenance when more than three items are waiting and forwards on click to right vehicle
 - Fix: due and overdue maintenance cards now stack correctly on small screens, keeping the action button reachable

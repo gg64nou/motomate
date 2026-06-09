@@ -92,7 +92,9 @@
 			"title": "Benvenuto su MotoMate",
 			"description": "Aggiungiamo il tuo primo veicolo e impostiamo un programma di manutenzione. Richiede circa un minuto.",
 			"submit": "Inizia →",
-			"skipWarning": "Ricorda di aggiornare la tua email e password in Impostazioni → Account prima di attivarti."
+			"skipWarning": "Ricorda di aggiornare la tua email e password in Impostazioni → Account prima di attivarti.",
+			"nameLabel": "Il tuo nome",
+			"namePlaceholder": "Es. Marco"
 		},
 		"type": {
 			"title": "Che tipo di veicolo?",
@@ -185,7 +187,10 @@
 		"greeting": {
 			"morning": "Buongiorno",
 			"afternoon": "Buon pomeriggio",
-			"evening": "Buonasera"
+			"evening": "Buonasera",
+			"morningNamed": "Buongiorno, {name}",
+			"afternoonNamed": "Buon pomeriggio, {name}",
+			"eveningNamed": "Buonasera, {name}"
 		},
 		"status": {
 			"overdue": "{count, plural, =1 {1 elemento in ritardo.} other {# elementi in ritardo.}}",
@@ -769,7 +774,9 @@
 			"avatarUpdated": "Foto del profilo aggiornata",
 			"avatarDicebear": "Scegli un avatar",
 			"avatarShuffle": "Mescola",
-			"subtitle": "Lingua, valuta e unità chilometrica."
+			"subtitle": "Lingua, valuta e unità chilometrica.",
+			"displayName": "Nome visualizzato",
+			"displayNamePlaceholder": "Il tuo nome"
 		},
 		"account": {
 			"title": "Account",
