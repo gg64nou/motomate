@@ -1,4 +1,5 @@
 import PDFDocumentClass from 'pdfkit';
+import { PDFDocument } from 'pdf-lib';
 import { readFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import type {
@@ -192,6 +193,10 @@ function ensureSpace(doc: PDFDoc, height: number): void {
 
 function isImage(mime: string): boolean {
 	return ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'].includes(mime);
+}
+
+function isPdf(mime: string): boolean {
+	return mime === 'application/pdf';
 }
 
 function flushDoc(doc: PDFDoc): Promise<Buffer> {
@@ -412,14 +417,10 @@ function drawServiceLogs(
 				.text(refs, ML, cy, { width: CW, align: 'right', lineBreak: false });
 		}
 
-		cy = doc.y + 5;
+		cy += 14; // 9pt line + gap; lineBreak:false doesn't advance doc.y
 
 		if (notesBody) {
-			doc
-				.fontSize(9)
-				.font(FB)
-				.fillColor(MUTED)
-				.text(`${t.notes}: ${notesBody}`, ML, cy, { width: CW });
+			doc.fontSize(9).font(FB).fillColor(MUTED).text(notesBody, ML, cy, { width: CW });
 			cy = doc.y + 2;
 		}
 
@@ -506,7 +507,6 @@ function drawFinanceSummary(
 	}
 
 	const COL_LABEL = ML;
-	const COL_TOTAL = W - ML;
 
 	for (const cat of CAT_ORDER) {
 		const entry = byCategory.get(cat);
@@ -694,38 +694,36 @@ export async function buildMaintenanceReport(opts: MaintenanceReportOptions): Pr
 	const addendumEntries: AddendumEntry[] = orderedAttachments.map(({ id, doc: d }) => ({
 		tag: `[A${attachmentIndex.get(id)}]`,
 		doc: d,
-		embeddable: isImage(d.mime_type) && docBuffers.has(id)
+		embeddable: (isImage(d.mime_type) || isPdf(d.mime_type)) && docBuffers.has(id)
 	}));
 	drawAddendumIndex(pdfDoc, addendumEntries, t);
 
 	const contentPageCount = pdfDoc.bufferedPageRange().count;
 	stampFooters(pdfDoc, contentPageCount);
 
-	// Image attachment pages
+	// Attachment pages — images inline, PDFs via pdf-lib merge after flush
+	const pdfCoverPageIndices = new Map<string, number>();
+
 	for (const { id, doc: d } of orderedAttachments) {
 		const tag = `[A${attachmentIndex.get(id)}]`;
 		const title = d.title || d.name;
 
 		pdfDoc.addPage();
+		const pageIdx = pdfDoc.bufferedPageRange().count - 1;
 
-		// Header bar
-		pdfDoc
-			.save()
-			.rect(0, H - 28, W, 28)
-			.fillColor(ACCENT)
-			.fill()
-			.restore();
+		// Header bar at top of page
+		pdfDoc.save().rect(0, 0, W, 28).fillColor(ACCENT).fill().restore();
 		pdfDoc
 			.fontSize(9)
 			.font(FS)
 			.fillColor('#ffffff')
-			.text(`${tag}  ${title}`, ML, H - 20, { lineBreak: false });
+			.text(`${tag}  ${title}`, ML, 8, { lineBreak: false });
 
 		if (isImage(d.mime_type) && docBuffers.has(id)) {
 			try {
 				const buf = docBuffers.get(id)!;
-				const availH = H - 28 - 32;
-				pdfDoc.image(buf, ML, 16, { fit: [CW, availH], align: 'center', valign: 'center' });
+				const availH = H - 28 - 36;
+				pdfDoc.image(buf, ML, 36, { fit: [CW, availH], align: 'center', valign: 'center' });
 			} catch {
 				pdfDoc
 					.fontSize(10)
@@ -733,6 +731,9 @@ export async function buildMaintenanceReport(opts: MaintenanceReportOptions): Pr
 					.fillColor(MUTED)
 					.text(`[Could not render: ${d.name}]`, ML, H / 2);
 			}
+		} else if (isPdf(d.mime_type) && docBuffers.has(id)) {
+			// Stub page — actual PDF pages inserted right after this via pdf-lib
+			pdfCoverPageIndices.set(id, pageIdx);
 		} else {
 			pdfDoc
 				.fontSize(10)
@@ -742,5 +743,27 @@ export async function buildMaintenanceReport(opts: MaintenanceReportOptions): Pr
 		}
 	}
 
-	return flushDoc(pdfDoc);
+	const mainBuffer = await flushDoc(pdfDoc);
+
+	if (pdfCoverPageIndices.size === 0) return mainBuffer;
+
+	// Merge PDF attachment pages in reverse order to preserve indices during insertion
+	const mainDoc = await PDFDocument.load(mainBuffer);
+	const pdfEntries = [...pdfCoverPageIndices.entries()].reverse();
+
+	for (const [id, coverIdx] of pdfEntries) {
+		const buf = docBuffers.get(id)!;
+		try {
+			const attachDoc = await PDFDocument.load(buf);
+			const pages = await mainDoc.copyPages(attachDoc, attachDoc.getPageIndices());
+			let insertAt = coverIdx + 1;
+			for (const page of pages) {
+				mainDoc.insertPage(insertAt++, page);
+			}
+		} catch {
+			// Corrupted or encrypted PDF: stub page remains with header only
+		}
+	}
+
+	return Buffer.from(await mainDoc.save());
 }

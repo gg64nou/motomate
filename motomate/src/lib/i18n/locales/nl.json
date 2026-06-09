@@ -973,7 +973,7 @@
 			"apiKeys": {
 				"title": "API-sleutels",
 				"description": "Maak sleutels aan en beheer ze om de MotoMate API te gebruiken.",
-				"empty": "Nog geen API-sleutels.",
+				"empty": "Je hebt nog geen API-sleutels aangemaakt!",
 				"create": "Sleutel maken",
 				"creating": "Maken...",
 				"nameLabel": "Naam",
