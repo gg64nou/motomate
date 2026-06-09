@@ -596,6 +596,18 @@
 		font-family: var(--font-mono);
 		font-variant-numeric: tabular-nums;
 	}
+	@media (max-width: 540px) {
+		.tracker-card--due .tracker-main,
+		.tracker-card--overdue .tracker-main {
+			flex-direction: column;
+			gap: 0.625rem;
+		}
+		.tracker-card--due .tracker-actions,
+		.tracker-card--overdue .tracker-actions {
+			align-self: flex-end;
+		}
+	}
+
 	.history-cost {
 		color: var(--text-subtle);
 	}
