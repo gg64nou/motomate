@@ -53,6 +53,8 @@ export type VehicleMeta = {
 	displacement_cc?: number;
 	fuel_type?: 'petrol' | 'diesel' | 'electric' | 'hybrid';
 	avatar_emoji?: string;
+	pinned_doc_id?: string;
+	pinned_doc_label?: string;
 };
 
 export type PartNumbers = string[];

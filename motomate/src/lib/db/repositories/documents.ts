@@ -86,6 +86,12 @@ export async function getDocumentsByIds(ids: string[], userId: string): Promise<
 	}) as Promise<Document[]>;
 }
 
+export async function getDocumentById(id: string, userId: string): Promise<Document | undefined> {
+	return db.query.documents.findFirst({
+		where: and(eq(documents.id, id), eq(documents.user_id, userId))
+	});
+}
+
 export async function getRouteDocumentsByVehicle(
 	vehicleId: string,
 	userId: string

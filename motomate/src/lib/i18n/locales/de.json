@@ -246,6 +246,21 @@
 				"finance": "Finanzen",
 				"travels": "Fahrten",
 				"settings": "Einstellungen"
+			},
+			"pinnedDoc": {
+				"pin": "Dokument anheften",
+				"change": "Angeheftetes Dokument andern",
+				"view": "In Dokumenten anzeigen",
+				"openFile": "Datei offnen",
+				"viewInList": "In Liste anzeigen",
+				"editPin": "Anheftung bearbeiten",
+				"openNewTab": "In neuem Tab offnen",
+				"remove": "Anheftung entfernen",
+				"noDocs": "Noch keine Dokumente hochgeladen.",
+				"actions": "Dokumentaktionen",
+				"noResults": "Keine Ergebnisse fur \"{q}\"",
+				"searchPlaceholder": "Dokumente suchen...",
+				"customLabel": "Benutzerdefiniertes Label"
 			}
 		},
 		"detail": {

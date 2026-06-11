@@ -2294,10 +2294,11 @@
 		color: var(--status-due);
 	}
 	.upcoming-target {
-		font-size: var(--text-xs);
+		margin-top: 0.15rem;
+		font-size: var(--text-sm);
 		color: var(--text-subtle);
-		margin-top: 0.25rem;
-		font-family: var(--font-mono);
+		font-weight: 400;
+		font-family: var(--font-display);
 		font-variant-numeric: tabular-nums;
 	}
 	.upcoming-log-link {

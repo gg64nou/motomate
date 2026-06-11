@@ -5,6 +5,7 @@
 - Added 'Developer' tab in the profile page, allowing you to setup access keys for the REST API
 - Added 'Finance' data to the pdf export functionality, meaning you can export financial data in the printable maintenance report
 - You can now set your name in your profile, which should make the experience a tad more personal
+- You can now pin a document for quick-reference per vehicle, e.g. allowing you to pin your vehicles manual
 - Fix: odometer reminder workflow no longer fires daily once stale, cooldown now matches the configured interval
 - Fix: odometer staleness now checks the last logged odometer entry, not the last time the vehicle record was edited
 - Fix: workflow rules with multiple vehicles now notify each vehicle independently instead of blocking after the first
@@ -17,7 +18,7 @@
 - Fix: vehicle cover images are now only accessible to the vehicle's owner
 - Fix: the server now requires AUTH_SECRET to be set at startup and warns if open registration is left enabled on an active instance
 - Fix: the pdf export for vehicles now has less dependencies, uses proper (number) formatting and consistent styling
-- Security: `AUTH_SECRET` is now required as environment variable
+- Security: `AUTH_SECRET` is now required as environment variable and thus no longer optional
 
 ## 0.2.5
 

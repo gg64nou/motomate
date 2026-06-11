@@ -497,6 +497,21 @@
 				"finance": "Finance",
 				"travels": "Travels",
 				"settings": "Settings"
+			},
+			"pinnedDoc": {
+				"pin": "Pin document",
+				"change": "Change pinned document",
+				"view": "View in documents",
+				"openFile": "Open file",
+				"viewInList": "View in list",
+				"editPin": "Edit pin",
+				"openNewTab": "Open in new tab",
+				"remove": "Remove pin",
+				"noDocs": "No documents uploaded yet.",
+				"actions": "Document actions",
+				"noResults": "No results for \"{q}\"",
+				"searchPlaceholder": "Search documents...",
+				"customLabel": "Custom label"
 			}
 		}
 	},

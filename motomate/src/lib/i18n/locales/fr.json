@@ -246,6 +246,21 @@
 				"finance": "Finances",
 				"settings": "Parametres",
 				"travels": "Voyages"
+			},
+			"pinnedDoc": {
+				"pin": "Epingler un document",
+				"change": "Changer le document epingle",
+				"view": "Voir dans les documents",
+				"openFile": "Ouvrir le fichier",
+				"viewInList": "Voir dans la liste",
+				"editPin": "Modifier l'epingle",
+				"openNewTab": "Ouvrir dans un nouvel onglet",
+				"remove": "Retirer l'epingle",
+				"noDocs": "Aucun document telecharge.",
+				"actions": "Actions sur le document",
+				"noResults": "Aucun resultat pour \"{q}\"",
+				"searchPlaceholder": "Rechercher des documents...",
+				"customLabel": "Libelle personnalise"
 			}
 		},
 		"detail": {

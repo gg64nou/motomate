@@ -246,6 +246,21 @@
 				"finance": "Financieel",
 				"settings": "Instellingen",
 				"travels": "Routes"
+			},
+			"pinnedDoc": {
+				"pin": "Document vastzetten",
+				"change": "Vastgezet document wijzigen",
+				"view": "Bekijken in documenten",
+				"openFile": "Bestand openen",
+				"viewInList": "Bekijken in lijst",
+				"editPin": "Pin bewerken",
+				"openNewTab": "Openen in nieuw tabblad",
+				"remove": "Pin verwijderen",
+				"noDocs": "Nog geen documenten geupload.",
+				"actions": "Documentacties",
+				"noResults": "Geen resultaten voor \"{q}\"",
+				"searchPlaceholder": "Documenten zoeken...",
+				"customLabel": "Aangepast label"
 			}
 		},
 		"detail": {

@@ -139,7 +139,9 @@ export const VehicleMetaSchema = z.object({
 		.optional(),
 	displacement_cc: optPosInt(),
 	fuel_type: z.enum(['petrol', 'diesel', 'electric', 'hybrid']).optional(),
-	avatar_emoji: optStr(10)
+	avatar_emoji: optStr(10),
+	pinned_doc_id: optStr(50),
+	pinned_doc_label: optStr(80)
 });
 
 export const CreateVehicleSchema = z.object({

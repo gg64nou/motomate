@@ -246,6 +246,21 @@
 				"finance": "Finanzas",
 				"settings": "Configuracion",
 				"travels": "Viajes"
+			},
+			"pinnedDoc": {
+				"pin": "Anclar documento",
+				"change": "Cambiar documento anclado",
+				"view": "Ver en documentos",
+				"openFile": "Abrir archivo",
+				"viewInList": "Ver en lista",
+				"editPin": "Editar ancla",
+				"openNewTab": "Abrir en nueva pestana",
+				"remove": "Quitar ancla",
+				"noDocs": "Aun no hay documentos subidos.",
+				"actions": "Acciones de documento",
+				"noResults": "Sin resultados para \"{q}\"",
+				"searchPlaceholder": "Buscar documentos...",
+				"customLabel": "Etiqueta personalizada"
 			}
 		},
 		"detail": {

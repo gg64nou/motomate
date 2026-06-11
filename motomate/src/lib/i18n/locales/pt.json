@@ -246,6 +246,21 @@
 				"finance": "Financas",
 				"settings": "Configuracoes",
 				"travels": "Viagens"
+			},
+			"pinnedDoc": {
+				"pin": "Fixar documento",
+				"change": "Alterar documento fixo",
+				"view": "Ver nos documentos",
+				"openFile": "Abrir ficheiro",
+				"viewInList": "Ver na lista",
+				"editPin": "Editar pin",
+				"openNewTab": "Abrir em novo separador",
+				"remove": "Remover pin",
+				"noDocs": "Ainda nao foram carregados documentos.",
+				"actions": "Acoes do documento",
+				"noResults": "Sem resultados para \"{q}\"",
+				"searchPlaceholder": "Pesquisar documentos...",
+				"customLabel": "Etiqueta personalizada"
 			}
 		},
 		"detail": {
