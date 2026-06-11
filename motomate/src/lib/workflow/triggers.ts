@@ -336,7 +336,7 @@ export function evaluateMaintenanceTrigger(
 	const legacyDistanceValue = getLegacyDistanceAliasValue(measurement) ?? 0;
 
 	if (normalizedTrigger.phase === 'upcoming') {
-		const matches = measurement.delta >= -threshold && measurement.delta <= 0;
+		const matches = measurement.delta > -threshold && measurement.delta <= 0;
 		const measurementUntilFire = Math.max(0, -threshold - measurement.delta);
 		const measurementValue = Math.max(0, -measurement.delta);
 		return {

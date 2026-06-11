@@ -234,7 +234,7 @@
 
 	$effect(() => {
 		if (form?.logged) {
-			const justLogged = loggingTracker; // capture before clearing
+			const justLogged = untrack(() => loggingTracker);
 			loggingTracker = null;
 			recentlyLoggedId = justLogged;
 			toasts.success($_('maintenance.toasts.logged'));

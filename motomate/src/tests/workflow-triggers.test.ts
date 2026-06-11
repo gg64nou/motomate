@@ -81,6 +81,37 @@ describe('workflow trigger evaluation', () => {
 		expect(evaluation).toBeNull();
 	});
 
+	it('does not fire an upcoming notification immediately after service when delta equals the threshold exactly', () => {
+		const trigger = normalizeWorkflowTrigger({ type: 'odometer_upcoming', km_before: 500 });
+		if (trigger.kind !== 'maintenance') throw new Error('expected maintenance trigger');
+
+		const evaluation = evaluateMaintenanceTrigger(
+			trigger,
+			{ current_measurement: 1500, current_measurement_unit: 'km', current_odometer: 1500, odometer_unit: 'km' },
+			{ next_due_measurement: 2000, next_due_odometer: 2000, measurement_unit: 'km' },
+			{ name: 'Chain service', interval_km: 500 }
+		);
+
+		expect(evaluation).not.toBeNull();
+		expect(evaluation?.matches).toBe(false);
+	});
+
+	it('fires an upcoming notification once the vehicle moves past the threshold boundary', () => {
+		const trigger = normalizeWorkflowTrigger({ type: 'odometer_upcoming', km_before: 500 });
+		if (trigger.kind !== 'maintenance') throw new Error('expected maintenance trigger');
+
+		const evaluation = evaluateMaintenanceTrigger(
+			trigger,
+			{ current_measurement: 1501, current_measurement_unit: 'km', current_odometer: 1501, odometer_unit: 'km' },
+			{ next_due_measurement: 2000, next_due_odometer: 2000, measurement_unit: 'km' },
+			{ name: 'Chain service', interval_km: 500 }
+		);
+
+		expect(evaluation).not.toBeNull();
+		expect(evaluation?.matches).toBe(true);
+		expect(evaluation?.measurementValue).toBe(499);
+	});
+
 	it('evaluates maintenance triggers for hours-based vehicles', () => {
 		const trigger = normalizeWorkflowTrigger({ type: 'odometer_overdue', km_past: 0 });
 		if (trigger.kind !== 'maintenance') throw new Error('expected maintenance trigger');
