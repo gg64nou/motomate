@@ -353,11 +353,6 @@
 		font-weight: 400;
 		color: var(--text-subtle);
 	}
-	.field-hint {
-		font-size: var(--text-xs);
-		color: var(--text-subtle);
-		line-height: var(--leading-base);
-	}
 	.input {
 		padding: 0.5rem 0.75rem;
 		border: 1px solid var(--border-strong);
