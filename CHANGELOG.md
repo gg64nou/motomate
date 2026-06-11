@@ -6,6 +6,9 @@
 - Added 'Finance' data to the pdf export functionality, meaning you can export financial data in the printable maintenance report
 - You can now set your name in your profile, which should make the experience a tad more personal
 - Fix: odometer reminder workflow no longer fires daily once stale, cooldown now matches the configured interval
+- Fix: odometer staleness now checks the last logged odometer entry, not the last time the vehicle record was edited
+- Fix: workflow rules with multiple vehicles now notify each vehicle independently instead of blocking after the first
+- Fix: when multiple documents are expiring, you now get a notification for each one instead of only the first
 - Fix: normalized errors on the login/register forms, these are now translated (#40)
 - Fix: dashboard now shows which vehicle has overdue/upcoming maintenance when more than three items are waiting and forwards on click to right vehicle
 - Fix: due and overdue maintenance cards now stack correctly on small screens, keeping the action button reachable
