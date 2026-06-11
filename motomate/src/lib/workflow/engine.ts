@@ -12,6 +12,13 @@ import {
 	normalizeWorkflowTrigger
 } from './triggers.js';
 
+function getCooldownHours(trigger: RuleTrigger): number {
+	const t = normalizeWorkflowTrigger(trigger);
+	if (t.kind === 'no_odometer_update') return t.days * 24;
+	if (t.kind === 'document_expiring') return Math.min(t.daysBefore, 7) * 24;
+	return 23;
+}
+
 // Each fired result carries the template vars and, for tracker-based triggers,
 // the tracker id + its current state (so the main loop can do per-tracker cooldown
 // without an extra DB round-trip).
@@ -255,11 +262,11 @@ export async function runWorkflowChecks(
 					const notifiedBy = (result.trackerState?.notified_by ?? {}) as Record<string, string>;
 					if (notifiedBy[rule.id]) continue;
 				} else {
-					// Non-tracker triggers (calendar, no_odometer_update, etc.) use 23h cooldown
+					// Non-tracker triggers use per-kind cooldown to prevent daily spam
 					if (rule.last_triggered_at) {
 						const hoursSince =
 							(Date.now() - new Date(rule.last_triggered_at).getTime()) / 3_600_000;
-						if (hoursSince < 23) continue;
+						if (hoursSince < getCooldownHours(rule.trigger)) continue;
 					}
 				}
 
