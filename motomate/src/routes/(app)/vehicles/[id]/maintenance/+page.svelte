@@ -233,15 +233,6 @@
 	}
 
 	$effect(() => {
-		if (form?.logged) {
-			const justLogged = untrack(() => loggingTracker);
-			loggingTracker = null;
-			recentlyLoggedId = justLogged;
-			toasts.success($_('maintenance.toasts.logged'));
-			setTimeout(() => {
-				recentlyLoggedId = null;
-			}, 1800);
-		}
 		if (form?.trackerUpdated) {
 			toasts.success($_('maintenance.toasts.trackerUpdated'));
 			editingTracker = null;
@@ -971,8 +962,19 @@
 							method="POST"
 							action="?/log"
 							use:enhance={() => {
-								return async ({ update }) => {
+								const justLogged = loggingTracker;
+								return async ({ result, update }) => {
 									await update({ reset: false });
+									if (
+										result.type === 'success' &&
+										(result.data as Record<string, unknown>)?.logged
+									) {
+										recentlyLoggedId = justLogged;
+										toasts.success($_('maintenance.toasts.logged'));
+										setTimeout(() => {
+											recentlyLoggedId = null;
+										}, 1800);
+									}
 									loggingTracker = null;
 								};
 							}}

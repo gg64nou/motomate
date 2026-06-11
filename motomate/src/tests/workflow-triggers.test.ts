@@ -87,7 +87,12 @@ describe('workflow trigger evaluation', () => {
 
 		const evaluation = evaluateMaintenanceTrigger(
 			trigger,
-			{ current_measurement: 1500, current_measurement_unit: 'km', current_odometer: 1500, odometer_unit: 'km' },
+			{
+				current_measurement: 1500,
+				current_measurement_unit: 'km',
+				current_odometer: 1500,
+				odometer_unit: 'km'
+			},
 			{ next_due_measurement: 2000, next_due_odometer: 2000, measurement_unit: 'km' },
 			{ name: 'Chain service', interval_km: 500 }
 		);
@@ -102,7 +107,12 @@ describe('workflow trigger evaluation', () => {
 
 		const evaluation = evaluateMaintenanceTrigger(
 			trigger,
-			{ current_measurement: 1501, current_measurement_unit: 'km', current_odometer: 1501, odometer_unit: 'km' },
+			{
+				current_measurement: 1501,
+				current_measurement_unit: 'km',
+				current_odometer: 1501,
+				odometer_unit: 'km'
+			},
 			{ next_due_measurement: 2000, next_due_odometer: 2000, measurement_unit: 'km' },
 			{ name: 'Chain service', interval_km: 500 }
 		);
