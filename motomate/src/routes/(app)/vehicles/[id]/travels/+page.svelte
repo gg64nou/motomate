@@ -2,7 +2,7 @@
 	import { untrack } from 'svelte';
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { replaceState, beforeNavigate } from '$app/navigation';
 	import { _, waitLocale } from '$lib/i18n';
 	import { formatYearMonth } from '$lib/utils/format.js';
@@ -78,22 +78,22 @@
 
 	// Handle ?edit=id and ?delete=id deep-links from the timeline
 	$effect(() => {
-		const editId = $page.url.searchParams.get('edit');
+		const editId = page.url.searchParams.get('edit');
 		if (editId) {
 			const t = data.travels.find((t: Travel) => t.id === editId);
 			if (t) openEdit(t);
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.delete('edit');
-			replaceState(url, $page.state);
+			replaceState(url, page.state);
 			return;
 		}
-		const deleteId = $page.url.searchParams.get('delete');
+		const deleteId = page.url.searchParams.get('delete');
 		if (deleteId) {
 			const t = data.travels.find((t: Travel) => t.id === deleteId);
 			if (t) deletingTravel = t;
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.delete('delete');
-			replaceState(url, $page.state);
+			replaceState(url, page.state);
 		}
 	});
 
@@ -158,7 +158,7 @@
 	}
 
 	// Filtered + sorted + grouped travels for the list
-	const displayedTravels = $derived((): Travel[] => {
+	const displayedTravels = $derived.by((): Travel[] => {
 		let list = [...data.travels] as Travel[];
 
 		if (searchQuery.trim()) {
@@ -204,9 +204,9 @@
 	});
 
 	// Group by year-month
-	const grouped = $derived((): [string, Travel[]][] => {
+	const grouped = $derived.by((): [string, Travel[]][] => {
 		const map = new Map<string, Travel[]>();
-		for (const t of displayedTravels()) {
+		for (const t of displayedTravels) {
 			const key = t.start_date.slice(0, 7);
 			if (!map.has(key)) map.set(key, []);
 			map.get(key)!.push(t);
@@ -354,7 +354,7 @@
 
 <!-- Travel List -->
 {#if hasHistory}
-	{#if grouped().length === 0}
+	{#if grouped.length === 0}
 		<div class="empty">
 			<span class="empty-icon"
 				>{@html `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>`}</span
@@ -364,7 +364,7 @@
 		</div>
 	{:else}
 		<div class="travel-list">
-			{#each grouped() as [ym, group]}
+			{#each grouped as [ym, group]}
 				<div class="month-group">
 					<div class="month-label">{formatYearMonth(ym, locale)}</div>
 					{#each group as travel}

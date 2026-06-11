@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
+	import { browser } from '$app/environment';
 	import { _ } from '$lib/i18n';
 
 	const altchaCtx = getContext<{ locale: string }>('altcha-locale');
@@ -15,10 +16,6 @@
 	let loading = $state(false);
 	let altchaReady = $state(false);
 	let altchaVerified = $state(false);
-	let mounted = $state(false);
-	onMount(() => {
-		mounted = true;
-	});
 	const mismatch = $derived(confirmValue.length > 0 && confirmValue !== passwordValue);
 </script>
 
@@ -111,7 +108,7 @@
 			{/if}
 		</label>
 		{#if data.altchaEnabled}
-			{#if mounted}
+			{#if browser}
 				<div class="altcha-wrap">
 					{#if !altchaReady}
 						<div class="altcha-skeleton" aria-hidden="true"></div>

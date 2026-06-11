@@ -93,7 +93,9 @@
 			"title": "Welcome to MotoMate",
 			"description": "Let's add your first vehicle and set up a maintenance schedule. Takes about a minute.",
 			"submit": "Get started →",
-			"skipWarning": "Remember to update your email and password in Settings → Account before going live."
+			"skipWarning": "Remember to update your email and password in Settings → Account before going live.",
+			"nameLabel": "Your name",
+			"namePlaceholder": "e.g. Danny"
 		},
 		"type": {
 			"title": "What kind of vehicle?",
@@ -186,7 +188,10 @@
 		"greeting": {
 			"morning": "Good morning",
 			"afternoon": "Good afternoon",
-			"evening": "Good evening"
+			"evening": "Good evening",
+			"morningNamed": "Good morning, {name}",
+			"afternoonNamed": "Good afternoon, {name}",
+			"eveningNamed": "Good evening, {name}"
 		},
 		"status": {
 			"overdue": "{count, plural, =1 {1 item overdue.} other {# items overdue.}}",
@@ -202,7 +207,7 @@
 		"viewAll": "View all →",
 		"serviceEntry": "Service entry",
 		"attention": {
-			"andMore": "{count, plural, =1 {+ 1 more item} other {+ # more items}}"
+			"moreOnVehicle": "{count, plural, =1 {1 more on {vehicleName}} other {# more on {vehicleName}}}"
 		},
 		"empty": {
 			"title": "Your garage is empty",
@@ -436,7 +441,8 @@
 						"desc": "Select what to include in the report. Your preferences are saved for next time.",
 						"download": "Download PDF",
 						"downloading": "Downloading...",
-						"cancel": "Cancel"
+						"cancel": "Cancel",
+						"includeFinance": "Include expense summary"
 					},
 					"pdf": {
 						"generatedOn": "Generated on",
@@ -453,9 +459,16 @@
 						"trackers": "Serviced",
 						"period": "Period",
 						"attached": "Attached",
-						"seeFollowingPage": "See following page",
-						"seeFollowingPages": "See following {count} pages",
-						"fileNotEmbeddable": "File not embeddable in PDF"
+						"financeSummary": "Expense Summary",
+						"financeTotal": "Total",
+						"financeNoData": "No expense records in this period.",
+						"catMaintenance": "Maintenance",
+						"catParts": "Parts",
+						"catAccessories": "Accessories",
+						"catAdministrative": "Administrative",
+						"catFuel": "Fuel",
+						"catOther": "Other",
+						"documentInApp": "This document is available in your MotoMate document library."
 					}
 				}
 			},
@@ -484,6 +497,21 @@
 				"finance": "Finance",
 				"travels": "Travels",
 				"settings": "Settings"
+			},
+			"pinnedDoc": {
+				"pin": "Pin document",
+				"change": "Change pinned document",
+				"view": "View in documents",
+				"openFile": "Open file",
+				"viewInList": "View in list",
+				"editPin": "Edit pin",
+				"openNewTab": "Open in new tab",
+				"remove": "Remove pin",
+				"noDocs": "No documents uploaded yet.",
+				"actions": "Document actions",
+				"noResults": "No results for \"{q}\"",
+				"searchPlaceholder": "Search documents...",
+				"customLabel": "Custom label"
 			}
 		}
 	},
@@ -773,7 +801,9 @@
 			"avatarUpdated": "Profile picture updated",
 			"avatarDicebear": "Choose an avatar",
 			"avatarShuffle": "Shuffle",
-			"subtitle": "Language, currency, and odometer unit."
+			"subtitle": "Language, currency, and odometer unit.",
+			"displayName": "Display name",
+			"displayNamePlaceholder": "Your name"
 		},
 		"account": {
 			"title": "Account",
@@ -955,7 +985,11 @@
 			"title": "What's new?",
 			"subtitle": "See what changed in the latest versions.",
 			"refresh": "Refresh",
-			"noContent": "No changes found. Try again later."
+			"noContent": "No changes found. Try again later.",
+			"latest": "Latest",
+			"installed": "Installed",
+			"viewFull": "View full changelog",
+			"openIssue": "Open an issue"
 		},
 		"developer": {
 			"title": "Developer",

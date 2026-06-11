@@ -92,7 +92,9 @@
 			"title": "Bem-vindo ao MotoMate",
 			"description": "Vamos adicionar o seu primeiro veículo e configurar um plano de manutenção. Leva cerca de um minuto.",
 			"submit": "Começar →",
-			"skipWarning": "Lembre-se de atualizar o seu e-mail e palavra-passe em Definições → Conta antes de ir para produção."
+			"skipWarning": "Lembre-se de atualizar o seu e-mail e palavra-passe em Definições → Conta antes de ir para produção.",
+			"nameLabel": "O seu nome",
+			"namePlaceholder": "Ex. João"
 		},
 		"type": {
 			"title": "Que tipo de veículo?",
@@ -185,7 +187,10 @@
 		"greeting": {
 			"morning": "Bom dia",
 			"afternoon": "Boa tarde",
-			"evening": "Boa noite"
+			"evening": "Boa noite",
+			"morningNamed": "Bom dia, {name}",
+			"afternoonNamed": "Boa tarde, {name}",
+			"eveningNamed": "Boa noite, {name}"
 		},
 		"status": {
 			"overdue": "{count, plural, =1 {1 item em atraso.} other {# items em atraso.}}",
@@ -201,7 +206,7 @@
 		"viewAll": "Ver tudo →",
 		"serviceEntry": "Entrada de serviço",
 		"attention": {
-			"andMore": "{count, plural, =1 {+ 1 item a mais} other {+ # itens a mais}}"
+			"moreOnVehicle": "{count, plural, =1 {1 a mais em {vehicleName}} other {# a mais em {vehicleName}}}"
 		},
 		"empty": {
 			"title": "A sua garage está vazia",
@@ -241,6 +246,21 @@
 				"finance": "Financas",
 				"settings": "Configuracoes",
 				"travels": "Viagens"
+			},
+			"pinnedDoc": {
+				"pin": "Fixar documento",
+				"change": "Alterar documento fixo",
+				"view": "Ver nos documentos",
+				"openFile": "Abrir ficheiro",
+				"viewInList": "Ver na lista",
+				"editPin": "Editar pin",
+				"openNewTab": "Abrir em novo separador",
+				"remove": "Remover pin",
+				"noDocs": "Ainda nao foram carregados documentos.",
+				"actions": "Acoes do documento",
+				"noResults": "Sem resultados para \"{q}\"",
+				"searchPlaceholder": "Pesquisar documentos...",
+				"customLabel": "Etiqueta personalizada"
 			}
 		},
 		"detail": {
@@ -447,7 +467,8 @@
 						"desc": "Seleciona o que queres incluir no relatório. As tuas preferências são guardadas para a próxima vez.",
 						"download": "Baixar PDF",
 						"downloading": "Baixando...",
-						"cancel": "Cancelar"
+						"cancel": "Cancelar",
+						"includeFinance": "Incluir resumo de despesas"
 					},
 					"pdf": {
 						"generatedOn": "Gerado em",
@@ -464,9 +485,16 @@
 						"trackers": "Realizado",
 						"period": "Periodo",
 						"attached": "Anexado",
-						"seeFollowingPage": "Ver pagina seguinte",
-						"seeFollowingPages": "Ver as {count} paginas seguintes",
-						"fileNotEmbeddable": "Ficheiro nao incorporavel no PDF"
+						"financeSummary": "Resumo de despesas",
+						"financeTotal": "Total",
+						"financeNoData": "Nenhum registo de despesas neste periodo.",
+						"catMaintenance": "Manutencao",
+						"catParts": "Pecas",
+						"catAccessories": "Acessorios",
+						"catAdministrative": "Administrativo",
+						"catFuel": "Combustivel",
+						"catOther": "Outros",
+						"documentInApp": "Este documento esta disponivel na sua biblioteca de documentos MotoMate."
 					}
 				}
 			},
@@ -761,7 +789,9 @@
 			"avatarUpdated": "Foto de perfil atualizada",
 			"avatarDicebear": "Escolher um avatar",
 			"avatarShuffle": "Misturar",
-			"subtitle": "Idioma, moeda e unidade do odómetro."
+			"subtitle": "Idioma, moeda e unidade do odómetro.",
+			"displayName": "Nome de exibição",
+			"displayNamePlaceholder": "O seu nome"
 		},
 		"account": {
 			"title": "Conta",
@@ -954,7 +984,11 @@
 			"title": "O que há de novo?",
 			"subtitle": "Veja o que mudou nas versões mais recentes.",
 			"refresh": "Atualizar",
-			"noContent": "Nenhuma alteração encontrada. Tente novamente mais tarde."
+			"noContent": "Nenhuma alteração encontrada. Tente novamente mais tarde.",
+			"latest": "Mais recente",
+			"installed": "Instalada",
+			"viewFull": "Ver changelog completo",
+			"openIssue": "Reportar um problema"
 		},
 		"developer": {
 			"title": "Desenvolvedor",

@@ -129,6 +129,21 @@
 		}}
 	>
 		<label class="field">
+			<span class="field-label">
+				{$_('settings.profile.displayName')}
+				<span class="optional">{$_('common.optional')}</span>
+			</span>
+			<input
+				type="text"
+				name="display_name"
+				class="input"
+				maxlength="80"
+				value={data.user.settings.display_name ?? ''}
+				placeholder={$_('settings.profile.displayNamePlaceholder')}
+			/>
+		</label>
+
+		<label class="field">
 			<span class="field-label">{$_('settings.profile.language')}</span>
 			<select name="locale" class="input">
 				{#each [['en', 'English'], ['de', 'Deutsch'], ['fr', 'Français'], ['it', 'Italiano'], ['es', 'Español'], ['nl', 'Nederlands'], ['pt', 'Português']] as [val, label]}
@@ -330,6 +345,13 @@
 		font-size: var(--text-sm);
 		font-weight: 500;
 		color: var(--text-muted);
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+	}
+	.optional {
+		font-weight: 400;
+		color: var(--text-subtle);
 	}
 	.input {
 		padding: 0.5rem 0.75rem;

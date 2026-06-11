@@ -15,12 +15,19 @@
 	const _currency = $derived(data.user.settings.currency ?? 'EUR');
 
 	const hour = new Date().getHours();
+	const displayName = $derived(data.user.settings.display_name ?? null);
 	const greeting = $derived(
-		hour < 12
-			? $_('dashboard.greeting.morning')
-			: hour < 18
-				? $_('dashboard.greeting.afternoon')
-				: $_('dashboard.greeting.evening')
+		displayName
+			? hour < 12
+				? $_('dashboard.greeting.morningNamed', { values: { name: displayName } })
+				: hour < 18
+					? $_('dashboard.greeting.afternoonNamed', { values: { name: displayName } })
+					: $_('dashboard.greeting.eveningNamed', { values: { name: displayName } })
+			: hour < 12
+				? $_('dashboard.greeting.morning')
+				: hour < 18
+					? $_('dashboard.greeting.afternoon')
+					: $_('dashboard.greeting.evening')
 	);
 
 	type TrackerItem = (typeof data.overdueTrackers)[number];
@@ -29,7 +36,16 @@
 		...data.dueTrackers.map((t: TrackerItem) => ({ ...t, status: 'due' as const }))
 	]);
 	const visibleAttention = $derived(attentionItems.slice(0, 3));
-	const hiddenAttentionCount = $derived(attentionItems.length - visibleAttention.length);
+	const hiddenByVehicle = $derived.by(() => {
+		const hidden = attentionItems.slice(3);
+		const map = new Map<string, { vehicleId: string; vehicleName: string; count: number }>();
+		for (const item of hidden) {
+			const id = item.vehicle.id;
+			if (!map.has(id)) map.set(id, { vehicleId: id, vehicleName: item.vehicle.name, count: 0 });
+			map.get(id)!.count++;
+		}
+		return [...map.values()];
+	});
 
 	function attentionDetail(tracker: (typeof data.overdueTrackers)[0]) {
 		const v = tracker.vehicle;
@@ -90,7 +106,7 @@
 		<section class="dash-section">
 			<h2 class="section-eyebrow">{$_('dashboard.sections.needsAttention')}</h2>
 			<div class="attention-list">
-				{#each visibleAttention as tracker}
+				{#each visibleAttention as tracker (tracker.id)}
 					<AttentionCard
 						status={tracker.status}
 						vehicleName={tracker.vehicle.name}
@@ -99,11 +115,13 @@
 						href="/vehicles/{tracker.vehicle.id}/maintenance"
 					/>
 				{/each}
-				{#if hiddenAttentionCount > 0}
-					<a href="/vehicles" class="attention-overflow">
-						{$_('dashboard.attention.andMore', { values: { count: hiddenAttentionCount } })}
+				{#each hiddenByVehicle as group (group.vehicleId)}
+					<a href="/vehicles/{group.vehicleId}/maintenance" class="attention-overflow">
+						{$_('dashboard.attention.moreOnVehicle', {
+							values: { count: group.count, vehicleName: group.vehicleName }
+						})}
 					</a>
-				{/if}
+				{/each}
 			</div>
 		</section>
 	{/if}
@@ -116,7 +134,7 @@
 				<a href="/vehicles" class="section-link">{$_('dashboard.viewAll')}</a>
 			</div>
 			<div class="entry-list">
-				{#each data.vehicles as vehicle}
+				{#each data.vehicles as vehicle (vehicle.id)}
 					{@const defaultEmoji =
 						vehicle.type === 'scooter' ? '🛵' : vehicle.type === 'bike' ? '🚲' : '🏍'}
 					{@const avatarEmoji = vehicle.meta?.avatar_emoji ?? defaultEmoji}
@@ -163,7 +181,7 @@
 		<section class="dash-section">
 			<h2 class="section-eyebrow">{$_('dashboard.sections.recentActivity')}</h2>
 			<div class="entry-list">
-				{#each data.recentLogs as log}
+				{#each data.recentLogs as log (log.id)}
 					<a href="/vehicles/{log.vehicle_id}/maintenance" class="entry">
 						<div class="entry-body">
 							<div class="entry-title">
@@ -434,6 +452,11 @@
 		}
 		.mobile-brand {
 			display: none;
+		}
+		.entry-meta {
+			flex-wrap: wrap;
+			overflow: visible;
+			white-space: normal;
 		}
 	}
 

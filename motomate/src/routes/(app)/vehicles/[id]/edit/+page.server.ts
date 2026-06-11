@@ -260,5 +260,26 @@ export const actions: Actions = {
 		});
 
 		return { avatarUpdated: true };
+	},
+
+	pinDocument: async ({ request, locals, params }) => {
+		const user = locals.user!;
+		const vehicleId = params.id;
+		const formData = await request.formData();
+		const docId = String(formData.get('doc_id') || '').trim() || undefined;
+		const pinLabel = String(formData.get('pin_label') || '').trim() || undefined;
+
+		const vehicle = await getVehicleById(vehicleId, user.id);
+		if (!vehicle) return fail(404, { error: 'Not found' });
+
+		const currentMeta: VehicleMeta = vehicle.meta ?? {};
+		const newMeta: VehicleMeta = {
+			...currentMeta,
+			pinned_doc_id: docId,
+			pinned_doc_label: docId ? pinLabel : undefined
+		};
+
+		await updateVehicle(vehicleId, user.id, { meta: newMeta });
+		return { pinned: true };
 	}
 };

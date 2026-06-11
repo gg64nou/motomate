@@ -37,6 +37,7 @@ export type UserSettings = {
 	currency: string; // 'EUR', 'GBP', etc.
 	odometer_unit: OdometerUnit;
 	locale: string;
+	display_name?: string | null;
 	notification_channels?: NotificationChannels;
 	favorite_vehicle?: string | null;
 	avatar_key?: string | null;
@@ -52,6 +53,8 @@ export type VehicleMeta = {
 	displacement_cc?: number;
 	fuel_type?: 'petrol' | 'diesel' | 'electric' | 'hybrid';
 	avatar_emoji?: string;
+	pinned_doc_id?: string;
+	pinned_doc_label?: string;
 };
 
 export type PartNumbers = string[];

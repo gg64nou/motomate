@@ -4,23 +4,27 @@ import { getVehicleById } from '$lib/db/repositories/vehicles.js';
 import { getServiceLogsByVehicle } from '$lib/db/repositories/service-logs.js';
 import { getTrackersByVehicle } from '$lib/db/repositories/maintenance.js';
 import { getDocumentsByIds } from '$lib/db/repositories/documents.js';
+import { getFinanceTransactionsByVehicle } from '$lib/db/repositories/finance-transactions.js';
 import { getStorage } from '$lib/storage/index.js';
 import { buildMaintenanceReport } from '$lib/pdf/maintenance-report.js';
-import { filterTrackersForReport } from '$lib/utils/reminder-only.js';
 
-export const GET: RequestHandler = async ({ locals, params }) => {
+export const GET: RequestHandler = async ({ locals, params, url }) => {
 	if (!locals.user) error(401, 'Unauthorized');
 
 	const vehicle = await getVehicleById(params.id, locals.user.id);
 	if (!vehicle) error(404, 'Not found');
 
-	const [serviceLogs, trackers] = await Promise.all([
+	const dateFrom = url.searchParams.get('from') ?? undefined;
+	const dateTo = url.searchParams.get('to') ?? undefined;
+	const noFinance = url.searchParams.has('noFinance');
+
+	const [serviceLogs, trackers, financeTransactions] = await Promise.all([
 		getServiceLogsByVehicle(params.id, locals.user.id),
-		getTrackersByVehicle(params.id, locals.user.id)
+		getTrackersByVehicle(params.id, locals.user.id),
+		getFinanceTransactionsByVehicle(params.id, locals.user.id)
 	]);
 
-	const reportTrackers = filterTrackersForReport(trackers);
-	const trackerNames = new Map(reportTrackers.map((t) => [t.id, t.template.name]));
+	const trackerNames = new Map(trackers.map((t) => [t.id, t.template.name]));
 	const reportLogs = serviceLogs.filter((l) => !l.is_reminder);
 
 	const allDocIds = [...new Set(reportLogs.flatMap((l) => (l.attachments as string[]) ?? []))];
@@ -52,7 +56,11 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 		docs,
 		docBuffers,
 		locale,
-		excludedTrackerIds
+		excludedTrackerIds,
+		dateFrom,
+		dateTo,
+		includeFinanceSummary: !noFinance,
+		financeTransactions
 	});
 
 	const safeName = vehicle.name.replace(/[^a-zA-Z0-9-]/g, '_');

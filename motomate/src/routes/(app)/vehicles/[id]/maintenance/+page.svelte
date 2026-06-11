@@ -2,11 +2,11 @@
 	import { untrack } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { invalidateAll, beforeNavigate, replaceState } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { PageData } from './$types';
 	import TrackerCard from '$lib/components/ui/TrackerCard.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { toasts } from '$lib/stores/toasts.js';
+	import { toasts } from '$lib/stores/toasts.svelte.js';
 	import { _, waitLocale } from '$lib/i18n';
 	import {
 		formatMeasurement,
@@ -57,12 +57,12 @@
 	let recentlyLoggedId = $state<string | null>(null);
 
 	$effect(() => {
-		const logId = $page.url.searchParams.get('log');
+		const logId = page.url.searchParams.get('log');
 		if (logId && data.trackers.some((t) => t.id === logId)) {
 			loggingTracker = logId;
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.delete('log');
-			replaceState(url, $page.state);
+			replaceState(url, page.state);
 			setTimeout(() => {
 				document.querySelector(`[data-log-form="${logId}"]`)?.scrollIntoView({
 					behavior: 'smooth',
@@ -125,7 +125,7 @@
 	let editingLog = $state<string | null>(null);
 	let logMenu = $state<string | null>(null);
 
-	const averageKmPerMonth = $derived(() => {
+	const averageKmPerMonth = $derived.by(() => {
 		if (isHoursVehicle) return null;
 		const logs = data.odometerLogs ?? [];
 		if (logs.length < 5) return null;
@@ -143,7 +143,7 @@
 		return Math.round(kmDiff / monthsDiff);
 	});
 
-	const monthsOfUsage = $derived(() => {
+	const monthsOfUsage = $derived.by(() => {
 		const logs = data.odometerLogs ?? [];
 		if (logs.length < 2) return 0;
 		const dates = logs.map((l) => l.recorded_at).sort();
@@ -155,7 +155,7 @@
 		);
 	});
 
-	const trackerServiceLogs = $derived(() => {
+	const trackerServiceLogs = $derived.by(() => {
 		const map = new Map<string, typeof data.allServiceLogs>();
 		for (const log of data.allServiceLogs ?? []) {
 			const ids = new Set<string>();
@@ -169,7 +169,7 @@
 		return map;
 	});
 
-	const filteredTrackers = $derived(() => {
+	const filteredTrackers = $derived.by(() => {
 		let trackers = [...data.trackers];
 		if (searchQuery) {
 			const q = searchQuery.toLowerCase();
@@ -179,7 +179,7 @@
 	});
 
 	const sortedTrackers = $derived(
-		filteredTrackers().sort((a, b) => {
+		[...filteredTrackers].sort((a, b) => {
 			if (sortBy === 'status') {
 				const order: Record<string, number> = { overdue: 0, due: 1, ok: 2 };
 				return (order[a.status] ?? 3) - (order[b.status] ?? 3);
@@ -221,7 +221,7 @@
 		monthsUntil: number | null;
 	} {
 		if (isHoursVehicle) return { odometer: null, monthsUntil: null };
-		const avgKm = averageKmPerMonth();
+		const avgKm = averageKmPerMonth;
 		if (!avgKm || !tracker.last_done_odometer || !tracker.template.interval_km) {
 			return { odometer: null, monthsUntil: null };
 		}
@@ -287,7 +287,6 @@
 				node.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 			});
 		}
-		return {};
 	}
 
 	$effect(() => {
@@ -655,7 +654,7 @@
 		{/if}
 	</div>
 {:else if showAddTask && (viewMode === 'current' || viewMode === 'forecast')}
-	<form method="POST" action="?/addTask" use:enhance use:scrollOnMount class="add-task-form">
+	<form method="POST" action="?/addTask" use:enhance {@attach scrollOnMount} class="add-task-form">
 		<div class="add-task-fields">
 			<label class="field">
 				<span class="field-label">{$_('maintenance.addTask.fields.name')}</span>
@@ -731,7 +730,7 @@
 						{tracker}
 						vehicleUnit={data.vehicle.odometer_unit}
 						{locale}
-						serviceLogs={trackerServiceLogs().get(t.id) ?? []}
+						serviceLogs={trackerServiceLogs.get(t.id) ?? []}
 						showHistory={historyTracker === t.id}
 						forecastMode={viewMode === 'forecast'}
 						forecastData={viewMode === 'forecast' ? getKmForecast(t) : null}
@@ -741,7 +740,7 @@
 									return d ? formatDateShort(d, locale) : null;
 								})()
 							: null}
-						monthsOfUsage={monthsOfUsage()}
+						{monthsOfUsage}
 						isLogging={loggingTracker === t.id}
 						isRecentlyLogged={recentlyLoggedId === t.id}
 						isMenuOpen={trackerMenu === t.id}
@@ -1792,6 +1791,16 @@
 			opacity: 1;
 			width: 44px;
 			height: 44px;
+		}
+		.page-actions {
+			flex-wrap: wrap;
+		}
+		.view-toggle {
+			width: 100%;
+		}
+		.view-toggle-btn {
+			flex: 1;
+			text-align: center;
 		}
 	}
 

@@ -111,7 +111,7 @@
 		return parts.join(' · ');
 	}
 
-	const historyGrouped = $derived(() => {
+	const historyGrouped = $derived.by(() => {
 		const map = new Map<string, ServiceLog[]>();
 		for (const log of serviceLogs) {
 			const key = log.performed_at.slice(0, 7);
@@ -235,7 +235,7 @@
 
 	{#if showHistory && serviceLogs.length > 0}
 		<div class="tracker-history">
-			{#each historyGrouped() as [yearMonth, logs]}
+			{#each historyGrouped as [yearMonth, logs]}
 				<div class="history-month">
 					<div class="history-month-label">
 						<span class="history-month-name">{formatYearMonth(yearMonth, locale)}</span>
@@ -596,6 +596,18 @@
 		font-family: var(--font-mono);
 		font-variant-numeric: tabular-nums;
 	}
+	@media (max-width: 540px) {
+		.tracker-card--due .tracker-main,
+		.tracker-card--overdue .tracker-main {
+			flex-direction: column;
+			gap: 0.625rem;
+		}
+		.tracker-card--due .tracker-actions,
+		.tracker-card--overdue .tracker-actions {
+			align-self: flex-end;
+		}
+	}
+
 	.history-cost {
 		color: var(--text-subtle);
 	}

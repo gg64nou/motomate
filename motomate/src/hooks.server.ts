@@ -5,7 +5,30 @@ import { env as pubEnv } from '$env/dynamic/public';
 import { initScheduler } from '$lib/server/scheduler.js';
 import { findUserByApiKey, updateKeyLastUsed } from '$lib/db/repositories/api-keys.js';
 
+if (!env.AUTH_SECRET) {
+	throw new Error(
+		'[MotoMate] AUTH_SECRET is not set. Set a random secret (min 32 chars) in your .env file before starting the server.'
+	);
+}
+
 initScheduler();
+
+let _registrationChecked = false;
+
+async function warnIfRegistrationOpen(): Promise<void> {
+	_registrationChecked = true;
+	try {
+		const { hasAnyUser } = await import('$lib/db/repositories/users.js');
+		if ((await hasAnyUser()) && env.AUTH_ALLOW_REGISTRATION !== 'false') {
+			console.warn(
+				'[MotoMate] WARNING: Users exist but AUTH_ALLOW_REGISTRATION is not set to "false". ' +
+					'Set AUTH_ALLOW_REGISTRATION=false in your .env to prevent unauthorized registration.'
+			);
+		}
+	} catch {
+		// non-fatal
+	}
+}
 
 let _demoSeeded = false;
 
@@ -106,6 +129,8 @@ function buildCorsHeaders(requestOrigin: string | null): Record<string, string> 
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
+	if (!_registrationChecked) warnIfRegistrationOpen();
+
 	if (!_demoSeeded && pubEnv.PUBLIC_DEMO_ENABLED === 'true') {
 		_demoSeeded = true;
 		const { seedDemo } = await import('$lib/db/demo-seed.js');
@@ -145,7 +170,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 				}
 			});
 
-			// Permissive CORS for /api/v1/ — external tools need no-credential access
+			// CORS * is intentional here: /api/v1/ is accessed via Bearer tokens, not cookies.
+			// Browsers never auto-send Bearer headers cross-origin, so * does not widen attack surface.
+			// Session-based routes are protected by the origin check above.
 			if (event.url.pathname.startsWith('/api/v1/')) {
 				response.headers.set('Access-Control-Allow-Origin', '*');
 				response.headers.delete('Access-Control-Allow-Credentials');

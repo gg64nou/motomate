@@ -2,10 +2,14 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 const TEST_TITLE = 'MotoMate test notification';
-const TEST_BODY = 'This is a test from your notification settings.';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!locals.user) return json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+
+	const displayName = locals.user.settings?.display_name;
+	const TEST_BODY = displayName
+		? `Hi ${displayName}, this is a test from your notification settings.`
+		: 'This is a test from your notification settings.';
 
 	const body = (await request.json()) as {
 		channel: string;

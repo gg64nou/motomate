@@ -1,6 +1,12 @@
 import { eq, and, isNull } from 'drizzle-orm';
 import { db } from '$lib/db/index.js';
-import { workflow_rules, active_trackers, vehicles, documents } from '$lib/db/schema.js';
+import {
+	workflow_rules,
+	active_trackers,
+	vehicles,
+	documents,
+	odometer_logs
+} from '$lib/db/schema.js';
 import { renderTemplate } from './rules.js';
 import { serverT } from '$lib/i18n/server.js';
 import { recomputeTrackerStatuses } from '$lib/db/repositories/maintenance.js';
@@ -11,15 +17,14 @@ import {
 	evaluateMaintenanceTrigger,
 	normalizeWorkflowTrigger
 } from './triggers.js';
+import { getCooldownHours, parseFiredAtMap, cooldownKey } from './engine-utils.js';
 
-// Each fired result carries the template vars and, for tracker-based triggers,
-// the tracker id + its current state (so the main loop can do per-tracker cooldown
-// without an extra DB round-trip).
 type TriggerResult = {
 	vars: Record<string, string | number>;
 	trackerId?: string;
 	trackerState?: Record<string, unknown>;
 	trackerStatus?: string;
+	documentId?: string;
 };
 
 // Normalise old-format actions (array) or new-format (single object)
@@ -119,8 +124,13 @@ async function evalTrigger(
 
 	switch (normalizedTrigger.kind) {
 		case 'no_odometer_update': {
-			const cutoff = new Date(today.getTime() - normalizedTrigger.days * 86400000).toISOString();
-			const stale = (vehicle.updated_at ?? vehicle.created_at) < cutoff;
+			const latestLog = await db.query.odometer_logs.findFirst({
+				where: and(eq(odometer_logs.vehicle_id, vehicle.id), eq(odometer_logs.kind, 'odometer')),
+				orderBy: (o, { desc }) => [desc(o.recorded_at), desc(o.created_at)]
+			});
+			const lastActivity = latestLog?.recorded_at ?? vehicle.created_at;
+			const cutoff = new Date(today.getTime() - normalizedTrigger.days * 86400000);
+			const stale = new Date(lastActivity) < cutoff;
 			if (!stale) return [];
 			return [{ vars: { vehicle_name: vehicle.name, days: normalizedTrigger.days } }];
 		}
@@ -145,6 +155,7 @@ async function evalTrigger(
 				);
 				if (daysUntil >= 0 && daysUntil <= normalizedTrigger.daysBefore) {
 					results.push({
+						documentId: doc.id,
 						vars: {
 							vehicle_name: vehicle.name,
 							days_remaining: daysUntil,
@@ -255,11 +266,12 @@ export async function runWorkflowChecks(
 					const notifiedBy = (result.trackerState?.notified_by ?? {}) as Record<string, string>;
 					if (notifiedBy[rule.id]) continue;
 				} else {
-					// Non-tracker triggers (calendar, no_odometer_update, etc.) use 23h cooldown
-					if (rule.last_triggered_at) {
-						const hoursSince =
-							(Date.now() - new Date(rule.last_triggered_at).getTime()) / 3_600_000;
-						if (hoursSince < 23) continue;
+					const firedAtMap = parseFiredAtMap(rule.last_triggered_at);
+					const key = cooldownKey(vehicle.id, result.documentId);
+					const lastFired = firedAtMap[key];
+					if (lastFired) {
+						const hoursSince = (Date.now() - new Date(lastFired).getTime()) / 3_600_000;
+						if (hoursSince < getCooldownHours(rule.trigger)) continue;
 					}
 				}
 
@@ -267,7 +279,6 @@ export async function runWorkflowChecks(
 				const notification = normaliseActions(rule.actions);
 				await dispatchNotification(notification, rule.user_id, vehicle.id, result.vars);
 
-				// Stamp cooldown on the right record
 				if (result.trackerId) {
 					const currentState = result.trackerState ?? {};
 					const currentNotifiedBy = (currentState.notified_by ?? {}) as Record<string, string>;
@@ -283,10 +294,13 @@ export async function runWorkflowChecks(
 						.where(eq(active_trackers.id, result.trackerId));
 				} else {
 					const now = new Date().toISOString();
-					rule.last_triggered_at = now;
+					const currentMap = parseFiredAtMap(rule.last_triggered_at);
+					const key = cooldownKey(vehicle.id, result.documentId);
+					const updatedJson = JSON.stringify({ ...currentMap, [key]: now });
+					rule.last_triggered_at = updatedJson;
 					await db
 						.update(workflow_rules)
-						.set({ last_triggered_at: now })
+						.set({ last_triggered_at: updatedJson })
 						.where(eq(workflow_rules.id, rule.id));
 				}
 			}

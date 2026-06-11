@@ -92,7 +92,9 @@
 			"title": "Welkom bij MotoMate",
 			"description": "Laten we je eerste voertuig toevoegen en een onderhoudsschema instellen. Duurt ongeveer een minuut.",
 			"submit": "Aan de slag →",
-			"skipWarning": "Vergeet niet om je e-mail en wachtwoord bij te werken in Instellingen → Account voordat je live gaat."
+			"skipWarning": "Vergeet niet om je e-mail en wachtwoord bij te werken in Instellingen → Account voordat je live gaat.",
+			"nameLabel": "Jouw naam",
+			"namePlaceholder": "bijv. Danny"
 		},
 		"type": {
 			"title": "Welk type voertuig?",
@@ -185,7 +187,10 @@
 		"greeting": {
 			"morning": "Goedemorgen",
 			"afternoon": "Goedemiddag",
-			"evening": "Goedenavond"
+			"evening": "Goedenavond",
+			"morningNamed": "Goedemorgen, {name}",
+			"afternoonNamed": "Goedemiddag, {name}",
+			"eveningNamed": "Goedenavond, {name}"
 		},
 		"status": {
 			"overdue": "{count, plural, =1 {1 item achterstallig.} other {# items achterstallig.}}",
@@ -201,7 +206,7 @@
 		"viewAll": "Alles bekijken →",
 		"serviceEntry": "Service-invoer",
 		"attention": {
-			"andMore": "{count, plural, =1 {+ 1 item meer} other {+ # items meer}}"
+			"moreOnVehicle": "{count, plural, =1 {1 meer bij {vehicleName}} other {# meer bij {vehicleName}}}"
 		},
 		"empty": {
 			"title": "Je garage is leeg",
@@ -241,6 +246,21 @@
 				"finance": "Financieel",
 				"settings": "Instellingen",
 				"travels": "Routes"
+			},
+			"pinnedDoc": {
+				"pin": "Document vastzetten",
+				"change": "Vastgezet document wijzigen",
+				"view": "Bekijken in documenten",
+				"openFile": "Bestand openen",
+				"viewInList": "Bekijken in lijst",
+				"editPin": "Pin bewerken",
+				"openNewTab": "Openen in nieuw tabblad",
+				"remove": "Pin verwijderen",
+				"noDocs": "Nog geen documenten geupload.",
+				"actions": "Documentacties",
+				"noResults": "Geen resultaten voor \"{q}\"",
+				"searchPlaceholder": "Documenten zoeken...",
+				"customLabel": "Aangepast label"
 			}
 		},
 		"detail": {
@@ -447,7 +467,8 @@
 						"desc": "Selecteer wat je wil opnemen in het rapport. We slaan jouw voorkeuren op voor de volgende keer.",
 						"download": "PDF downloaden",
 						"downloading": "Bezig...",
-						"cancel": "Annuleren"
+						"cancel": "Annuleren",
+						"includeFinance": "Financieel overzicht meenemen"
 					},
 					"pdf": {
 						"generatedOn": "Gegenereerd op",
@@ -464,9 +485,16 @@
 						"trackers": "Uitgevoerd",
 						"period": "Periode",
 						"attached": "Bijgevoegd",
-						"seeFollowingPage": "Zie volgende pagina",
-						"seeFollowingPages": "Zie volgende {count} paginas",
-						"fileNotEmbeddable": "Bestand niet insluitbaar in PDF"
+						"financeSummary": "Uitgavenoverzicht",
+						"financeTotal": "Totaal",
+						"financeNoData": "Geen uitgaven gevonden in deze periode.",
+						"catMaintenance": "Onderhoud",
+						"catParts": "Onderdelen",
+						"catAccessories": "Accessoires",
+						"catAdministrative": "Administratief",
+						"catFuel": "Brandstof",
+						"catOther": "Overig",
+						"documentInApp": "Dit document is beschikbaar in uw MotoMate-documentenbibliotheek."
 					}
 				}
 			},
@@ -761,7 +789,9 @@
 			"avatarUpdated": "Profielfoto bijgewerkt",
 			"avatarDicebear": "Kies een avatar",
 			"avatarShuffle": "Shufflen",
-			"subtitle": "Taal, valuta en kilometereenheid."
+			"subtitle": "Taal, valuta en kilometereenheid.",
+			"displayName": "Weergavenaam",
+			"displayNamePlaceholder": "Jouw naam"
 		},
 		"account": {
 			"title": "Account",
@@ -954,7 +984,11 @@
 			"title": "Wat is er nieuw?",
 			"subtitle": "Bekijk wat er veranderd is in de nieuwste versies.",
 			"refresh": "Vernieuwen",
-			"noContent": "Geen gewijzigen gevonden. Probeer het later opnieuw."
+			"noContent": "Geen gewijzigen gevonden. Probeer het later opnieuw.",
+			"latest": "Nieuwste",
+			"installed": "Geïnstalleerd",
+			"viewFull": "Volledige changelog bekijken",
+			"openIssue": "Probleem melden"
 		},
 		"developer": {
 			"title": "Ontwikkelaar",
@@ -962,7 +996,7 @@
 			"apiKeys": {
 				"title": "API-sleutels",
 				"description": "Maak sleutels aan en beheer ze om de MotoMate API te gebruiken.",
-				"empty": "Nog geen API-sleutels.",
+				"empty": "Je hebt nog geen API-sleutels aangemaakt!",
 				"create": "Sleutel maken",
 				"creating": "Maken...",
 				"nameLabel": "Naam",

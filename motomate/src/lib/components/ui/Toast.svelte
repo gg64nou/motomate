@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { toasts } from '$lib/stores/toasts.js';
+	import { toasts } from '$lib/stores/toasts.svelte.js';
 </script>
 
 <div class="toast-stack" aria-live="polite" aria-atomic="false">
-	{#each $toasts as toast (toast.id)}
+	{#each toasts.items as toast (toast.id)}
 		<div class="toast toast--{toast.type}" role="status">
 			<span class="toast-icon"
 				>{toast.type === 'success' ? '✓' : toast.type === 'error' ? '✕' : 'ℹ'}</span

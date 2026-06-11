@@ -22,7 +22,7 @@
 		<div class="card-task">{taskName}</div>
 		<div class="card-detail">{detail}</div>
 	</div>
-	<div class="card-cta" aria-hidden="true">{$_('vehicle.detail.logLink')} →</div>
+	<div class="card-cta" aria-hidden="true">→</div>
 </a>
 
 <style>
@@ -30,29 +30,27 @@
 		display: flex;
 		align-items: center;
 		gap: 1rem;
-		padding: 1rem 1.25rem;
+		padding: 0.875rem 1.25rem;
 		border: 1px solid var(--border);
 		border-radius: 8px;
-		border-left-width: 3px;
 		text-decoration: none;
-		transition: border-color 0.15s;
+		transition:
+			background 0.15s,
+			border-color 0.15s;
 	}
 	.attention-card--due {
-		border-left-color: var(--status-due);
 		background: color-mix(in srgb, var(--status-due) 6%, var(--bg));
+		border-color: color-mix(in srgb, var(--status-due) 20%, var(--border));
 	}
 	.attention-card--overdue {
-		border-left-color: var(--status-overdue);
 		background: color-mix(in srgb, var(--status-overdue) 6%, var(--bg));
-	}
-	.attention-card:hover {
-		border-color: var(--border-strong);
+		border-color: color-mix(in srgb, var(--status-overdue) 20%, var(--border));
 	}
 	.attention-card--due:hover {
-		border-left-color: var(--status-due);
+		background: color-mix(in srgb, var(--status-due) 10%, var(--bg));
 	}
 	.attention-card--overdue:hover {
-		border-left-color: var(--status-overdue);
+		background: color-mix(in srgb, var(--status-overdue) 10%, var(--bg));
 	}
 
 	.card-body {
@@ -60,18 +58,19 @@
 		min-width: 0;
 	}
 	.card-vehicle {
-		font-size: var(--text-xs);
+		font-size: var(--text-sm);
 		font-weight: 500;
 		color: var(--text-muted);
 		margin-bottom: 0.125rem;
 	}
 	.card-task {
 		font-size: var(--text-base);
-		font-weight: 500;
+		font-weight: 600;
 		color: var(--text);
 	}
 	.card-detail {
 		font-size: var(--text-sm);
+		font-weight: 400;
 		margin-top: 0.125rem;
 	}
 	.attention-card--due .card-detail {
@@ -82,16 +81,8 @@
 	}
 
 	.card-cta {
-		font-size: var(--text-sm);
-		font-weight: 500;
+		font-size: var(--text-base);
 		color: var(--text-subtle);
 		flex-shrink: 0;
-		white-space: nowrap;
-	}
-	.attention-card--due .card-cta {
-		color: var(--status-due);
-	}
-	.attention-card--overdue .card-cta {
-		color: var(--status-overdue);
 	}
 </style>

@@ -104,6 +104,7 @@ export const UserSettingsSchema = z.object({
 	currency: z.string().length(3).default('EUR'),
 	odometer_unit: DistanceUnitSchema.default(DEFAULT_ODOMETER_UNIT),
 	locale: z.string().default('en'),
+	display_name: z.string().min(1).max(80).trim().nullable().optional(),
 	notification_channels: NotificationChannelsSchema,
 	favorite_vehicle: z.string().nonempty().max(64).nullable().optional(),
 	avatar_key: z.string().max(500).nullable().optional(),
@@ -138,7 +139,9 @@ export const VehicleMetaSchema = z.object({
 		.optional(),
 	displacement_cc: optPosInt(),
 	fuel_type: z.enum(['petrol', 'diesel', 'electric', 'hybrid']).optional(),
-	avatar_emoji: optStr(10)
+	avatar_emoji: optStr(10),
+	pinned_doc_id: optStr(50),
+	pinned_doc_label: optStr(80)
 });
 
 export const CreateVehicleSchema = z.object({

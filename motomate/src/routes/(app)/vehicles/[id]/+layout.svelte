@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page, navigating } from '$app/stores';
+	import { page, navigating } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { tick } from 'svelte';
@@ -20,10 +20,32 @@
 	let avatarCacheBuster = $state(0);
 	let tabsEl: HTMLElement | undefined = $state();
 	let popoverEl: HTMLElement | undefined = $state();
+	let showPinPicker = $state(false);
+	let pinSearch = $state('');
+	let pinSearchEl: HTMLInputElement | undefined = $state();
+
+	$effect(() => {
+		if (showPinPicker) {
+			tick().then(() => pinSearchEl?.focus());
+		} else {
+			pinSearch = '';
+		}
+	});
 
 	// Derived logic
 	const vehicle = $derived(data.vehicle);
 	const locale = $derived(data.user?.settings?.locale ?? 'en');
+	const pinnedDoc = $derived(data.pinnedDoc);
+	const docList = $derived(data.docList);
+	const filteredDocList = $derived(
+		pinSearch.trim().length === 0
+			? docList
+			: docList.filter(
+					(d) =>
+						d.name.toLowerCase().includes(pinSearch.toLowerCase()) ||
+						d.doc_type.toLowerCase().includes(pinSearch.toLowerCase())
+				)
+	);
 
 	let displayOdo = $state(0);
 
@@ -99,7 +121,7 @@
 	]);
 
 	const activeTabId = $derived(
-		tabs.findLast((t) => $page.url.pathname.startsWith(t.href) || $page.url.pathname === t.href)
+		tabs.findLast((t) => page.url.pathname.startsWith(t.href) || page.url.pathname === t.href)
 			?.id ?? 'timeline'
 	);
 
@@ -143,10 +165,21 @@
 		'🌟'
 	];
 
-	/**
-	 * Standardized Submit Handler
-	 * Ensures SvelteKit handles the response without a page refresh.
-	 */
+	const handlePinSubmit = () => {
+		return async ({ update }: { update: any }) => {
+			await update();
+			await invalidateAll();
+			showPinPicker = false;
+		};
+	};
+
+	const handleLabelSave = () => {
+		return async ({ update }: { update: any }) => {
+			await update();
+			await invalidateAll();
+		};
+	};
+
 	const handleAvatarSubmit = () => {
 		return async ({ update }: { update: any }) => {
 			// update() handles the background data refresh
@@ -205,6 +238,256 @@
 						<span class="odo-unit">{vehicle.odometer_unit}</span>
 					</div>
 				</div>
+
+				<div class="pin-widget" class:pin-widget--pinned={pinnedDoc !== null}>
+					{#if pinnedDoc}
+						<a
+							href="/api/files?key={pinnedDoc.storage_key}"
+							target="_blank"
+							rel="noopener"
+							class="pin-content"
+							aria-label={vehicle.meta?.pinned_doc_label || pinnedDoc.title || pinnedDoc.name}
+						>
+							<span class="pin-doc-name"
+								>{vehicle.meta?.pinned_doc_label || pinnedDoc.title || pinnedDoc.name}</span
+							>
+						</a>
+
+						<div
+							class="pin-actions"
+							role="group"
+							aria-label={$_('vehicle.layout.pinnedDoc.actions')}
+						>
+							<a
+								href="/api/files?key={pinnedDoc.storage_key}"
+								target="_blank"
+								rel="noopener"
+								class="pin-action"
+								title={$_('vehicle.layout.pinnedDoc.openFile')}
+							>
+								<svg
+									width="11"
+									height="11"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+									<polyline points="15 3 21 3 21 9" />
+									<line x1="10" y1="14" x2="21" y2="3" />
+								</svg>
+							</a>
+							<a
+								href="/vehicles/{vehicle.id}/documents?highlight={pinnedDoc.id}"
+								class="pin-action"
+								title={$_('vehicle.layout.pinnedDoc.viewInList')}
+							>
+								<svg
+									width="11"
+									height="11"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<line x1="8" y1="6" x2="21" y2="6" />
+									<line x1="8" y1="12" x2="21" y2="12" />
+									<line x1="8" y1="18" x2="21" y2="18" />
+									<line x1="3" y1="6" x2="3.01" y2="6" />
+									<line x1="3" y1="12" x2="3.01" y2="12" />
+									<line x1="3" y1="18" x2="3.01" y2="18" />
+								</svg>
+							</a>
+							<button
+								type="button"
+								class="pin-action"
+								onclick={() => (showPinPicker = !showPinPicker)}
+								title={$_('vehicle.layout.pinnedDoc.editPin')}
+							>
+								<svg
+									width="11"
+									height="11"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M12 20h9" />
+									<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+								</svg>
+							</button>
+						</div>
+					{:else}
+						<button
+							type="button"
+							class="pin-content"
+							onclick={() => (showPinPicker = !showPinPicker)}
+							aria-label={$_('vehicle.layout.pinnedDoc.pin')}
+						>
+							<svg
+								class="pin-empty-icon"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+								<polyline points="14 2 14 8 20 8" />
+								<line x1="16" y1="13" x2="8" y2="13" />
+								<line x1="16" y1="17" x2="8" y2="17" />
+							</svg>
+							<span class="pin-empty-label">{$_('vehicle.layout.pinnedDoc.pin')}</span>
+						</button>
+					{/if}
+
+					{#if showPinPicker}
+						<div
+							class="pin-picker-overlay"
+							role="presentation"
+							onclick={() => (showPinPicker = false)}
+						></div>
+						<div class="pin-picker" role="dialog" aria-label={$_('vehicle.layout.pinnedDoc.pin')}>
+							<div class="pin-picker-search">
+								<svg
+									class="pin-search-icon"
+									width="13"
+									height="13"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<circle cx="11" cy="11" r="8" />
+									<line x1="21" y1="21" x2="16.65" y2="16.65" />
+								</svg>
+								<input
+									bind:this={pinSearchEl}
+									bind:value={pinSearch}
+									type="search"
+									class="pin-search-input"
+									placeholder={$_('vehicle.layout.pinnedDoc.searchPlaceholder')}
+									autocomplete="off"
+									onkeydown={(e) => e.key === 'Escape' && (showPinPicker = false)}
+								/>
+								{#if pinSearch.length > 0}
+									<button
+										type="button"
+										class="pin-search-clear"
+										onclick={() => {
+											pinSearch = '';
+											pinSearchEl?.focus();
+										}}
+										aria-label="Clear search"
+									>
+										<svg
+											width="10"
+											height="10"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2.5"
+											stroke-linecap="round"
+											aria-hidden="true"
+										>
+											<line x1="18" y1="6" x2="6" y2="18" />
+											<line x1="6" y1="6" x2="18" y2="18" />
+										</svg>
+									</button>
+								{/if}
+							</div>
+							<div class="pin-picker-list" role="menu">
+								{#if docList.length === 0}
+									<p class="pin-picker-empty">{$_('vehicle.layout.pinnedDoc.noDocs')}</p>
+								{:else if filteredDocList.length === 0}
+									<p class="pin-picker-empty">
+										{$_('vehicle.layout.pinnedDoc.noResults', { values: { q: pinSearch } })}
+									</p>
+								{:else}
+									{#each filteredDocList as doc}
+										<form
+											method="POST"
+											action="/vehicles/{vehicle.id}/edit?/pinDocument"
+											use:enhance={handlePinSubmit}
+										>
+											<input type="hidden" name="doc_id" value={doc.id} />
+											<button
+												type="submit"
+												class="pin-picker-item"
+												class:pin-picker-item--active={pinnedDoc?.id === doc.id}
+												role="menuitem"
+											>
+												<span class="doc-chip-type">{$_('documents.types.' + doc.doc_type)}</span>
+												<span class="pin-picker-name">{doc.title || doc.name}</span>
+											</button>
+										</form>
+									{/each}
+								{/if}
+							</div>
+							{#if pinnedDoc}
+								<div class="pin-picker-sep"></div>
+								<form
+									method="POST"
+									action="/vehicles/{vehicle.id}/edit?/pinDocument"
+									use:enhance={handleLabelSave}
+									class="pin-label-form"
+								>
+									<input type="hidden" name="doc_id" value={pinnedDoc.id} />
+									<label class="pin-label-field">
+										<span class="pin-label-caption"
+											>{$_('vehicle.layout.pinnedDoc.customLabel')}</span
+										>
+										<div class="pin-label-input-row">
+											<input
+												type="text"
+												name="pin_label"
+												class="pin-label-input"
+												value={vehicle.meta?.pinned_doc_label ?? ''}
+												placeholder={pinnedDoc.title || pinnedDoc.name}
+												maxlength="80"
+											/>
+											<button type="submit" class="pin-label-save">
+												{$_('common.save')}
+											</button>
+										</div>
+									</label>
+								</form>
+								<div class="pin-picker-sep"></div>
+								<form
+									method="POST"
+									action="/vehicles/{vehicle.id}/edit?/pinDocument"
+									use:enhance={handlePinSubmit}
+								>
+									<input type="hidden" name="doc_id" value="" />
+									<button
+										type="submit"
+										class="pin-picker-item pin-picker-item--remove"
+										role="menuitem"
+									>
+										{$_('vehicle.layout.pinnedDoc.remove')}
+									</button>
+								</form>
+							{/if}
+						</div>
+					{/if}
+				</div>
 			</div>
 		</div>
 
@@ -227,7 +510,7 @@
 		</nav>
 	</div>
 
-	<div class="vehicle-content" class:loading={$navigating}>
+	<div class="vehicle-content" class:loading={navigating.to !== null}>
 		{@render children()}
 	</div>
 
@@ -702,5 +985,341 @@
 	}
 	.popover-btn--danger:hover {
 		background: color-mix(in srgb, var(--status-overdue) 10%, transparent);
+	}
+
+	/* Pin widget */
+	.pin-widget {
+		position: relative;
+		margin-left: auto;
+		flex-shrink: 0;
+		align-self: stretch;
+	}
+	@media (max-width: 639px) {
+		.pin-widget {
+			display: none;
+		}
+	}
+	.pin-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.375rem;
+		width: 112px;
+		height: 100%;
+		border: 1px dashed var(--border);
+		border-radius: 8px;
+		background: transparent;
+		cursor: pointer;
+		padding: 0.75rem;
+		transition:
+			border-color 0.2s ease,
+			background 0.2s ease,
+			color 0.2s ease;
+		color: var(--text-subtle);
+		text-align: center;
+		font-family: var(--font-sans);
+	}
+	.pin-content:hover {
+		border-color: var(--accent);
+		color: var(--text-muted);
+		background: var(--accent-subtle);
+	}
+	.pin-widget--pinned .pin-content {
+		border-style: solid;
+		border-color: var(--border);
+		background: transparent;
+		align-items: flex-start;
+		justify-content: flex-start;
+		padding-top: 0.875rem;
+		width: 152px;
+		text-align: left;
+	}
+	.pin-widget--pinned .pin-content:hover {
+		border-color: var(--border-strong);
+		background: var(--bg-subtle);
+	}
+	.pin-empty-icon {
+		color: inherit;
+		flex-shrink: 0;
+		transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+	}
+	.pin-content:hover .pin-empty-icon {
+		transform: translateY(-3px) rotate(-6deg);
+	}
+	.pin-empty-label {
+		font-size: var(--text-xs);
+		font-weight: 400;
+		letter-spacing: 0.02em;
+		color: inherit;
+		line-height: var(--leading-snug);
+	}
+	.pin-doc-name {
+		font-size: var(--text-sm);
+		font-weight: 400;
+		color: var(--text-muted);
+		line-height: var(--leading-snug);
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		line-clamp: 4;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		word-break: break-word;
+	}
+	.pin-widget--pinned .pin-content:hover .pin-doc-name {
+		color: var(--text);
+	}
+	.pin-actions {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 36px;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		gap: 0.25rem;
+		padding: 0 0.5rem 0.375rem;
+		background: linear-gradient(
+			to bottom,
+			transparent 0%,
+			color-mix(in srgb, var(--bg-subtle) 70%, transparent) 50%,
+			var(--bg-subtle) 100%
+		);
+		border-bottom-left-radius: 7px;
+		border-bottom-right-radius: 7px;
+		opacity: 0;
+		transform: translateY(4px);
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+		pointer-events: none;
+	}
+	.pin-widget--pinned:hover .pin-actions {
+		opacity: 1;
+		transform: translateY(0);
+		pointer-events: all;
+	}
+	.pin-action {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 22px;
+		height: 22px;
+		border-radius: 4px;
+		background: var(--bg);
+		border: 1px solid var(--border);
+		color: var(--text-subtle);
+		text-decoration: none;
+		transition:
+			color 0.15s,
+			border-color 0.15s,
+			background 0.15s,
+			transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+		flex-shrink: 0;
+	}
+	.pin-action:hover {
+		color: var(--accent);
+		border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+		background: var(--accent-subtle);
+		transform: scale(1.1);
+	}
+	.pin-action:active {
+		transform: scale(0.95);
+	}
+	.pin-picker-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 29;
+	}
+	.pin-picker {
+		position: absolute;
+		right: 0;
+		top: calc(100% + 0.375rem);
+		background: var(--bg);
+		border: 1px solid var(--border-strong);
+		border-radius: 10px;
+		box-shadow: 0 4px 20px color-mix(in srgb, var(--text) 12%, transparent);
+		z-index: 30;
+		width: 300px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	.pin-picker-search {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.625rem 0.75rem;
+		border-bottom: 1px solid var(--border);
+		flex-shrink: 0;
+	}
+	.pin-search-icon {
+		color: var(--text-subtle);
+		flex-shrink: 0;
+	}
+	.pin-search-input {
+		flex: 1;
+		border: none;
+		background: transparent;
+		font-size: var(--text-sm);
+		color: var(--text);
+		font-family: var(--font-sans);
+		outline: none;
+		min-width: 0;
+		appearance: none;
+	}
+	.pin-search-input::placeholder {
+		color: var(--text-subtle);
+	}
+	.pin-search-input::-webkit-search-cancel-button {
+		display: none;
+	}
+	.pin-search-clear {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		background: var(--bg-muted);
+		border: none;
+		cursor: pointer;
+		color: var(--text-muted);
+		flex-shrink: 0;
+		transition:
+			background 0.1s,
+			color 0.1s;
+	}
+	.pin-search-clear:hover {
+		background: var(--border-strong);
+		color: var(--text);
+	}
+	.pin-picker-list {
+		padding: 0.375rem;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		max-height: 240px;
+		overflow-y: auto;
+	}
+	.pin-picker-empty {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		padding: 0.5rem 0.625rem;
+		margin: 0;
+	}
+	.pin-picker-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		width: 100%;
+		padding: 0.5rem 0.625rem;
+		border: none;
+		border-radius: 6px;
+		background: transparent;
+		cursor: pointer;
+		text-align: left;
+		transition: background 0.1s;
+		font-family: var(--font-sans);
+	}
+	.pin-picker-item:hover {
+		background: var(--bg-muted);
+	}
+	.pin-picker-item:active {
+		transform: scale(0.98);
+		transition: transform 0.08s ease;
+	}
+	.pin-picker-item--active {
+		background: var(--accent-subtle);
+	}
+	.pin-picker-item--active:hover {
+		background: color-mix(in srgb, var(--accent-subtle) 70%, var(--bg-muted));
+	}
+	.pin-picker-name {
+		font-size: var(--text-sm);
+		color: var(--text);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		flex: 1;
+		min-width: 0;
+	}
+	.pin-picker-item--remove {
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+		justify-content: center;
+	}
+	.pin-picker-item--remove:hover {
+		color: var(--status-overdue);
+		background: color-mix(in srgb, var(--status-overdue) 6%, transparent);
+	}
+	.pin-picker-sep {
+		height: 1px;
+		background: var(--border);
+		margin: 0;
+	}
+	.pin-label-form {
+		padding: 0.625rem 0.75rem;
+	}
+	.pin-label-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+	.pin-label-caption {
+		font-size: var(--text-xs);
+		font-weight: 500;
+		color: var(--text-muted);
+		letter-spacing: 0.01em;
+	}
+	.pin-label-input-row {
+		display: flex;
+		gap: 0.375rem;
+	}
+	.pin-label-input {
+		flex: 1;
+		min-width: 0;
+		padding: 0.375rem 0.5rem;
+		border: 1px solid var(--border-strong);
+		border-radius: 6px;
+		background: var(--bg);
+		color: var(--text);
+		font-size: var(--text-sm);
+		font-family: var(--font-sans);
+		outline: none;
+	}
+	.pin-label-input:focus {
+		border-color: var(--accent);
+		outline: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+		outline-offset: 0;
+	}
+	.pin-label-save {
+		padding: 0.375rem 0.625rem;
+		background: var(--bg-muted);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		color: var(--text);
+		cursor: pointer;
+		font-family: var(--font-sans);
+		white-space: nowrap;
+		transition:
+			background 0.1s,
+			border-color 0.1s;
+		flex-shrink: 0;
+	}
+	.pin-label-save:hover {
+		background: var(--border);
+		border-color: var(--border-strong);
+	}
+	.doc-chip-type {
+		font-size: var(--text-xs);
+		font-weight: 500;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		flex-shrink: 0;
 	}
 </style>
