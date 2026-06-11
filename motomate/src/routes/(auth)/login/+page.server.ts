@@ -64,7 +64,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 };
 
 export const actions: Actions = {
-	login: async ({ request, cookies, getClientAddress, locals }) => {
+	login: async ({ request, cookies, getClientAddress }) => {
 		const ip = getClientAddress();
 		const data = Object.fromEntries(await request.formData());
 		const rawLocale = String(data.locale ?? cookies.get('locale') ?? 'en');

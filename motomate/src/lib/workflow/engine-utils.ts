@@ -15,7 +15,9 @@ export function parseFiredAtMap(raw: string | null): Record<string, string> {
 		if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
 			return parsed as Record<string, string>;
 		}
-	} catch {}
+	} catch {
+		/* ignore malformed JSON */
+	}
 	return {};
 }
 
