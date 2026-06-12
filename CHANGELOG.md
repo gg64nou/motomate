@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1
+
+- New mobile navigation bar at the bottom of the screen with tabs for dashboard and garage, and a floating + button to quickly log entries
+- Notification panel in the top bar now shows your three most recent notifications, with dismiss and swipe-to-dismiss support
+- Light, dark, and system theme can now be selected from Settings > Profile
+- Fix: toast notifications no longer repeat for the same event
+
 ## 0.3.0
 
 - Added 'Developer' tab in the profile page, allowing you to setup access keys for the REST API
