@@ -1,6 +1,13 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import { markRead, markAllRead } from '$lib/workflow/channels/inapp.js';
+import { markRead, markAllRead, getNotifications } from '$lib/workflow/channels/inapp.js';
+
+export const GET: RequestHandler = async ({ locals, url }) => {
+	if (!locals.user) error(401);
+	const limit = Math.min(Number(url.searchParams.get('limit') ?? '3'), 10);
+	const items = await getNotifications(locals.user.id, limit, 0, 'all');
+	return json(items);
+};
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!locals.user) error(401);

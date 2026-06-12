@@ -10,7 +10,9 @@
 		isDistanceUnit
 	} from '$lib/utils/measurement.js';
 	import { untrack } from 'svelte';
+	import { browser } from '$app/environment';
 	import { dicebearUri, randomSeed } from '$lib/utils/dicebear.js';
+	import { resolveTheme, readStoredTheme } from '$lib/utils/theme.js';
 
 	let { data, form } = $props<{
 		data: { user: User };
@@ -74,6 +76,23 @@
 			? data.user.settings.odometer_unit
 			: DEFAULT_ODOMETER_UNIT
 	);
+
+	const themeOptions = [
+		{ id: 'light' as const, labelKey: 'layout.theme.light' },
+		{ id: 'dark' as const, labelKey: 'layout.theme.dark' },
+		{ id: 'system' as const, labelKey: 'layout.theme.system' }
+	];
+	let selectedTheme = $state<'light' | 'dark' | 'system'>('system');
+
+	$effect(() => {
+		if (browser) selectedTheme = readStoredTheme();
+	});
+
+	function setTheme(t: 'light' | 'dark' | 'system') {
+		selectedTheme = t;
+		localStorage.setItem('theme', t);
+		document.documentElement.dataset.theme = resolveTheme(t);
+	}
 </script>
 
 <svelte:head><title>{$_('settings.profile.title')} &middot; Settings</title></svelte:head>
@@ -183,6 +202,22 @@
 			{saving ? $_('settings.profile.saving') : $_('settings.profile.submit')}
 		</button>
 	</form>
+</section>
+
+<section class="setting-section">
+	<h3 class="sub-title">{$_('layout.theme.title')}</h3>
+	<div class="toggle-row">
+		{#each themeOptions as opt}
+			<button
+				type="button"
+				class="toggle-opt"
+				class:toggle-opt--active={selectedTheme === opt.id}
+				onclick={() => setTheme(opt.id)}
+			>
+				{$_(opt.labelKey)}
+			</button>
+		{/each}
+	</div>
 </section>
 
 {#if showAvatarPopover}
@@ -384,6 +419,9 @@
 		font-weight: 500;
 		color: var(--text-muted);
 		background: var(--bg-subtle);
+		border: none;
+		border-radius: 0;
+		transition: background 0.1s, color 0.1s;
 	}
 	.toggle-opt--active {
 		background: var(--accent);

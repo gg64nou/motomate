@@ -1061,7 +1061,8 @@
 		"nav": {
 			"dashboard": "Painel",
 			"garage": "Garage",
-			"settings": "Definições"
+			"settings": "Definições",
+			"profile": "Perfil"
 		},
 		"theme": {
 			"title": "Tema",
@@ -1088,6 +1089,12 @@
 			"financeDesc": "Combustível, seguro ou peças",
 			"usage": "Uso",
 			"usageDesc": "Horas ou leitura no contador"
+		},
+		"notifications": {
+			"title": "Notificações",
+			"empty": "Sem novas notificações",
+			"viewAll": "Ver tudo",
+			"error": "Não foi possível carregar as notificações"
 		}
 	},
 	"notifications": {

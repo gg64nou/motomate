@@ -1062,7 +1062,8 @@
 		"nav": {
 			"dashboard": "Dashboard",
 			"garage": "Garage",
-			"settings": "Impostazioni"
+			"settings": "Impostazioni",
+			"profile": "Profilo"
 		},
 		"theme": {
 			"title": "Tema",
@@ -1089,6 +1090,12 @@
 			"financeDesc": "Carburante, assicurazione o ricambi",
 			"usage": "Utilizzo",
 			"usageDesc": "Ore o lettura sul tuo contatore"
+		},
+		"notifications": {
+			"title": "Notifiche",
+			"empty": "Nessuna nuova notifica",
+			"viewAll": "Vedi tutte",
+			"error": "Impossibile caricare le notifiche"
 		}
 	},
 	"notifications": {

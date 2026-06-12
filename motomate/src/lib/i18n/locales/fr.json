@@ -1061,7 +1061,8 @@
 		"nav": {
 			"dashboard": "Tableau de bord",
 			"garage": "Garage",
-			"settings": "Paramètres"
+			"settings": "Paramètres",
+			"profile": "Profil"
 		},
 		"theme": {
 			"title": "Thème",
@@ -1088,6 +1089,12 @@
 			"financeDesc": "Carburant, assurance ou pièces",
 			"usage": "Usage",
 			"usageDesc": "Heures ou relevé sur votre compteur"
+		},
+		"notifications": {
+			"title": "Notifications",
+			"empty": "Aucune nouvelle notification",
+			"viewAll": "Tout afficher",
+			"error": "Impossible de charger les notifications"
 		}
 	},
 	"notifications": {

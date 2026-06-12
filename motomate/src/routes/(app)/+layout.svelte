@@ -49,7 +49,8 @@
 		{ id: 'system', labelKey: 'layout.theme.system', icon: Monitor }
 	] as const;
 
-	let notifCount = $derived(data.unreadCount ?? 0);
+	let notifCountAdjustment = $state(0);
+	const notifCount = $derived(Math.max(0, (data.unreadCount ?? 0) - notifCountAdjustment));
 	const topnavAvatarUri = $derived(
 		!data.user.settings?.avatar_key && data.user.settings?.avatar_seed
 			? dicebearUri(data.user.settings.avatar_seed)
@@ -57,26 +58,128 @@
 	);
 	let shortcutsOpen = $state(false);
 	let themeMenuOpen = $state(false);
-	let isMobile = $state(false);
+	let avatarMenuOpen = $state(false);
+	let notifMenuOpen = $state(false);
 	let logoutConfirmOpen = $state(false);
 
-	function checkMobile() {
-		isMobile = window.innerWidth <= 768;
+	type NotifItem = {
+		id: string;
+		title: string;
+		body: string;
+		created_at: string;
+		read_at: string | null;
+	};
+	let notifItems = $state<NotifItem[]>([]);
+	let notifLoading = $state(false);
+	let notifError = $state(false);
+
+	function timeAgo(dateStr: string): string {
+		const diff = Date.now() - new Date(dateStr).getTime();
+		const mins = Math.floor(diff / 60000);
+		if (mins < 2) return 'now';
+		if (mins < 60) return `${mins}m`;
+		const hrs = Math.floor(mins / 60);
+		if (hrs < 24) return `${hrs}h`;
+		const days = Math.floor(hrs / 24);
+		if (days < 7) return `${days}d`;
+		return new Date(dateStr).toLocaleDateString(data.user.settings.locale ?? 'en', {
+			month: 'short',
+			day: 'numeric'
+		});
 	}
 
-	$effect(() => {
-		checkMobile();
-		let rafId: number;
-		function onResize() {
-			cancelAnimationFrame(rafId);
-			rafId = requestAnimationFrame(checkMobile);
+	async function fetchNotifications() {
+		if (notifLoading) return;
+		notifLoading = true;
+		notifError = false;
+		try {
+			const res = await fetch('/api/notifications?limit=3');
+			if (res.ok) notifItems = await res.json();
+			else notifError = true;
+		} catch {
+			notifError = true;
+		} finally {
+			notifLoading = false;
 		}
-		window.addEventListener('resize', onResize, { passive: true });
-		return () => {
-			cancelAnimationFrame(rafId);
-			window.removeEventListener('resize', onResize);
+	}
+
+	async function dismissNotif(item: NotifItem) {
+		const wasUnread = item.read_at == null;
+		notifItems = notifItems.filter((n) => n.id !== item.id);
+		if (wasUnread) notifCountAdjustment++;
+		fetch('/api/notifications', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ id: item.id })
+		});
+	}
+
+	function toggleNotifMenu() {
+		themeMenuOpen = false;
+		avatarMenuOpen = false;
+		notifMenuOpen = !notifMenuOpen;
+		if (notifMenuOpen) {
+			notifItems = [];
+			fetchNotifications();
+		}
+	}
+
+	function swipeable(node: HTMLElement, params: { onDismiss: () => void }) {
+		let startX = 0;
+		let startY = 0;
+		let currentX = 0;
+		let isHorizontal: boolean | null = null;
+
+		function onStart(e: TouchEvent) {
+			startX = e.touches[0].clientX;
+			startY = e.touches[0].clientY;
+			currentX = 0;
+			isHorizontal = null;
+			node.style.transition = 'none';
+		}
+
+		function onMove(e: TouchEvent) {
+			const dx = e.touches[0].clientX - startX;
+			const dy = e.touches[0].clientY - startY;
+			if (isHorizontal === null && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+				isHorizontal = Math.abs(dx) > Math.abs(dy);
+			}
+			if (!isHorizontal) return;
+			e.preventDefault();
+			currentX = dx;
+			node.style.transform = `translateX(${dx}px)`;
+			node.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 120));
+		}
+
+		function onEnd() {
+			if (!isHorizontal) return;
+			if (Math.abs(currentX) > 80) {
+				node.style.transition = 'transform 0.18s ease, opacity 0.18s ease';
+				node.style.transform = `translateX(${currentX > 0 ? '120%' : '-120%'})`;
+				node.style.opacity = '0';
+				setTimeout(() => params.onDismiss(), 180);
+			} else {
+				node.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+				node.style.transform = '';
+				node.style.opacity = '';
+			}
+		}
+
+		node.addEventListener('touchstart', onStart, { passive: true });
+		node.addEventListener('touchmove', onMove, { passive: false });
+		node.addEventListener('touchend', onEnd, { passive: true });
+
+		return {
+			update(p: { onDismiss: () => void }) {
+				params = p;
+			},
+			destroy() {
+				node.removeEventListener('touchstart', onStart);
+				node.removeEventListener('touchmove', onMove);
+				node.removeEventListener('touchend', onEnd);
+			}
 		};
-	});
+	}
 
 	// Quick-add modal
 	let quickAddOpen = $state(false);
@@ -191,17 +294,17 @@
 	}
 
 	function handleClickOutside(e: MouseEvent) {
-		if (themeMenuOpen) {
-			const target = e.target as Element;
-			if (!target.closest('.theme-menu-container') && !target.closest('.theme-mobile-trigger')) {
-				themeMenuOpen = false;
-			}
-		}
+		const target = e.target as Element;
+		if (themeMenuOpen && !target.closest('.theme-menu-container')) themeMenuOpen = false;
+		if (avatarMenuOpen && !target.closest('.avatar-menu-container')) avatarMenuOpen = false;
+		if (notifMenuOpen && !target.closest('.notif-menu-container')) notifMenuOpen = false;
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'Escape' && themeMenuOpen) {
-			themeMenuOpen = false;
+		if (e.key === 'Escape') {
+			if (themeMenuOpen) themeMenuOpen = false;
+			if (avatarMenuOpen) avatarMenuOpen = false;
+			if (notifMenuOpen) notifMenuOpen = false;
 			return;
 		}
 
@@ -216,9 +319,9 @@
 				if (k === 'd') goto('/dashboard');
 				if (k === 'g') goto('/vehicles');
 				if (k === 's') goto('/settings');
-				window.removeEventListener('keydown', handleSecondKey);
 			};
 			window.addEventListener('keydown', handleSecondKey, { once: true });
+			setTimeout(() => window.removeEventListener('keydown', handleSecondKey), 1500);
 		}
 		if (key === 'n') {
 			e.preventDefault();
@@ -272,7 +375,7 @@
 						{/if}
 					</button>
 
-					{#if themeMenuOpen && !isMobile}
+					{#if themeMenuOpen}
 						<button
 							type="button"
 							class="menu-overlay"
@@ -302,31 +405,152 @@
 					{/if}
 				</div>
 
-				<div class="action-item">
-					<NotificationBell
-						count={notifCount}
-						onclick={() => goto('/settings/notifications/all')}
-					/>
+				<div class="action-item notif-menu-container">
+					<NotificationBell count={notifCount} onclick={toggleNotifMenu} />
+
+					{#if notifMenuOpen}
+						<div
+							class="notif-dropdown"
+							in:fly={{ y: 8, duration: 150 }}
+							out:fade={{ duration: 100 }}
+						>
+							{#if notifLoading}
+								<div class="notif-loading">
+									<div class="notif-placeholder"></div>
+									<div class="notif-placeholder"></div>
+									<div class="notif-placeholder"></div>
+								</div>
+							{:else if notifError}
+								<p class="notif-empty notif-empty--error">{$_('layout.notifications.error')}</p>
+							{:else if notifItems.length === 0}
+								<p class="notif-empty">{$_('layout.notifications.empty')}</p>
+							{:else}
+								<div class="notif-list">
+									{#each notifItems as item (item.id)}
+										<div
+											class="notif-item"
+											class:notif-item--unread={!item.read_at}
+											use:swipeable={{ onDismiss: () => dismissNotif(item) }}
+										>
+											<div class="notif-item-row">
+												<span class="notif-title">{item.title}</span>
+												<span class="notif-time">{timeAgo(item.created_at)}</span>
+												<button
+													type="button"
+													class="notif-dismiss"
+													onclick={() => dismissNotif(item)}
+													aria-label="Dismiss"
+												>
+													<svg
+														viewBox="0 0 24 24"
+														fill="none"
+														stroke="currentColor"
+														stroke-width="2.5"
+														stroke-linecap="round"
+														aria-hidden="true"
+													>
+														<line x1="18" y1="6" x2="6" y2="18" /><line
+															x1="6"
+															y1="6"
+															x2="18"
+															y2="18"
+														/>
+													</svg>
+												</button>
+											</div>
+											{#if item.body}
+												<p class="notif-body">{item.body}</p>
+											{/if}
+										</div>
+									{/each}
+								</div>
+							{/if}
+
+							<a
+								href="/settings/notifications/all"
+								class="notif-footer"
+								onclick={() => (notifMenuOpen = false)}
+							>
+								{$_('layout.notifications.viewAll')}
+								<svg
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<polyline points="9 18 15 12 9 6" />
+								</svg>
+							</a>
+						</div>
+					{/if}
 				</div>
 
-				<a href="/settings/profile" class="topnav-avatar" aria-label="Profile settings">
-					{#if data.user.settings?.avatar_key}
-						<img
-							src="/api/files?key={data.user.settings.avatar_key}"
-							alt=""
-							class="topnav-avatar-img"
+				<a
+					href="/settings"
+					class="topnav-settings-mobile"
+					class:active={page.url.pathname.startsWith('/settings')}
+					aria-label={$_('layout.nav.settings')}
+				>
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.75"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<circle cx="12" cy="12" r="3" />
+						<path
+							d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
 						/>
-					{:else if topnavAvatarUri}
-						<img src={topnavAvatarUri} alt="" class="topnav-avatar-img" />
-					{:else}
-						<span class="topnav-avatar-initials">{(data.user.email?.[0] ?? '?').toUpperCase()}</span
-						>
-					{/if}
+					</svg>
 				</a>
 
-				<button type="button" class="topnav-signout" onclick={() => (logoutConfirmOpen = true)}
-					>{$_('layout.signOut')}</button
-				>
+				<div class="avatar-menu-container">
+					<button
+						type="button"
+						class="topnav-avatar"
+						class:open={avatarMenuOpen}
+						onclick={() => (avatarMenuOpen = !avatarMenuOpen)}
+						aria-label="Profile menu"
+						aria-expanded={avatarMenuOpen}
+					>
+						{#if data.user.settings?.avatar_key}
+							<img
+								src="/api/files?key={data.user.settings.avatar_key}"
+								alt=""
+								class="topnav-avatar-img"
+							/>
+						{:else if topnavAvatarUri}
+							<img src={topnavAvatarUri} alt="" class="topnav-avatar-img" />
+						{:else}
+							<span class="topnav-avatar-initials"
+								>{(data.user.email?.[0] ?? '?').toUpperCase()}</span
+							>
+						{/if}
+					</button>
+
+					{#if avatarMenuOpen}
+						<div
+							class="avatar-dropdown"
+							in:fly={{ y: 8, duration: 150 }}
+							out:fade={{ duration: 100 }}
+						>
+							<button
+								type="button"
+								class="avatar-menu-item avatar-menu-item--danger"
+								onclick={() => {
+									avatarMenuOpen = false;
+									logoutConfirmOpen = true;
+								}}>{$_('layout.signOut')}</button
+							>
+						</div>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</header>
@@ -358,6 +582,27 @@
 			<span class="tab-label">{$_('layout.nav.dashboard')}</span>
 		</a>
 
+		<div class="bottom-tab bottom-tab--fab">
+			<button
+				class="fab-btn"
+				class:fab-btn--open={quickAddOpen}
+				onclick={openQuickAdd}
+				aria-label="Add entry"
+			>
+				<svg
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					aria-hidden="true"
+				>
+					<line x1="12" y1="5" x2="12" y2="19" />
+					<line x1="5" y1="12" x2="19" y2="12" />
+				</svg>
+			</button>
+		</div>
+
 		<a
 			href="/vehicles"
 			class="bottom-tab"
@@ -382,88 +627,7 @@
 			</svg>
 			<span class="tab-label">{$_('layout.nav.garage')}</span>
 		</a>
-
-		<div class="bottom-tab bottom-tab--fab">
-			<button
-				class="fab-btn"
-				class:fab-btn--open={quickAddOpen}
-				onclick={openQuickAdd}
-				aria-label="Add entry"
-			>
-				<svg
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2.5"
-					stroke-linecap="round"
-					aria-hidden="true"
-				>
-					<line x1="12" y1="5" x2="12" y2="19" />
-					<line x1="5" y1="12" x2="19" y2="12" />
-				</svg>
-			</button>
-		</div>
-
-		<a
-			href="/settings"
-			class="bottom-tab"
-			class:active={page.url.pathname.startsWith('/settings')}
-			aria-current={page.url.pathname.startsWith('/settings') ? 'page' : undefined}
-		>
-			<svg
-				class="tab-icon"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="1.75"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				aria-hidden="true"
-			>
-				<circle cx="12" cy="12" r="3" />
-				<path
-					d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-				/>
-			</svg>
-			<span class="tab-label">{$_('layout.nav.settings')}</span>
-		</a>
-
-		<button type="button" class="bottom-tab theme-mobile-trigger" onclick={toggleThemeMenu}>
-			<div class="tab-icon tab-icon--theme">
-				{#if CurrentThemeIcon}
-					<CurrentThemeIcon />
-				{/if}
-			</div>
-			<span class="tab-label">{$_('layout.theme.title')}</span>
-		</button>
 	</nav>
-
-	<!-- Mobile theme dropdown (above bottom bar) -->
-	{#if themeMenuOpen && isMobile}
-		<button
-			type="button"
-			class="menu-overlay"
-			onclick={() => (themeMenuOpen = false)}
-			aria-label="Close menu"
-		></button>
-		<div
-			class="theme-dropdown theme-dropdown--mobile"
-			in:fly={{ y: 8, duration: 150 }}
-			out:fade={{ duration: 100 }}
-		>
-			{#each themes as t}
-				<button
-					type="button"
-					class="theme-item"
-					class:selected={currentTheme === t.id}
-					onclick={() => setTheme(t.id)}
-				>
-					<span class="icon-wrapper"><t.icon /></span>
-					{$_(t.labelKey)}
-				</button>
-			{/each}
-		</div>
-	{/if}
 </div>
 
 <!-- Quick-add modal -->
@@ -692,6 +856,16 @@
 	</div>
 {/if}
 
+{#if notifMenuOpen}
+	<div
+		class="notif-backdrop"
+		role="presentation"
+		onclick={() => (notifMenuOpen = false)}
+		in:fade={{ duration: 150 }}
+		out:fade={{ duration: 100 }}
+	></div>
+{/if}
+
 <Toast />
 <ShortcutsModal bind:open={shortcutsOpen} />
 <ConfirmDialog
@@ -728,10 +902,18 @@
 		min-height: 100dvh;
 	}
 
+	.notif-backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.3);
+		z-index: 60;
+		cursor: default;
+	}
+
 	.topnav {
 		position: sticky;
 		top: 0;
-		z-index: 50;
+		z-index: 80;
 		background: var(--bg);
 		border-bottom: 1px solid var(--border);
 	}
@@ -759,12 +941,11 @@
 
 	.topnav-links {
 		display: flex;
-		gap: var(--space-1);
+		gap: var(--space-2);
 		margin-left: var(--space-4);
 	}
 
-	.topnav-link,
-	.topnav-signout {
+	.topnav-link {
 		padding: 0.4rem 0.8rem;
 		font-size: var(--text-sm);
 		font-weight: 500;
@@ -789,7 +970,15 @@
 	}
 
 	.topnav-link.active {
-		color: var(--text);
+		color: var(--accent);
+		background: var(--accent-subtle);
+		border-color: transparent;
+	}
+
+	.topnav-link.active:hover {
+		background: var(--accent-subtle);
+		color: var(--accent);
+		transform: none;
 	}
 
 	.topnav-link:active {
@@ -798,16 +987,13 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.topnav-link,
-		.topnav-signout {
+		.topnav-link {
 			transition:
 				color 0.1s,
 				background 0.1s;
 		}
 		.topnav-link:hover,
-		.topnav-link:active,
-		.topnav-signout:hover,
-		.topnav-signout:active {
+		.topnav-link:active {
 			transform: none;
 		}
 	}
@@ -817,6 +1003,46 @@
 		display: flex;
 		align-items: center;
 		gap: var(--space-2);
+	}
+
+	.topnav-settings-mobile {
+		display: none;
+		width: 42px;
+		height: 42px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 12px;
+		border: 3px solid transparent;
+		color: var(--text-muted);
+		text-decoration: none;
+		transition:
+			background 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+			color 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+			border-color 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+	}
+
+	.topnav-settings-mobile svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.topnav-settings-mobile:hover {
+		background: var(--bg-muted);
+		color: var(--text);
+	}
+
+	.topnav-settings-mobile:active {
+		background: color-mix(in srgb, var(--accent) 4%, transparent);
+		border-color: color-mix(in srgb, var(--accent) 15%, transparent);
+	}
+
+	.topnav-settings-mobile.active {
+		color: var(--accent);
+		background: var(--accent-subtle);
+	}
+
+	.topnav-settings-mobile.active:hover {
+		background: var(--accent-subtle);
 	}
 
 	.action-item {
@@ -848,7 +1074,6 @@
 	}
 
 	.theme-trigger :global(svg),
-	.bottom-tab :global(svg),
 	.theme-item :global(svg) {
 		width: 20px;
 		height: 20px;
@@ -930,11 +1155,13 @@
 		justify-content: center;
 		text-decoration: none;
 		flex-shrink: 0;
+		cursor: pointer;
 		transition:
 			background 0.15s cubic-bezier(0.25, 1, 0.5, 1),
 			border-color 0.15s cubic-bezier(0.25, 1, 0.5, 1);
 	}
-	.topnav-avatar:hover {
+	.topnav-avatar:hover,
+	.topnav-avatar.open {
 		background: var(--bg-muted);
 	}
 	.topnav-avatar:active {
@@ -958,30 +1185,238 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 0.6875rem;
+		font-size: var(--text-xs);
 		font-weight: 600;
 		color: var(--text-muted);
 		text-transform: uppercase;
 		line-height: 1;
 	}
 
-	.topnav-signout {
-		margin-left: 0;
+	.avatar-menu-container {
+		position: relative;
 	}
 
-	.topnav-signout:hover {
-		background: color-mix(in srgb, var(--status-overdue) 5%, transparent);
+	.avatar-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		margin-top: 8px;
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		padding: 0.4rem;
+		min-width: 160px;
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+		z-index: 105;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.avatar-menu-item {
+		display: flex;
+		align-items: center;
+		padding: 0.6rem 0.8rem;
+		border: 3px solid transparent;
+		background: transparent;
+		color: var(--text);
+		font-size: var(--text-sm);
+		font-weight: 500;
+		cursor: pointer;
+		border-radius: 12px;
+		text-align: left;
+		width: 100%;
+		text-decoration: none;
+	}
+
+	.avatar-menu-item:hover {
+		background: var(--bg-muted);
+	}
+
+	.avatar-menu-item:active {
+		background: color-mix(in srgb, var(--accent) 4%, transparent);
+		border-color: color-mix(in srgb, var(--accent) 15%, transparent);
+	}
+
+	.avatar-menu-item--danger {
 		color: var(--status-overdue);
-		border-color: color-mix(in srgb, var(--status-overdue) 10%, transparent);
-		transform: translateY(-1px);
 	}
 
-	.topnav-signout:active {
+	.avatar-menu-item--danger:hover {
+		background: color-mix(in srgb, var(--status-overdue) 5%, transparent);
+	}
+
+	.avatar-menu-item--danger:active {
 		background: color-mix(in srgb, var(--status-overdue) 10%, transparent);
 		border-color: color-mix(in srgb, var(--status-overdue) 20%, transparent);
-		color: var(--status-overdue);
-		transform: scale(0.97);
-		transition-duration: 0.06s;
+	}
+
+	/* Notification dropdown */
+	.notif-menu-container {
+		position: relative;
+	}
+
+	.notif-dropdown {
+		position: absolute;
+		top: 100%;
+		right: -0.5rem;
+		margin-top: 8px;
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		width: min(300px, calc(100vw - 2rem));
+		box-shadow:
+			0 2px 8px color-mix(in srgb, var(--text) 5%, transparent),
+			0 8px 24px color-mix(in srgb, var(--text) 7%, transparent);
+		z-index: 105;
+		overflow: hidden;
+	}
+
+	.notif-list {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.notif-item {
+		padding: 0.625rem 0.875rem;
+		border-bottom: 1px solid var(--border);
+		border-left: 3px solid transparent;
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		touch-action: pan-y;
+	}
+	.notif-item:last-child {
+		border-bottom: none;
+	}
+	.notif-item--unread {
+		border-left-color: var(--accent);
+	}
+
+	.notif-item-row {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+	}
+
+	.notif-title {
+		flex: 1;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		color: var(--text);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.notif-time {
+		font-size: var(--text-xs);
+		color: var(--text-subtle);
+		flex-shrink: 0;
+	}
+
+	.notif-dismiss {
+		width: 20px;
+		height: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: var(--text-subtle);
+		border-radius: 6px;
+		flex-shrink: 0;
+		opacity: 0.35;
+		transition:
+			opacity 0.1s,
+			background 0.1s;
+		padding: 0;
+	}
+	.notif-dismiss svg {
+		width: 11px;
+		height: 11px;
+	}
+	.notif-item:hover .notif-dismiss {
+		opacity: 1;
+	}
+	.notif-dismiss:hover {
+		background: var(--bg-muted);
+		color: var(--text);
+		opacity: 1;
+	}
+
+	.notif-body {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+		margin: 0;
+		line-height: var(--leading-snug);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.notif-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.75rem 0.875rem;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		color: var(--accent);
+		text-decoration: none;
+		border-top: 1px solid var(--border);
+		transition: background 0.1s;
+	}
+	.notif-footer:hover {
+		background: var(--bg-subtle);
+	}
+	.notif-footer svg {
+		width: 14px;
+		height: 14px;
+	}
+
+	.notif-empty {
+		padding: 1.25rem 0.875rem;
+		font-size: var(--text-sm);
+		color: var(--text-subtle);
+		text-align: center;
+		margin: 0;
+	}
+	.notif-empty--error {
+		color: var(--text-muted);
+	}
+
+	.notif-loading {
+		padding: 0.625rem 0.875rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.notif-placeholder {
+		height: 32px;
+		background: var(--bg-muted);
+		border-radius: 6px;
+		animation: notif-pulse 1.4s ease-in-out infinite;
+	}
+	.notif-placeholder:nth-child(2) {
+		animation-delay: 0.15s;
+		width: 85%;
+	}
+	.notif-placeholder:nth-child(3) {
+		animation-delay: 0.3s;
+		width: 70%;
+	}
+
+	@keyframes notif-pulse {
+		0%,
+		100% {
+			opacity: 0.4;
+		}
+		50% {
+			opacity: 0.8;
+		}
 	}
 
 	.icon-wrapper {
@@ -990,6 +1425,26 @@
 		justify-content: center;
 		width: 1.25rem;
 		height: 1.25rem;
+	}
+
+	.topnav-link:focus-visible,
+	.topnav-settings-mobile:focus-visible,
+	.theme-trigger:focus-visible,
+	.topnav-avatar:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+		border-radius: 8px;
+	}
+
+	.avatar-menu-item:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: -2px;
+		border-radius: 10px;
+	}
+
+	.bottom-tab:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: -3px;
 	}
 
 	.app-main {
@@ -1001,12 +1456,23 @@
 		display: none;
 		position: fixed;
 		bottom: 0;
-		width: 100%;
-		background: var(--bg);
-		border-top: 1px solid var(--border);
+		left: 0;
+		right: 0;
 		padding-bottom: env(safe-area-inset-bottom);
 		z-index: 50;
 		align-items: stretch;
+		overflow: visible;
+	}
+
+	.bottom-tabs::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--bg);
+		border-top: 1px solid var(--border);
+		pointer-events: none;
+		mask-image: radial-gradient(circle 40px at 50% 0px, transparent 40px, black 41px);
+		-webkit-mask-image: radial-gradient(circle 40px at 50% 0px, transparent 40px, black 41px);
 	}
 
 	.bottom-tab {
@@ -1021,11 +1487,13 @@
 		background: none;
 		border: none;
 		color: var(--text-muted);
-		font-size: 0.6875rem;
+		font-size: var(--text-xs);
 		font-weight: 500;
 		text-decoration: none;
 		cursor: pointer;
 		transition: color 0.1s;
+		position: relative;
+		z-index: 1;
 	}
 	.bottom-tab.active {
 		color: var(--accent);
@@ -1035,33 +1503,26 @@
 		height: 22px;
 		flex-shrink: 0;
 	}
-	.tab-icon--theme {
-		width: 22px;
-		height: 22px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.tab-icon--theme :global(svg) {
-		width: 20px;
-		height: 20px;
-	}
 	.tab-label {
 		line-height: 1;
 	}
 
 	/* FAB slot */
 	.bottom-tab--fab {
-		flex: 1;
+		flex: 0 0 80px;
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: center;
-		padding: 0;
 		position: relative;
+		z-index: 1;
 	}
 	.fab-btn {
-		width: 76px;
-		height: 76px;
+		position: fixed;
+		left: 50%;
+		bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+		transform: translateX(-50%);
+		width: 72px;
+		height: 72px;
 		border-radius: 50%;
 		background: var(--accent);
 		border: none;
@@ -1071,19 +1532,15 @@
 		justify-content: center;
 		color: #fff;
 		box-shadow: 0 2px 16px color-mix(in srgb, var(--accent) 45%, transparent);
+		z-index: 55;
 		transition:
 			background 0.15s,
-			transform 0.1s,
 			box-shadow 0.15s;
-		position: absolute;
-		bottom: -10px;
-		left: 50%;
-		transform: translateX(-50%);
 	}
 	.fab-btn svg {
-		width: 44px;
-		height: 44px;
-		stroke-width: 2;
+		width: 30px;
+		height: 30px;
+		stroke-width: 2.25;
 		transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 	.fab-btn--open svg {
@@ -1096,18 +1553,8 @@
 	@media (hover: hover) {
 		.fab-btn:hover {
 			background: var(--accent-hover);
-			box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 45%, transparent);
+			box-shadow: 0 4px 24px color-mix(in srgb, var(--accent) 50%, transparent);
 		}
-	}
-
-	/* Mobile theme dropdown (above bottom bar) */
-	.theme-dropdown--mobile {
-		position: fixed !important;
-		bottom: calc(4rem + env(safe-area-inset-bottom) + 0.5rem);
-		right: 0.75rem;
-		top: auto !important;
-		left: auto;
-		margin-top: 0;
 	}
 
 	/* Quick-add modal */
@@ -1291,7 +1738,13 @@
 	}
 
 	@media (max-width: 768px) {
-		.topnav {
+		.topnav-links {
+			display: none;
+		}
+		.topnav-settings-mobile {
+			display: flex;
+		}
+		.theme-menu-container {
 			display: none;
 		}
 		.bottom-tabs {

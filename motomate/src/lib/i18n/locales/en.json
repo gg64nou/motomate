@@ -1051,7 +1051,8 @@
 		"nav": {
 			"dashboard": "Dashboard",
 			"garage": "Garage",
-			"settings": "Settings"
+			"settings": "Settings",
+			"profile": "Profile"
 		},
 		"theme": {
 			"title": "Theme",
@@ -1078,6 +1079,12 @@
 			"usageDesc": "Hours or reading on your meter",
 			"finance": "Finance",
 			"financeDesc": "Fuel, insurance, or parts"
+		},
+		"notifications": {
+			"title": "Notifications",
+			"empty": "No new notifications",
+			"viewAll": "View all",
+			"error": "Could not load notifications"
 		}
 	},
 	"units": {

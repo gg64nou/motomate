@@ -1061,7 +1061,8 @@
 		"nav": {
 			"dashboard": "Übersicht",
 			"garage": "Garage",
-			"settings": "Einstellungen"
+			"settings": "Einstellungen",
+			"profile": "Profil"
 		},
 		"theme": {
 			"title": "Design",
@@ -1088,6 +1089,12 @@
 			"financeDesc": "Kraftstoff, Versicherung oder Teile",
 			"usage": "Verbrauch",
 			"usageDesc": "Stunden oder Stand am Zähler"
+		},
+		"notifications": {
+			"title": "Benachrichtigungen",
+			"empty": "Keine neuen Benachrichtigungen",
+			"viewAll": "Alle anzeigen",
+			"error": "Benachrichtigungen konnten nicht geladen werden"
 		}
 	},
 	"notifications": {

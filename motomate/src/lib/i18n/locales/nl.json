@@ -1061,7 +1061,8 @@
 		"nav": {
 			"dashboard": "Dashboard",
 			"garage": "Garage",
-			"settings": "Instellingen"
+			"settings": "Instellingen",
+			"profile": "Profiel"
 		},
 		"theme": {
 			"title": "Thema",
@@ -1088,6 +1089,12 @@
 			"financeDesc": "Brandstof, onderdelen of andere kosten",
 			"usage": "Draaiuren",
 			"usageDesc": "Uren of stand op je teller"
+		},
+		"notifications": {
+			"title": "Meldingen",
+			"empty": "Geen nieuwe meldingen",
+			"viewAll": "Alles bekijken",
+			"error": "Meldingen konden niet worden geladen"
 		}
 	},
 	"notifications": {
