@@ -421,7 +421,9 @@
 		background: var(--bg-subtle);
 		border: none;
 		border-radius: 0;
-		transition: background 0.1s, color 0.1s;
+		transition:
+			background 0.1s,
+			color 0.1s;
 	}
 	.toggle-opt--active {
 		background: var(--accent);
