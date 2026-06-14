@@ -8,8 +8,9 @@ register('it', () => import('./locales/it.json'));
 register('es', () => import('./locales/es.json'));
 register('nl', () => import('./locales/nl.json'));
 register('pt', () => import('./locales/pt.json'));
+register('ro', () => import('./locales/ro.json'));
 
-const SUPPORTED_LOCALES = ['en', 'de', 'fr', 'it', 'es', 'nl', 'pt'];
+const SUPPORTED_LOCALES = ['en', 'de', 'fr', 'it', 'es', 'nl', 'pt', 'ro'];
 
 function detectInitialLocale(): string {
 	if (!browser) return 'en';
