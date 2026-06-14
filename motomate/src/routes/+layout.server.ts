@@ -1,13 +1,12 @@
 import { env } from '$env/dynamic/public';
 import type { LayoutServerLoad } from './$types';
-
-const SUPPORTED_LOCALES = ['en', 'de', 'fr', 'it', 'es', 'nl', 'pt'];
+import { supportedLocales } from '$lib/i18n/locales.js';
 
 function localeFromAcceptLanguage(header: string | null): string {
 	if (!header) return 'en';
 	for (const entry of header.split(',')) {
 		const code = entry.split(';')[0].trim().split('-')[0].toLowerCase();
-		if (SUPPORTED_LOCALES.includes(code)) return code;
+		if ((supportedLocales as string[]).includes(code)) return code;
 	}
 	return 'en';
 }
@@ -26,6 +25,6 @@ export const load: LayoutServerLoad = async ({ locals, request, cookies }) => {
 
 	return {
 		user: locals.user,
-		locale: SUPPORTED_LOCALES.includes(locale) ? locale : 'en'
+		locale: (supportedLocales as string[]).includes(locale) ? locale : 'en'
 	};
 };

@@ -9,13 +9,7 @@ import type {
 	FinanceTransaction
 } from '$lib/db/schema.js';
 
-import en from '$lib/i18n/locales/en.json';
-import de from '$lib/i18n/locales/de.json';
-import fr from '$lib/i18n/locales/fr.json';
-import es from '$lib/i18n/locales/es.json';
-import it from '$lib/i18n/locales/it.json';
-import nl from '$lib/i18n/locales/nl.json';
-import pt from '$lib/i18n/locales/pt.json';
+import { locales, supportedLocales } from '$lib/i18n/locales.js';
 
 type PDFDoc = InstanceType<typeof PDFDocumentClass>;
 
@@ -80,8 +74,6 @@ const ML = 56;
 const CW = W - ML * 2;
 const FOOTER_H = 40;
 
-const LOCALE_DATA: Record<string, unknown> = { en, de, fr, es, it, nl, pt };
-
 const FALLBACK_TRANSLATIONS: ReportTranslations = {
 	generatedOn: 'Generated on',
 	currentOdometer: 'Current odometer',
@@ -110,9 +102,8 @@ const FALLBACK_TRANSLATIONS: ReportTranslations = {
 };
 
 function loadTranslations(locale: string): ReportTranslations {
-	const supported = ['en', 'nl', 'de', 'es', 'fr', 'it', 'pt'];
-	const lang = supported.includes(locale) ? locale : 'en';
-	const json = LOCALE_DATA[lang] as Record<string, unknown> | undefined;
+	const lang = (supportedLocales as string[]).includes(locale) ? locale : 'en';
+	const json = locales[lang as keyof typeof locales] as Record<string, unknown> | undefined;
 	const loaded = (json as any)?.vehicle?.edit?.settings?.report?.pdf as
 		| Partial<ReportTranslations>
 		| undefined;
