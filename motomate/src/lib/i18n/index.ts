@@ -2,6 +2,7 @@ import { register, init, locale, _, waitLocale } from 'svelte-i18n';
 import { browser } from '$app/environment';
 import { supportedLocales } from './locales.js';
 
+/* To add a locale: add JSON to locales/, register below, add to locales.ts */
 register('en', () => import('./locales/en.json'));
 register('de', () => import('./locales/de.json'));
 register('fr', () => import('./locales/fr.json'));
