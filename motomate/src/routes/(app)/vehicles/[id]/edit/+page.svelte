@@ -111,9 +111,12 @@
 	let showUnarchiveDialog = $state(false);
 
 	$effect(() => {
-		if ((form as any)?.unarchived) {
-			toasts.success($_('vehicle.edit.vehicleRestored'));
-		}
+		const f = form;
+		untrack(() => {
+			if ((f as any)?.unarchived) {
+				toasts.success($_('vehicle.edit.vehicleRestored'));
+			}
+		});
 	});
 </script>
 

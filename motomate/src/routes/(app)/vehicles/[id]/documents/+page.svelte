@@ -234,22 +234,25 @@
 	});
 
 	$effect(() => {
-		if (form?.uploaded) {
-			showForm = false;
-			selectedFile = null;
-			toasts.success($_('documents.toasts.uploaded'));
-		}
-		if (form?.renamed) {
-			editingDocId = null;
-			editingName = '';
-			toasts.success($_('documents.toasts.renamed'));
-		}
-		if (form?.deleted) {
-			toasts.success($_('documents.toasts.deleted'));
-		}
-		if (form?.error) {
-			toasts.error(String(form.error));
-		}
+		const f = form;
+		untrack(() => {
+			if (f?.uploaded) {
+				showForm = false;
+				selectedFile = null;
+				toasts.success($_('documents.toasts.uploaded'));
+			}
+			if (f?.renamed) {
+				editingDocId = null;
+				editingName = '';
+				toasts.success($_('documents.toasts.renamed'));
+			}
+			if (f?.deleted) {
+				toasts.success($_('documents.toasts.deleted'));
+			}
+			if (f?.error) {
+				toasts.error(String(f.error));
+			}
+		});
 	});
 </script>
 
