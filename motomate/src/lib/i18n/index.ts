@@ -1,6 +1,8 @@
 import { register, init, locale, _, waitLocale } from 'svelte-i18n';
 import { browser } from '$app/environment';
+import { supportedLocales } from './locales.js';
 
+/* To add a locale: add JSON to locales/, register below, add to locales.ts */
 register('en', () => import('./locales/en.json'));
 register('de', () => import('./locales/de.json'));
 register('fr', () => import('./locales/fr.json'));
@@ -10,12 +12,10 @@ register('nl', () => import('./locales/nl.json'));
 register('pt', () => import('./locales/pt.json'));
 register('ro', () => import('./locales/ro.json'));
 
-const SUPPORTED_LOCALES = ['en', 'de', 'fr', 'it', 'es', 'nl', 'pt', 'ro'];
-
 function detectInitialLocale(): string {
 	if (!browser) return 'en';
 	const stored = localStorage.getItem('locale');
-	if (stored && SUPPORTED_LOCALES.includes(stored)) return stored;
+	if (stored && (supportedLocales as string[]).includes(stored)) return stored;
 	return 'en';
 }
 

@@ -198,26 +198,26 @@
 			</div>
 		</label>
 
+		<div class="field">
+			<span class="field-label">{$_('layout.theme.title')}</span>
+			<div class="toggle-row">
+				{#each themeOptions as opt}
+					<button
+						type="button"
+						class="toggle-opt"
+						class:toggle-opt--active={selectedTheme === opt.id}
+						onclick={() => setTheme(opt.id)}
+					>
+						{$_(opt.labelKey)}
+					</button>
+				{/each}
+			</div>
+		</div>
+
 		<button type="submit" class="btn-secondary" disabled={saving}>
 			{saving ? $_('settings.profile.saving') : $_('settings.profile.submit')}
 		</button>
 	</form>
-</section>
-
-<section class="setting-section">
-	<h3 class="sub-title">{$_('layout.theme.title')}</h3>
-	<div class="toggle-row">
-		{#each themeOptions as opt}
-			<button
-				type="button"
-				class="toggle-opt"
-				class:toggle-opt--active={selectedTheme === opt.id}
-				onclick={() => setTheme(opt.id)}
-			>
-				{$_(opt.labelKey)}
-			</button>
-		{/each}
-	</div>
 </section>
 
 {#if showAvatarPopover}

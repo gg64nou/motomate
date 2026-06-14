@@ -22,24 +22,7 @@ import {
 	type MeasurementValue
 } from '../../utils/measurement.js';
 
-import en from '$lib/i18n/locales/en.json';
-import de from '$lib/i18n/locales/de.json';
-import fr from '$lib/i18n/locales/fr.json';
-import es from '$lib/i18n/locales/es.json';
-import it from '$lib/i18n/locales/it.json';
-import nl from '$lib/i18n/locales/nl.json';
-import pt from '$lib/i18n/locales/pt.json';
-
-type LocaleMessages = {
-	onboarding: {
-		presets: {
-			tasks: Record<string, string>;
-			descriptions: Record<string, string>;
-		};
-	};
-};
-
-const localeMessages: Record<string, LocaleMessages> = { en, de, fr, es, it, nl, pt };
+import { locales } from '$lib/i18n/locales.js';
 
 type ResolvedTemplateInterval = {
 	interval_measurement: number | null;
@@ -589,7 +572,7 @@ export async function applyDefaultTrackersFromHistory(
 	measurementUnit: MeasurementUnit = DEFAULT_ODOMETER_UNIT
 ): Promise<void> {
 	const userLocale = locale ?? 'en';
-	const messages = localeMessages[userLocale] ?? localeMessages['en'];
+	const messages = locales[userLocale as keyof typeof locales] ?? locales['en'];
 	const tasks = messages.onboarding.presets.tasks as Record<string, string>;
 	const descs = messages.onboarding.presets.descriptions as Record<string, string>;
 
