@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2
+
+- Romanian (ro) locale is now available, contributed by @gg64nou (#46)
+- Fix: theme selector in profile settings is now in the main section instead of a separate tab
+- Fix: toast notifications no longer overflow or stack incorrectly when multiple fire in quick succession (#47)
+
 ## 0.3.1
 
 - New mobile navigation bar at the bottom of the screen with tabs for dashboard and garage, and a floating + button to quickly log entries
