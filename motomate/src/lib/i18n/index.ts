@@ -10,6 +10,7 @@ register('it', () => import('./locales/it.json'));
 register('es', () => import('./locales/es.json'));
 register('nl', () => import('./locales/nl.json'));
 register('pt', () => import('./locales/pt.json'));
+register('ro', () => import('./locales/ro.json'));
 
 function detectInitialLocale(): string {
 	if (!browser) return 'en';

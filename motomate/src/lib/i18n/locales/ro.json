@@ -1,0 +1,1186 @@
+{
+	"common": {
+		"save": "Salvează",
+		"cancel": "Anulează",
+		"delete": "Șterge",
+		"edit": "Editează",
+		"add": "Adaugă",
+		"back": "Înapoi",
+		"continue": "Continuă",
+		"done": "Gata",
+		"loading": "Se încarcă...",
+		"optional": "(opțional)",
+		"required": "*",
+		"close": "Închide",
+		"saving": "Se salvează…",
+		"months": "luni",
+		"or": "sau"
+	},
+	"auth": {
+		"login": {
+			"title": "Autentificare",
+			"subtitle": "Introdu adresa de email pentru a continua",
+			"email": "Email",
+			"password": "Parolă",
+			"rememberMe": "Ține-mă minte",
+			"forgotPassword": "Ai uitat parola?",
+			"submit": "Autentificare",
+			"noAccount": "Nu ai un cont?",
+			"signUp": "Înregistrează-te!",
+			"magicLinkSent": "Verifică-ți căsuța de email, un link de autentificare este pe drum.",
+			"setupNotice": {
+				"title": "Configurare inițială",
+				"body": "Bun venit la MotoMate. Deoarece ești nou aici, a fost creat un cont de administrator implicit. Autentifică-te pentru a finaliza configurarea și pentru a schimba aceste credențiale.",
+				"defaultCreds": "Folosește credențialele implicite de mai sus la prima autentificare. Le poți schimba ulterior în Setări → Cont."
+			},
+			"tabs": {
+				"password": "Parolă",
+				"magicLink": "Magic link"
+			},
+			"magicSubmit": "Trimite magic link",
+			"errors": {
+				"rateLimited": "Prea multe încercări. Te rugăm să încerci din nou mai târziu.",
+				"invalidFormat": "Format nevalid pentru email sau parolă",
+				"invalidCredentials": "Email sau parolă incorectă",
+				"invalidEmail": "Te rugăm să introduci o adresă de email validă",
+				"registrationClosed": "Din păcate, înregistrarea este închisă momentan. Contactează administratorul pentru acces.",
+				"verificationFailed": "Verificarea a eșuat. Te rugăm să încerci din nou.",
+				"smtpNotConfigured": "Autentificarea prin magic link nu este disponibilă: serverul SMTP nu este configurat."
+			}
+		},
+		"register": {
+			"title": "Creează cont",
+			"subtitle": "Înregistrează-te pentru a începe monitorizarea vehiculului tău",
+			"email": "Email",
+			"password": "Parolă",
+			"passwordHint": "Folosește cel puțin 8 caractere",
+			"confirmPassword": "Confirmă parola",
+			"passwordMismatch": "Parolele nu se potrivesc",
+			"submit": "Creează cont",
+			"hasAccount": "Ai deja un cont?",
+			"login": "Autentifică-te",
+			"closedTitle": "Înregistrare închisă",
+			"closedBody": "Conturile noi nu sunt acceptate în acest moment. Contactează administratorul pentru acces.",
+			"closedAction": "Mergi la autentificare",
+			"errors": {
+				"registrationClosed": "Înregistrarea este închisă.",
+				"rateLimited": "Prea multe încercări. Te rugăm să încerci din nou mai târziu.",
+				"verificationFailed": "Verificarea a eșuat. Te rugăm să încerci din nou.",
+				"invalidEmail": "Te rugăm să introduci o adresă de email validă",
+				"passwordTooShort": "Folosește cel puțin 8 caractere",
+				"passwordRequired": "Parola este obligatorie",
+				"emailInUse": "Verifică datele introduse și încearcă din nou, sau autentifică-te dacă ai deja un cont."
+			}
+		},
+		"magicLink": {
+			"title": "Magic link",
+			"verifying": "Se efectuează autentificarea…",
+			"invalid": "Acest link este nevalid sau a expirat.",
+			"retry": "Solicită un link nou"
+		}
+	},
+	"onboarding": {
+		"security": {
+			"title": "Securizează-ți contul",
+			"description": "Ești autentificat cu contul de admin implicit. Setează o adresă de email reală și o parolă înainte de a continua — le poți actualiza oricând mai târziu în Setări.",
+			"newEmail": "Adresă nouă de email",
+			"newPassword": "Parolă nouă",
+			"confirmPassword": "Confirmă parola",
+			"submit": "Salvează și continuă →",
+			"skip": "Omite momentan"
+		},
+		"welcome": {
+			"title": "Bun venit la MotoMate",
+			"description": "Hai să adăugăm primul tău vehicul și să configurăm un program de întreținere. Durează aproximativ un minut.",
+			"submit": "Să începem →",
+			"skipWarning": "Nu uita să îți actualizezi emailul și parola în Setări → Cont înainte de lansarea în producție.",
+			"nameLabel": "Numele tău",
+			"namePlaceholder": "de ex. Andrei"
+		},
+		"type": {
+			"title": "Ce fel de vehicul este?",
+			"motorcycle": "Motocicletă",
+			"scooter": "Scuter",
+			"bike": "Bicicletă",
+			"other": "Altul"
+		},
+		"details": {
+			"title": "Spune-ne mai multe despre acest {vehicleType}",
+			"name": "Pseudonim / Nume",
+			"make": "Marcă",
+			"model": "Model",
+			"year": "An",
+			"vin": "VIN (Serie șasiu)",
+			"licensePlate": "Număr înmatriculare",
+			"placeholders": {
+				"name": "de ex. Honda mea",
+				"make": "Honda",
+				"model": "CB500F",
+				"vin": "opțional",
+				"licensePlate": "de ex. B-123-AAA"
+			}
+		},
+		"odometer": {
+			"title": "Citirea curentă a odometrului",
+			"description": "Setează valoarea de bază pentru intervalele de întreținere calculate în km.",
+			"hoursTitle": "Citirea curentă a orelor de funcționare",
+			"hoursDescription": "Setează valoarea de bază pentru intervalele de întreținere calculate în ore.",
+			"placeholder": "0"
+		},
+		"presets": {
+			"title": "Ce operațiuni de întreținere bifezi?",
+			"description": "Vom crea indicatori de monitorizare pentru acestea. Îi poți adăuga sau elimina oricând.",
+			"hoursEmpty": "Vehiculele bazate pe ore de funcționare încep fără presetări de distanță. Poți adăuga intervale orare din secțiunea Întreținere după configurare.",
+			"tasks": {
+				"oil": "Schimb de ulei și filtru",
+				"tire": "Presiune și uzură anvelope",
+				"chain_lube": "Curățare și ungere lanț",
+				"chain_tension": "Verificare tensiune lanț",
+				"brake": "Plăcuțe și lichid de frână",
+				"belt": "Verificare curea de transmisie",
+				"air_filter": "Filtru de aer",
+				"cable_check": "Verificare cabluri și manete",
+				"battery": "Verificare baterie"
+			},
+			"intervals": {
+				"oil": "la fiecare 5.000 km / 12 luni",
+				"tire": "verificare lunară",
+				"chain_lube": "la fiecare 500 km",
+				"chain_tension": "la fiecare 500 km",
+				"brake": "la fiecare 10.000 km / 2 ani",
+				"belt": "la fiecare 10.000 km / 12 luni",
+				"air_filter": "la fiecare 6.000–15.000 km / 12–24 luni",
+				"cable_check": "anual",
+				"battery": "anual"
+			},
+			"descriptions": {
+				"chain_lube": "Curățarea și lubrifierea lanțului",
+				"chain_tension": "Verificarea și reglarea tensiunii lanțului"
+			},
+			"hourIntervals": {
+				"oil": "la fiecare 15 h",
+				"tire": "la fiecare 20 h",
+				"chain_lube": "la fiecare 5 h",
+				"chain_tension": "la fiecare 10 h",
+				"brake": "la fiecare 25 h"
+			}
+		},
+		"lastService": {
+			"title": "Ultimul schimb de ulei",
+			"description": "Opțional: ajută la calcularea momentului în care este scadent următorul service.",
+			"date": "Dată",
+			"odometer": "Odometru la momentul reviziei",
+			"hoursReading": "Ore de funcționare la revizie",
+			"skip": "Omite acest pas",
+			"setupNote": "Ultimul service (introdus în timpul configurării)"
+		},
+		"summary": {
+			"title": "Totul este pregătit!",
+			"submit": "Deschide garajul meu →"
+		},
+		"nav": {
+			"back": "← Înapoi",
+			"stepOf": "{step} din {total}",
+			"continueBtn": "Continuă →"
+		}
+	},
+	"dashboard": {
+		"greeting": {
+			"morning": "Bună dimineața",
+			"afternoon": "Bună ziua",
+			"evening": "Bună seara",
+			"morningNamed": "Bună dimineața, {name}",
+			"afternoonNamed": "Bună ziua, {name}",
+			"eveningNamed": "Bună seara, {name}"
+		},
+		"status": {
+			"overdue": "{count, plural, =1 {1 element restant.} other {# elemente restante.}}",
+			"dueSoon": "{count, plural, =1 {1 element scadent în curând.} other {# elemente scadente în curând.}}",
+			"allGood": "Totul arată bine.",
+			"addFirst": "Adaugă primul tău vehicul pentru a începe."
+		},
+		"sections": {
+			"needsAttention": "Necesită atenție",
+			"garage": "Garaj",
+			"recentActivity": "Activitate recentă"
+		},
+		"viewAll": "Vezi tot →",
+		"serviceEntry": "Înregistrare service",
+		"attention": {
+			"moreOnVehicle": "{count, plural, =1 {încă 1 pentru {vehicleName}} other {încă # pentru {vehicleName}}}"
+		},
+		"empty": {
+			"title": "Garajul tău este gol",
+			"descriptionOnboarding": "Adaugă prima ta motocicletă sau scuter pentru a începe.",
+			"descriptionActive": "Adaugă un vehicul nou în colecția ta.",
+			"submit": "+ Adaugă vehicul"
+		}
+	},
+	"vehicles": {
+		"title": "Garaj",
+		"vehicleCount": "{count, plural, =1 {1 vehicul} other {# vehicule}}",
+		"archived": {
+			"show": "Arată cele arhivate",
+			"hide": "Ascunde cele arhivate"
+		},
+		"add": "+ Adaugă vehicul",
+		"favorite": "Marchează ca favorit",
+		"unfavorite": "Elimină din favorite",
+		"empty": {
+			"title": "Garajul tău este gol",
+			"description": "Adaugă un vehicul nou în colecția ta."
+		}
+	},
+	"vehicle": {
+		"add": {
+			"title": "Adaugă vehicul",
+			"back": "← Garaj",
+			"sections": {
+				"type": "Tip",
+				"details": "Detalii",
+				"odometer": "Odometru"
+			},
+			"fields": {
+				"name": "Nume",
+				"make": "Marcă",
+				"model": "Model",
+				"year": "An",
+				"vin": "VIN (Serie șasiu)",
+				"licensePlate": "Număr înmatriculare",
+				"currentReading": "Citire curentă",
+				"unit": "Unitate"
+			},
+			"placeholders": {
+				"name": "Motocicleta mea CB500F",
+				"make": "de ex. Honda",
+				"model": "de ex. CB500F",
+				"vin": "opțional",
+				"licensePlate": "de ex. B-123-AAA"
+			},
+			"types": {
+				"motorcycle": "Motocicletă",
+				"scooter": "Scuter",
+				"bike": "Bicicletă",
+				"other": "Altul"
+			},
+			"actions": {
+				"cancel": "Anulează",
+				"submit": "Adaugă vehicul →"
+			}
+		},
+		"detail": {
+			"menu": {
+				"maintenance": "Întreținere",
+				"mileage": "Odometru / Consum",
+				"note": "Note"
+			},
+			"timeline": {
+				"title": "Cronologie",
+				"subtitle": "Toate înregistrările pentru {name} într-un singur loc.",
+				"empty": {
+					"title": "Niciun istoric încă",
+					"description": "Înregistrează prima revizie sau o actualizare de odometru pentru a porni cronologia.",
+					"usageDescription": "Înregistrează prima revizie sau citire a utilizării pentru a porni cronologia."
+				},
+				"filter": {
+					"service": "Întreținere",
+					"odometer": "Odometru",
+					"usage": "Utilizare",
+					"notes": "Note",
+					"travels": "Călătorii",
+					"finance": "Finanțe",
+					"reminders": "Mementouri"
+				},
+				"reminder": {
+					"label": "Doar memento"
+				}
+			},
+			"upcoming": "Următoarele",
+			"nextDue": "Următorul: {date}",
+			"logLink": "Înregistrează",
+			"overdueByKm": "Depășit cu {km} {unit}",
+			"overdueSince": "Depășit din data de {date}",
+			"overdue": "Depășit",
+			"neverServiced": "Niciun service înregistrat",
+			"dueInKm": "Scadent în {km} {unit}",
+			"dueDate": "Scadent pe {date}",
+			"dueSoon": "Scadent în curând",
+			"nextDueOdo": "Următorul: {reading} {unit}",
+			"serviceEntry": "Înregistrare service",
+			"hideOdoReadings": "Ascunde citirile odometrului",
+			"hideUsageReadings": "Ascunde citirile de utilizare",
+			"showMoreOdoReadings": "Arată încă {n} citiri de odometru",
+			"showMoreUsageReadings": "Arată încă {n} citiri de utilizare",
+			"deleteDialog": {
+				"title": "Ștergi această înregistrare?",
+				"description": "Această înregistrare va fi eliminată definitiv din cronologia ta. Această acțiune nu poate fi anulată.",
+				"confirm": "Șterge",
+				"cancel": "Păstrează"
+			}
+		},
+		"forms": {
+			"logService": "Înregistrează o intervenție de service",
+			"updateOdo": "Actualizează odometrul",
+			"updateUsage": "Actualizează utilizarea",
+			"writeNote": "Scrie o notă",
+			"noteDesc": "Scrie o notă sau o observație",
+			"editEntry": "Editează înregistrarea",
+			"fields": {
+				"date": "Dată",
+				"odometer": "Odometru ({unit})",
+				"usage": "Citire utilizare ({unit})",
+				"description": "Descriere",
+				"remark": "Observație {optional}",
+				"cost": "Cost {optional}",
+				"notes": "Note",
+				"resetCycle": "Resetează ciclul pentru {optional}",
+				"usedTracker": "Întreținere efectuată pentru",
+				"checkToReset": "(bifează pentru resetare)",
+				"currentReading": "Citire curentă ({unit})",
+				"attachments": "Atașamente {optional}"
+			},
+			"placeholders": {
+				"partsUsed": "Piese utilizate, observații…",
+				"cost": "0.00",
+				"description": "de ex. Schimb ulei, ungere lanț…",
+				"additionalDetails": "Detalii suplimentare…",
+				"beforeTrip": "de ex. Înainte de o călătorie lungă",
+				"note": "de ex. Am efectuat o inspecție generală",
+				"writeNote": "Scrie o notă…"
+			},
+			"submit": {
+				"service": "Salvează înregistrarea",
+				"odometer": "Actualizează",
+				"note": "Salvează nota"
+			},
+			"attachFile": "Atașează fișier",
+			"chooseFile": "Alege fișier",
+			"linkDocument": "Asociază document",
+			"viewDocument": "Vezi document",
+			"attachments": {
+				"pickerTitle": "Asociază un document",
+				"noDocuments": "Niciun document disponibil.",
+				"uploading": "Se încarcă..."
+			},
+			"warnings": {
+				"odoSame": "Ai deja o citire salvată de {num} {unit}.",
+				"odoLower": "Mai mică decât cea mai mare citire înregistrată ({current} {unit}), va fi salvată ca o înregistrare istorică."
+			}
+		},
+		"edit": {
+			"title": "Setări",
+			"subtitle": "Gestionează vehiculul {name}",
+			"odometer": {
+				"title": "Actualizează odometrul",
+				"usageTitle": "Actualizează utilizarea",
+				"currentReading": "Citire curentă ({unit})",
+				"currentUsage": "Utilizare curentă ({unit})",
+				"update": "Actualizează"
+			},
+			"measurementUnit": {
+				"title": "Unitate de măsură",
+				"locked": "Unitatea de măsură nu mai poate fi schimbată după crearea vehiculului."
+			},
+			"vehicleDetails": "Detalii vehicul",
+			"fields": {
+				"name": "Nume",
+				"year": "An",
+				"make": "Marcă",
+				"model": "Model",
+				"vin": "VIN (Serie șasiu)",
+				"licensePlate": "Număr înmatriculare"
+			},
+			"purchaseSale": "Achiziție & Vânzare",
+			"purchasePrice": "Preț achiziție",
+			"soldPrice": "Preț vânzare",
+			"save": "Salvează modificările",
+			"saved": "Modificări salvate",
+			"odometerUpdated": "Odometru actualizat",
+			"usageUpdated": "Utilizare actualizată",
+			"vehicleRestored": "Vehicul restaurat",
+			"settings": {
+				"title": "Setări",
+				"archive": {
+					"title": "Arhivează vehiculul",
+					"titleRestore": "Restaurează vehiculul",
+					"descArchive": "Mută acest vehicul în arhivă. Va fi ascuns din garaj.",
+					"descRestore": "Pune acest vehicul înapoi în garajul tău activ.",
+					"btnArchive": "Arhivează",
+					"btnRestore": "Restaurează"
+				},
+				"dangerZone": "Zonă periculoasă",
+				"delete": {
+					"title": "Șterge acest vehicul",
+					"desc": "Elimină definitiv tot istoricul de service, documentele și indicatorii de monitorizare.",
+					"btn": "Șterge",
+					"dialog": {
+						"title": "Ștergi {name}?",
+						"desc": "Această acțiune va elimina definitiv tot istoricul de service, documentele și indicatorii de monitorizare. Acțiunea nu poate fi anulată.",
+						"confirm": "Șterge vehiculul",
+						"cancel": "Păstrează vehiculul"
+					}
+				},
+				"archiveDialog": {
+					"title": "Arhivezi {name}?",
+					"desc": "Acest vehicul va fi ascuns din garaj. Îl poți restaura oricând. Setează prețul de vânzare de mai sus înainte de a continua, dacă l-ai vândut.",
+					"confirm": "Arhivează",
+					"cancel": "Păstrează activ"
+				},
+				"unarchiveDialog": {
+					"title": "Restaurezi {name}?",
+					"desc": "Acest vehicul va fi mutat înapoi în garajul tău activ. Prețul de vânzare va fi resetat pentru a putea edita din nou detaliile vehiculului.",
+					"confirm": "Restaurează",
+					"cancel": "Păstrează arhivat"
+				},
+				"report": {
+					"title": "Raport de întreținere",
+					"desc": "Descarcă o copie fizică a istoricului tău complet de service.",
+					"btn": "Descarcă",
+					"modal": {
+						"title": "Raport de întreținere",
+						"desc": "Selectează ce dorești să incluzi în raport. Preferințele tale vor fi salvate pentru data viitoare.",
+						"download": "Descarcă PDF",
+						"downloading": "Se descarcă...",
+						"cancel": "Anulează",
+						"includeFinance": "Include rezumatul cheltuielilor"
+					},
+					"pdf": {
+						"generatedOn": "Generat la data de",
+						"currentOdometer": "Odometru curent",
+						"serviceHistory": "Istoric service",
+						"addendum": "Anexă: Atașamente",
+						"cost": "Cost",
+						"parts": "Piese utilizate",
+						"notes": "Note",
+						"remark": "Observație",
+						"noLogs": "Nu s-au găsit înregistrări de service.",
+						"attachmentPage": "pagina",
+						"notEmbeddable": "nu poate fi încorporat",
+						"trackers": "Verificat/Efectuat",
+						"period": "Perioadă",
+						"attached": "Atașat",
+						"financeSummary": "Rezumat cheltuieli",
+						"financeTotal": "Total",
+						"financeNoData": "Nu există înregistrări de cheltuieli în această perioadă.",
+						"catMaintenance": "Întreținere",
+						"catParts": "Piese",
+						"catAccessories": "Accesorii",
+						"catAdministrative": "Administrative",
+						"catFuel": "Combustibil",
+						"catOther": "Altele",
+						"documentInApp": "Acest document este disponibil în biblioteca ta de documente MotoMate."
+					}
+				}
+			},
+			"errors": {
+				"invalidOdometer": "Citire nevalidă a odometrului",
+				"odometerTooLow": "Noua citire trebuie să fie mai mare decât odometrul curent",
+				"notFound": "Vehiculul nu a fost găsit",
+				"imageTooLarge": "Imaginea este prea mare (max. 2 MB)",
+				"invalidImageFormat": "Format de imagine nevalid. Formate acceptate: JPEG, PNG, WebP, GIF",
+				"invalidFileExt": "Extensie de fișier nevalidă. Extensii acceptate: .jpg, .jpeg, .png, .webp, .gif",
+				"uploadFailed": "Încărcarea a eșuat: eroare de stocare"
+			}
+		},
+		"layout": {
+			"backToGarage": "← Garaj",
+			"archived": "Arhivat",
+			"avatar": {
+				"choose": "Alege avatar",
+				"upload": "Încarcă imagine",
+				"reset": "Resetează avatar"
+			},
+			"tabs": {
+				"timeline": "Cronologie",
+				"maintenance": "Întreținere",
+				"documents": "Documente",
+				"finance": "Finanțe",
+				"travels": "Călătorii",
+				"settings": "Setări"
+			},
+			"pinnedDoc": {
+				"pin": "Fixează document",
+				"change": "Schimbă documentul fixat",
+				"view": "Vezi în documente",
+				"openFile": "Deschide fișier",
+				"viewInList": "Vezi în listă",
+				"editPin": "Editează fixarea",
+				"openNewTab": "Deschide în filă nouă",
+				"remove": "Elimină fixarea",
+				"noDocs": "Niciun document încărcat încă.",
+				"actions": "Acțiuni document",
+				"noResults": "Niciun rezultat pentru „{q}”",
+				"searchPlaceholder": "Caută documente...",
+				"customLabel": "Etichetă personalizată"
+			}
+		}
+	},
+	"maintenance": {
+		"title": "Întreținere",
+		"subtitle": "Urmărește programul de service",
+		"view": {
+			"current": "Curente",
+			"forecast": "Previziuni",
+			"history": "Istoric"
+		},
+		"forecast": {
+			"basedOnUsage": "bazat pe utilizarea din ultimele {months} luni",
+			"insufficientData": "date insuficiente pentru prognoză",
+			"estimated": "estimat",
+			"inMonths": "în ~{months} luni",
+			"dueSoon": "scadent în curând",
+			"estimatedDate": "est. {date}"
+		},
+		"filter": {
+			"search": "Caută sarcini...",
+			"sortStatus": "Sortează după stare",
+			"sortName": "Sortează după nume",
+			"sortLast": "Sortează după ultimul service",
+			"sortDate": "Sortează după dată"
+		},
+		"history": {
+			"title": "Istoric service",
+			"noHistory": "Niciun istoric de service încă",
+			"noHistoryDesc": "Înregistrează o intervenție de service pentru a o vedea aici.",
+			"serviceEntry": "Service"
+		},
+		"editLog": {
+			"date": "Dată",
+			"odometer": "Odometru ({unit})",
+			"cost": "Cost",
+			"notes": "Descriere",
+			"remark": "Observație (opțional)",
+			"remarkPlaceholder": "Detalii suplimentare...",
+			"save": "Salvează modificările"
+		},
+		"addTask": {
+			"button": "+ Adaugă sarcină",
+			"cancel": "Anulează",
+			"title": "Adaugă sarcină",
+			"historyDisabled": "Adaugă sarcina în vizualizarea Curente sau Previziuni",
+			"fields": {
+				"name": "Nume sarcină",
+				"intervalKm": "Interval ({unit})",
+				"intervalMonths": "Interval (luni)"
+			},
+			"placeholders": {
+				"name": "de ex. Schimb ulei",
+				"km": "de ex. 5000",
+				"hours": "de ex. 100",
+				"months": "de ex. 12"
+			},
+			"submit": "Adaugă sarcină"
+		},
+		"empty": {
+			"title": "Nicio sarcină de întreținere încă",
+			"description": "Adaugă sarcini personalizate sau rulează asistentul de configurare inițială pentru a seta presetările.",
+			"noMatch": "Nicio sarcină nu se potrivește căutării tale",
+			"noMatchDesc": "Încearcă un alt termen de căutare sau resetează filtrul."
+		},
+		"tracker": {
+			"every": "La fiecare {interval}",
+			"next": "Următorul {info}",
+			"due": "Scadent {info}",
+			"last": "Ultimul {info}",
+			"status": {
+				"due": "scadent",
+				"overdue": "depășit"
+			},
+			"logNow": "Înregistrează acum -",
+			"edit": "Editează",
+			"delete": "Șterge",
+			"notScheduled": "Neprogramat",
+			"reminderBadge": "memento"
+		},
+		"editTracker": {
+			"sections": {
+				"identity": "Nume",
+				"interval": "Interval",
+				"lastServiced": "Ultimul service",
+				"nextDue": "Următoarea scadență"
+			},
+			"fields": {
+				"name": "Nume",
+				"description": "Descriere (opțional)",
+				"everyKm": "La fiecare ({unit})",
+				"everyMonths": "La fiecare (luni)",
+				"date": "Dată",
+				"odometer": "Odometru ({unit})",
+				"usage": "Citire utilizare ({unit})",
+				"autoCompute": "— lasă gol pentru calculare automată",
+				"reminderOnly": "Doar memento",
+				"reminderOnlyHint": "Înregistrarea resetează mementoul fără a crea o intrare în cronologie sau a apărea în rapoarte."
+			},
+			"submit": "Salvează modificările"
+		},
+		"saving": "Se salvează…",
+		"logService": {
+			"submit": "Salvează înregistrarea"
+		},
+		"toasts": {
+			"logged": "Intervenția de service a fost înregistrată",
+			"trackerUpdated": "Monitorizarea a fost actualizată",
+			"trackerDeleted": "Monitorizarea a fost ștearsă",
+			"taskAdded": "Sarcina a fost adăugată",
+			"defaultsApplied": "Indicatorii impliciți au fost aplicați pe baza istoricului tău de service"
+		},
+		"applyDefaults": "Aplică setările implicite",
+		"delete": {
+			"title": "Ștergi {name}?",
+			"description": "Acest indicator de întreținere va fi eliminat definitiv. Această acțiune nu poate fi anulată.",
+			"confirm": "Șterge",
+			"cancel": "Păstrează"
+		},
+		"skip": {
+			"button": "Omite",
+			"title": "Omiți {name}?",
+			"description": "Această acțiune amână monitorizarea cu un interval. Nu va fi înregistrat niciun service.",
+			"confirm": "Omite",
+			"cancel": "Anulează"
+		}
+	},
+	"finance": {
+		"title": "Finanțe",
+		"subtitle": "Urmărește cheltuielile",
+		"totalSpent": "Total cheltuit pentru {name}",
+		"addExpense": "Adaugă",
+		"noCosts": "Nicio cheltuială înregistrată încă",
+		"groupBy": "Grupează după:",
+		"groupCategory": "Categorie",
+		"groupYear": "An",
+		"groupDescription": "Descriere",
+		"groupNone": "Niciuna",
+		"byCategory": "După categorie",
+		"byYear": "După an",
+		"byDescription": "După descriere",
+		"allTransactions": "Toate tranzacțiile",
+		"recentTransactions": "Tranzacții recente",
+		"serviceEntry": "Înregistrare service",
+		"expense": "Cheltuială",
+		"gain": "Câștig / Profit",
+		"loss": "Pierdere",
+		"profitLoss": "Profit/Pierdere",
+		"salePrice": "Preț vânzare",
+		"transactionAdded": "Tranzacție adăugată",
+		"transactionDeleted": "Tranzacție ștearsă",
+		"transactionUpdated": "Tranzacție actualizată",
+		"saving": "Se salvează...",
+		"save": "Salvează",
+		"cancel": "Anulează",
+		"investment": {
+			"purchasePrice": "Preț achiziție",
+			"notSet": "Nesetat",
+			"addHint": "Adaugă în Setări → Achiziție & Vânzare",
+			"expenses": "Cheltuieli",
+			"transactions": "{count, plural, =1 {1 tranzacție} other {# tranzacții}}",
+			"transactions_plural": "{count, plural, =1 {1 tranzacție} other {# tranzacții}}",
+			"totalInvested": "Total investit",
+			"soldFor": "Vândut pentru"
+		},
+		"form": {
+			"addTitle": "Adaugă",
+			"editTitle": "Editează",
+			"category": "Categorie",
+			"amount": "Sumă ({currency})",
+			"date": "Dată",
+			"odometer": "Odometru ({unit})",
+			"usage": "Citire utilizare ({unit})",
+			"odometerOptional": "Opțional",
+			"notes": "Note",
+			"notesPlaceholder": "Detalii suplimentare"
+		},
+		"deleteDialog": {
+			"title": "Ștergi această tranzacție?",
+			"description": "Această tranzacție va fi eliminată definitiv. Această acțiune nu poate fi anulată.",
+			"confirm": "Șterge",
+			"cancel": "Păstrează"
+		},
+		"categories": {
+			"maintenance": "Întreținere",
+			"parts": "Piese",
+			"accessories": "Accesorii",
+			"administrative": "Administrative",
+			"fuel": "Combustibil",
+			"other": "Altele"
+		},
+		"empty": {
+			"title": "Nicio cheltuială înregistrată",
+			"description": "Adaugă prima ta cheltuială pentru a începe monitorizarea."
+		}
+	},
+	"documents": {
+		"title": "Documente",
+		"subtitle": "Stochează fișe de service, fotografii și acte",
+		"upload": "+ Încarcă",
+		"dropHintDesktop": "Trage un fișier aici sau răsfoiește",
+		"dropHintMobile": "Apasă pentru a încărca un fișier",
+		"uploadHint": "Imagini, PDF, Word, Excel - max. 10 MB",
+		"selectedFile": "Fișier selectat",
+		"summary": "Rezumat / Titlu",
+		"summaryPlaceholder": "de ex., Chitanță schimb ulei",
+		"category": "Categorie",
+		"expiry": "Expirare",
+		"expiryOptional": "(Opțional)",
+		"expiryExpired": "Expirat",
+		"expiryExpiringSoon": "Expiră în curând",
+		"expiryValid": "Valid",
+		"actions": {
+			"view": "Vizualizează",
+			"rename": "Redenumește",
+			"delete": "Șterge"
+		},
+		"searchPlaceholder": "Caută documente...",
+		"allTypes": "Toate tipurile",
+		"cancel": "Anulează",
+		"saving": "Se salvează...",
+		"saveDocument": "Salvează documentul",
+		"toasts": {
+			"uploaded": "Document încărcat",
+			"renamed": "Document redenumit",
+			"deleted": "Document șters"
+		},
+		"deleteDialog": {
+			"title": "Ștergi {name}?",
+			"description": "Acest document va fi șters definitiv. Această acțiune nu poate fi anulată.",
+			"confirm": "Șterge",
+			"cancel": "Păstrează"
+		},
+		"sort": {
+			"newest": "Cele mai noi primile",
+			"oldest": "Cele mai vechi primele",
+			"name": "Nume A-Z"
+		},
+		"view": {
+			"list": "Listă",
+			"timeline": "Cronologie"
+		},
+		"types": {
+			"service": "Service",
+			"quotation": "Deviz / Ofertă preț",
+			"papers": "Acte / Documente",
+			"photo": "Fotografie",
+			"notes": "Note",
+			"other": "Altul",
+			"route": "Traseu"
+		},
+		"empty": {
+			"title": "Nu s-au găsit documente",
+			"description": "Încarcă documente sau ajustează filtrele de căutare."
+		},
+		"prevPage": "Anterior",
+		"nextPage": "Următor",
+		"pageOf": "Pagina {page} din {total}",
+		"linkedBadge": "Asociat · Service {date}",
+		"linkedTravelBadge": "Asociat · Călătorie {title}"
+	},
+	"settings": {
+		"title": "Setări",
+		"nav": {
+			"preferences": "Preferințe",
+			"account": "Cont",
+			"notifications": "Notificări",
+			"workflows": "Reguli notificări",
+			"developer": "Dezvoltator",
+			"changelog": "Istoric modificări",
+			"sourceCode": "Cod sursă",
+			"reportIssue": "Raportează o problemă",
+			"tapAgain": "Apasă din nou pentru a deschide"
+		},
+		"profile": {
+			"title": "Preferințe",
+			"display": "Afișare",
+			"language": "Limbă și regiune",
+			"currency": "Monedă",
+			"odometerUnit": "Unitate odometru",
+			"saved": "Preferințe salvate",
+			"submit": "Salvează preferințele",
+			"saving": "Se salvează…",
+			"avatar": "Fotografie de profil",
+			"avatarUpload": "Încarcă foto",
+			"avatarRemove": "Elimină",
+			"avatarUpdated": "Fotografia de profil a fost actualizată",
+			"avatarDicebear": "Alege un avatar",
+			"avatarShuffle": "Amestecă",
+			"subtitle": "Limba, moneda și unitatea odometrului.",
+			"displayName": "Nume afișat",
+			"displayNamePlaceholder": "Numele tău"
+		},
+		"account": {
+			"title": "Cont",
+			"email": {
+				"title": "Adresă de email",
+				"current": "Curentă: {email}",
+				"new": "Adresă nouă de email",
+				"submit": "Actualizează emailul",
+				"saved": "Email actualizat",
+				"errors": {
+					"invalid": "Introdu o adresă de email validă",
+					"sameAsCurrent": "Aceasta este deja adresa ta curentă de email",
+					"alreadyInUse": "Această adresă de email este deja utilizată"
+				}
+			},
+			"password": {
+				"title": "Parolă",
+				"current": "Parolă curentă",
+				"new": "Parolă nouă",
+				"confirm": "Confirmă parola nouă",
+				"hint": "Min. 8 caractere",
+				"submit": "Schimbă parola",
+				"saved": "Parolă schimbată",
+				"errors": {
+					"allRequired": "Toate câmpurile de parolă sunt obligatorii",
+					"tooShort": "Noua parolă trebuie să aibă cel puțin 8 caractere",
+					"noMatch": "Parolele nu se potrivesc",
+					"noPasswordSet": "Nu este setată nicio parolă pentru acest cont — folosește magic link pentru autentificare",
+					"incorrect": "Parola curentă este incorectă",
+					"sameAsCurrent": "Noua parolă trebuie să fie diferită de parola curentă"
+				}
+			},
+			"export": {
+				"title": "Exportă datele",
+				"desc": "Descarcă o copie a vehiculelor, înregistrărilor de întreținere, documentelor și setărilor tale.",
+				"btn": "Exportă datele",
+				"json": "Exportă ca JSON",
+				"jsonHint": "Date structurate, fără fișiere fizice",
+				"zip": "Exportă ca ZIP",
+				"zipHint": "Include documentele atașate"
+			},
+			"dangerZone": "Zonă periculoasă",
+			"delete": {
+				"title": "Șterge acest cont",
+				"desc": "Elimină definitiv contul tău, precum și toate vehiculele, istoricul de service și documentele tale.",
+				"btn": "Șterge contul",
+				"dialog": {
+					"title": "Ștergi contul tău?",
+					"desc": "Această acțiune va elimina definitiv contul tău, toate vehiculele și toate datele asociate. Acțiunea nu poate fi anulată.",
+					"confirm": "Șterge contul",
+					"cancel": "Păstrează contul"
+				}
+			},
+			"subtitle": "Email, parolă și export de date."
+		},
+		"workflows": {
+			"title": "Reguli de notificare",
+			"loadPresets": "Restaurează regulile presetate",
+			"empty": "Nicio regulă definită încă. Restaurează regulile presetate pentru a începe sau creează unele proprii.",
+			"presets": {
+				"maintenanceDueSoonKm": "Întreținere scadentă în curând",
+				"maintenanceOverdueKm": "Întreținere restantă (depășită)",
+				"maintenanceDueSoonDate": "Întreținere scadentă în curând (dată)",
+				"maintenanceOverdueDate": "Întreținere restantă (dată depășită)",
+				"odometerNudge": "Memento actualizare odometru"
+			},
+			"lastFired": "Ultima declanșare: {date}",
+			"neverFired": "Niciodată declanșat",
+			"nextFire": "Următoarea",
+			"delete": "Șterge",
+			"confirmDelete": "Ștergi această regulă?",
+			"editBtn": "Editează",
+			"editSave": "Salvează",
+			"editCancel": "Anulează",
+			"allChannels": "Toate canalele activate",
+			"trigger": {
+				"beforeDue": "înainte de scadență",
+				"pastDue": "după scadență",
+				"whenOverdue": "Când este depășit (km)",
+				"daysBefore": "zile înainte de data scadenței",
+				"daysPast": "zile după data scadenței",
+				"every": "La fiecare",
+				"noOdo": "Nicio actualizare de odometru de",
+				"days": "zile",
+				"docExpiring": "Documentul expiră în",
+				"unknown": "Declanșator necunoscut"
+			},
+			"edit": {
+				"kmBefore": "Notifică când distanța rămasă e mai mică de (km)",
+				"kmPast": "Notifică când este depășit cu (km)",
+				"daysBefore": "Notifică cu atâtea zile înainte",
+				"daysPast": "Notifică la atâtea zile după",
+				"days": "După câte zile",
+				"month": "Lună",
+				"day": "Zi"
+			},
+			"deleted": "Regulă ștearsă",
+			"confirmDeleteDesc": "Ștergi regula „{name}”? Această acțiune nu poate fi anulată.",
+			"runCheck": "Rulează verificarea acum",
+			"runCheckDone": "Verificare finalizată",
+			"subtitle": "Reguli automatizate pentru întreținere și mementouri."
+		},
+		"notifications": {
+			"title": "Notificări",
+			"markAllRead": "Marchează toate ca citite",
+			"empty": "Nicio notificare încă.",
+			"markRead": "Marchează ca citită",
+			"channels": {
+				"title": "Canale de notificare",
+				"saveBtn": "Salvează canalele",
+				"saved": "Salvat",
+				"testBtn": "Trimite test",
+				"testSent": "Trimis",
+				"testError": "Eșuat",
+				"push": {
+					"label": "Push în browser",
+					"description": "Trimite notificări push în acest browser atunci când o regulă se declanșează.",
+					"subscribe": "Abonează acest browser",
+					"subscribed": "Abonat",
+					"subError": "Abonarea a eșuat",
+					"noVapid": "Cheile VAPID nu sunt configurate pe acest server. Solicită administratorului să seteze VAPID_PUBLIC_KEY și VAPID_PRIVATE_KEY."
+				},
+				"email": {
+					"label": "Email",
+					"description": "Trimite o notificare prin email la adresa de mai jos.",
+					"addressLabel": "Adresă pentru notificări",
+					"addressPlaceholder": "tu@example.com",
+					"hint": "Poate fi diferită de adresa de email utilizată pentru autentificare.",
+					"noSmtp": "Serverul SMTP nu este configurat pe acest server. Solicită administratorului să seteze SMTP_HOST."
+				},
+				"webhook": {
+					"label": "Webhook",
+					"description": "Trimite un payload JSON prin POST către orice URL când o regulă se declanșează.",
+					"urlLabel": "URL Webhook",
+					"urlPlaceholder": "https://hooks.example.com/...",
+					"authLabel": "Antet de autorizare (Authorization header)",
+					"authPlaceholder": "Bearer token123 (opțional)",
+					"hint": "Trimite o cerere POST cu tipul evenimentului, titlu, conținut, numele vehiculului și datele aferente."
+				},
+				"ha": {
+					"label": "Home Assistant",
+					"description": "Declanșează o automatizare prin webhook în Home Assistant.",
+					"urlLabel": "URL Webhook",
+					"urlPlaceholder": "http://homeassistant.local:8123/api/webhook/motomate",
+					"hint": "Lipește URL-ul webhook-ului din HA. Nu este necesar un token.",
+					"tip": "Sfat: Pentru un URL extern Home Assistant, dezactivează opțiunea „Accessible only from the network”.",
+					"configLabel": "Configurație automatizare",
+					"copy": "Copiază",
+					"invalidUrl": "URL-ul trebuie să se termine cu /api/webhook/<webhook_id>"
+				}
+			},
+			"inbox": {
+				"title": "Notificări recente"
+			},
+			"seeMore": "Vezi toate cele {total} notificări",
+			"viewAll": "Vezi toate notificările",
+			"scheduledRules": {
+				"title": "Reguli programate",
+				"noRules": "Nicio regulă activată. Configurează regulile în setările pentru Reguli notificări (Workflows).",
+				"ready": "Pregătit, se va rula la următoarea verificare",
+				"cooldown": "În perioada de pauză până la {date}",
+				"waiting": "Se așteaptă următorul jurnal de service",
+				"inMeasurement": "În {value} {unit}",
+				"onDate": "Din data de {date}",
+				"trackerLabel": "({tracker})",
+				"noData": "Fără date"
+			},
+			"allTitle": "Toate notificările",
+			"delete": "Șterge",
+			"deleteRead": "Șterge cele citite",
+			"filterAll": "Toate",
+			"filterUnread": "Necitite",
+			"prevPage": "Anterior",
+			"nextPage": "Următor",
+			"pageOf": "Pagina {page} din {total}",
+			"subtitle": "Canale de notificare și alerte recente."
+		},
+		"changelog": {
+			"title": "Ce este nou?",
+			"subtitle": "Vezi ce s-a schimbat în ultimele versiuni.",
+			"refresh": "Reîmprospătează",
+			"noContent": "Nu s-au găsit modificări. Încearcă din nou mai târziu.",
+			"latest": "Ultima versiune",
+			"installed": "Instalată",
+			"viewFull": "Vezi istoricul complet",
+			"openIssue": "Deschide o sesizare (Issue)"
+		},
+		"developer": {
+			"title": "Dezvoltator",
+			"subtitle": "Creează chei API și răsfoiește documentația.",
+			"apiKeys": {
+				"title": "Chei API",
+				"description": "Creează și gestionează chei pentru a utiliza API-ul MotoMate.",
+				"empty": "Nicio cheie API încă.",
+				"create": "Creează cheie",
+				"creating": "Se creează...",
+				"nameLabel": "Nume",
+				"namePlaceholder": "de ex. Home Assistant",
+				"scopeLabel": "Acces",
+				"scopeRead": "Doar citire",
+				"scopeReadWrite": "Citire + Scriere",
+				"expiryLabel": "Expirare",
+				"expiry30": "30 de zile",
+				"expiry90": "90 de zile (recomandat)",
+				"expiry365": "1 an",
+				"expiryNone": "Fără expirare",
+				"prefix": "Cheie",
+				"expires": "Expiră",
+				"neverExpires": "Niciodată",
+				"lastUsed": "Ultima utilizare",
+				"neverUsed": "niciodată",
+				"revoke": "Revocă",
+				"revokeConfirm": "Revocarea va întrerupe orice script sau automatizare care utilizează această cheie.",
+				"revokeConfirmBtn": "Confirmă revocarea",
+				"rotate": "Rotește (Reînnoiește)",
+				"rotateConfirm": "Rotirea generează o cheie nouă și o invalidează pe cea curentă.",
+				"rotateConfirmBtn": "Confirmă rotirea",
+				"cancel": "Anulează",
+				"tokenRevealTitle": "Copiază această cheie acum",
+				"tokenRevealDesc": "Această cheie nu va mai fi afișată din nou.",
+				"tokenCopied": "Copiat",
+				"tokenCopyBtn": "Copiază",
+				"tokenDoneBtn": "Am copiat-o",
+				"maxKeysError": "S-a atins numărul maxim de 20 de chei API. Revocă una înainte de a crea o cheie nouă.",
+				"scopeBadgeRead": "citire",
+				"scopeBadgeReadWrite": "citire + scriere",
+				"expiringSoon": "Expiră în curând",
+				"expired": "Expirată",
+				"revoked": "Revocată",
+				"deleteKey": "Șterge",
+				"deleteKeyConfirm": "Confirmă ștergerea",
+				"restoreKey": "Restaurează",
+				"errorNameTaken": "Acest nume este deja utilizat."
+			},
+			"docs": {
+				"title": "Documentație API",
+				"description": "Explorează și testează toate endpoint-urile disponibile.",
+				"link": "Vezi documentația",
+				"specLink": "Specificație OpenAPI brută (Raw)"
+			}
+		}
+	},
+	"layout": {
+		"brand": "MotoMate",
+		"nav": {
+			"dashboard": "Panou control",
+			"garage": "Garaj",
+			"settings": "Setări",
+			"profile": "Profil"
+		},
+		"theme": {
+			"title": "Temă",
+			"light": "Luminoasă",
+			"dark": "Întunecată",
+			"system": "Sistem"
+		},
+		"signOut": "Deconectare",
+		"logoutConfirm": {
+			"title": "Deconectare",
+			"description": "Sigur dorești să te deconectezi?",
+			"confirm": "Deconectare",
+			"cancel": "Rămâi autentificat"
+		},
+		"addEntry": {
+			"title": "Adaugă înregistrare",
+			"chooseVehicle": "Alege un vehicul",
+			"whatLogging": "Ce dorești să înregistrezi?",
+			"maintenance": "Întreținere",
+			"maintenanceDesc": "Ulei, anvelope sau reparații",
+			"mileage": "Odometru",
+			"mileageDesc": "Valoarea de pe bord",
+			"usage": "Utilizare",
+			"usageDesc": "Orele sau valoarea de pe contor",
+			"finance": "Finanțe",
+			"financeDesc": "Combustibil, asigurare sau piese"
+		},
+		"notifications": {
+			"title": "Notificări",
+			"empty": "Nicio notificare nouă",
+			"viewAll": "Vezi toate",
+			"error": "Notificările nu au putut fi încărcate"
+		}
+	},
+	"units": {
+		"km": "km",
+		"mi": "mi",
+		"hours": "ore"
+	},
+	"currency": {
+		"eur": "€ Euro",
+		"gbp": "£ Liră",
+		"chf": "CHF Franc",
+		"usd": "$ Dolar"
+	},
+	"travels": {
+		"title": "Călătorii",
+		"subtitle": "Plimbările și traseele tale",
+		"add": "Adaugă călătorie",
+		"empty": {
+			"title": "Nicio călătorie încă",
+			"description": "Înregistrează prima ta plimbare pentru a porni istoricul călătoriilor."
+		},
+		"entry": {
+			"days": "{n, plural, =1 {1 zi} other {# zile}}",
+			"routes": "{n, plural, =1 {1 traseu} other {# trasee}}",
+			"planned": "Planificată"
+		},
+		"form": {
+			"createTitle": "Adaugă călătorie",
+			"editTitle": "Editează călătorie",
+			"title": "Titlu",
+			"titlePlaceholder": "de ex. Traversarea Alpilor",
+			"startDate": "Dată început",
+			"duration": "Durată (zile)",
+			"expenses": "Total cheltuieli",
+			"remark": "Observație",
+			"remarkPlaceholder": "Note despre călătorie…",
+			"gpxFiles": "Trasee GPX",
+			"gpxSlot": "Ziua {n}",
+			"gpxChoose": "Alege fișier GPX",
+			"gpxPickExisting": "Alege din bibliotecă",
+			"gpxPickPlaceholder": "Selectează un traseu...",
+			"gpxHint": "Un singur fișier GPX pentru fiecare zi a călătoriei. Max. 20 MB fiecare.",
+			"submit": {
+				"create": "Salvează călătoria",
+				"edit": "Salvează modificările"
+			}
+		},
+		"map": {
+			"title": "Hartă",
+			"loading": "Se încarcă traseele…",
+			"error": "Harta nu a putut fi încărcată",
+			"noRoutes": "Niciun traseu atașat",
+			"clickHint": "Fă clic pe un traseu de pe hartă pentru a filtra lista",
+			"filterActive": "{n, plural, =1 {1 traseu selectat} other {# trasee selectate}}",
+			"clearFilter": "Arată tot",
+			"hideDay": "Ascunde această zi de pe hartă",
+			"showDay": "Arată această zi pe hartă"
+		},
+		"delete": {
+			"title": "Ștergi această călătorie?",
+			"description": "Această călătorie și toate fișierele GPX atașate vor fi șterse definitiv. Această acțiune nu poate fi anulată.",
+			"confirm": "Șterge",
+			"cancel": "Păstrează"
+		},
+		"timeline": {
+			"label": "Călătorie"
+		},
+		"filter": {
+			"search": "Caută călătorii...",
+			"noResults": "Nicio călătorie nu se potrivește căutării tale.",
+			"noResultsDesc": "Încearcă un alt termen de căutare sau resetează filtrul.",
+			"all": "Toate",
+			"past": "Anterioare",
+			"upcoming": "Viitoare"
+		}
+	},
+	"notifications": {
+		"maintenanceDueSoonKm": {
+			"title": "Întreținere scadentă în curând",
+			"body": "Sarcina „{{tracker_name}}” pentru {{vehicle_name}} este scadentă în {{measurement_value}} {{measurement_unit}}."
+		},
+		"maintenanceOverdueKm": {
+			"title": "Întreținere restantă (depășită)",
+			"body": "Sarcina „{{tracker_name}}” pentru {{vehicle_name}} este depășită cu {{measurement_value}} {{measurement_unit}}."
+		},
+		"maintenanceDueSoonDate": {
+			"title": "Întreținere scadentă în curând",
+			"body": "Sarcina „{{tracker_name}}” pentru {{vehicle_name}} este scadentă în {{days_remaining}} zile ({{due_date}})."
+		},
+		"maintenanceOverdueDate": {
+			"title": "Întreținere restantă (depășită)",
+			"body": "Sarcina „{{tracker_name}}” pentru {{vehicle_name}} este depășită cu {{days_over}} zile (scadență {{due_date}})."
+		},
+		"odometerNudge": {
+			"title": "Actualizează odometrul",
+			"body": "Te-ai plimbat cu {{vehicle_name}} recent? Actualizează odometrul pentru a păstra acuratețea monitorizării întreținerii."
+		}
+	}
+}
