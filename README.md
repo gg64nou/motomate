@@ -54,6 +54,17 @@ Want to support MotoMate? Drop a star on GitHub, or consider supporting developm
 
 This project is licensed under the **AGPL 3.0** license. See [LICENSE](LICENSE) for details.
 
-## Contributing
+## Contributors
+
+Made possible thanks to the following people:
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Contributions including ideas, bug reports, and pull requests are welcome. Please open an issue to discuss any proposed changes or identified issues.
