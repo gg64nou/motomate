@@ -51,7 +51,7 @@
 		{ code: 'it', label: 'Italiano' },
 		{ code: 'es', label: 'Español' },
 		{ code: 'nl', label: 'Nederlands' },
-		{ code: 'pt', label: 'Português' }
+		{ code: 'pt', label: 'Português' },
 		{ code: 'ro', label: 'Română' }
 	];
 
