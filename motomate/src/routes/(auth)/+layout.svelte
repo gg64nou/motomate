@@ -52,6 +52,7 @@
 		{ code: 'es', label: 'Español' },
 		{ code: 'nl', label: 'Nederlands' },
 		{ code: 'pt', label: 'Português' }
+		{ code: 'ro', label: 'Română' }
 	];
 
 	function readStoredLocale(): string {
